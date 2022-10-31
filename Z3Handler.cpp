@@ -242,15 +242,15 @@ z3::expr Z3Handler::Z3HandlingExprPtr(ExprPtr ptr){
             return Z3HandleConst(ptr);
         }
         case Expr::Kind::Bin:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? Bin \033[0m\n");
             throw ptr;
         }
         case Expr::Kind::Tri:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? Tri\033[0m\n");
             throw ptr;
         }
         case Expr::Kind::Ury:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? Ury\033[0m\n");
             throw ptr;
         }
         case Expr::Kind::Add: { // 7
@@ -284,7 +284,7 @@ z3::expr Z3Handler::Z3HandlingExprPtr(ExprPtr ptr){
             return Z3HandleSDiv(R, L);
         }
         case Expr::Kind::URem:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? URem\033[0m\n");
             throw ptr;
         }
         case Expr::Kind::SRem:{
@@ -390,11 +390,11 @@ z3::expr Z3Handler::Z3HandlingExprPtr(ExprPtr ptr){
             return Z3HandleSge(R, L);
         }
         case Expr::Kind::Lor:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? Lor\033[0m\n");
             throw ptr;
         }
         case Expr::Kind::LAnd:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? LAnd\033[0m\n");
             throw ptr;
         }
         case Expr::Kind::LNot:{
@@ -408,27 +408,33 @@ z3::expr Z3Handler::Z3HandlingExprPtr(ExprPtr ptr){
             return Z3HandleSignExt(ptr);
         }
         case Expr::Kind::ZeroEXT:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? ZeroExt\033[0m\n");
             throw ptr;
         }
         case Expr::Kind::Shrd:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? Shrd\033[0m\n");
             throw ptr;
         }
         case Expr::Kind::Sign:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
-            throw ptr;
+        //pp-s frm Hx
+            return Z3HandleSign(ptr);
+            //printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            //throw ptr;
+        //pp-e
         }
         case Expr::Kind::NoSign:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
-            throw ptr;
+        //pp-s frm Hx
+            return Z3HandleNoSign(ptr);
+            //printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            //throw ptr;
+        //pp-e
         }
         case Expr::Kind::Overflow:{
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? Overflow\033[0m\n");
             throw ptr;
         }
         case Expr::Kind::NoOverflow:{ // 41
-            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
+            printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? NoOverflow\033[0m\n");
             throw ptr;
         }
         case Expr::Kind::Combine:{
@@ -475,7 +481,12 @@ z3::expr Z3Handler::Z3HandleConst(ExprPtr const_expr_ptr){ // 3
     }
     uint64_t value = const_expr->getValue();
     //std::cout << "value in ConstExpr : " << value << std::endl;
-    expr x = context_.bv_val(value, 32);
+    //pp-s frm Hx
+    int size = const_expr->getSize();
+    //std::cout << "size from z3: " << size << std::endl;
+    expr x = context_.bv_val(value, size * 8);
+    //expr x = context_.bv_val(value, 32);
+    //pp-e
     return x;
 }
 
@@ -685,9 +696,21 @@ z3::expr Z3Handler::Z3HandleLNot(ExprPtr ptr){
 
 z3::expr Z3Handler::Z3HandleSignExt(ExprPtr ptr){ // not sure how to write z3 expr
     //return context_.bv_val(100, 64);
-    expr x = Z3HandlingExprPtr(ptr);
+    //pp-s frm Hx
+    SignExtExpr *signext_expr = static_cast<SignExtExpr*>(ptr.get());
+    if (signext_expr == NULL){
+        printf("\033[47;31m Z3 Handlering ERROR : SignExtExpr \033[0m\n");
+        throw signext_expr;
+    }
+    expr x = Z3HandlingExprPtr(signext_expr->getExprPtr());
     int size = ptr->getExprSize();
-    return z3::sext(x, 2*size);  //TODO just double the size, please make sure
+    //printf("size in SignEXT : %d\n", size);
+    //std::cout << x << std::endl;
+    return z3::sext(x, 2*size * 8 );  //TODO just double the size, please make sure
+    //expr x = Z3HandlingExprPtr(ptr);
+    //int size = ptr->getExprSize();
+    //return z3::sext(x, 2*size);  //TODO just double the size, please make sure
+    //pp-e
 }
 
 z3::expr Z3Handler::Z3HandleZeroEXT(ExprPtr ptr){ // not sure how to write z3 expr
@@ -699,11 +722,56 @@ z3::expr Z3Handler::Z3HandleShrd(ExprPtr r, ExprPtr m, ExprPtr l){  // not sure 
 }
 
 z3::expr Z3Handler::Z3HandleSign(ExprPtr ptr){ // not sure how to write z3 expr
-    return context_.bv_val(100, 64);
+//pp-s frm Hx
+    SignExpr *sign_expr = static_cast<SignExpr*>(ptr.get());
+    if (sign_expr == NULL){
+        printf("\033[47;31m Z3 Handlering ERROR : SignExpr \033[0m\n");
+        throw sign_expr;
+    }
+    expr x = Z3HandlingExprPtr(sign_expr->getExprPtr());
+    //std::cout << "before sign : " << x << std::endl;
+    // general idea: get the highest byte first, and then check the sign/unsign
+    int size = sign_expr->getSize();
+    //std::cout << "size from Z3HandleSign : " << size << std::endl;
+    expr sign_bit = x.extract(size * 8 - 1, size  * 8 - 1);
+    //std::cout << "sign_bit : " << sign_bit.simplify() << std::endl;
+    expr bool_true = context_.bv_val(1, 1);
+    expr bool_false = context_.bv_val(0, 1);
+    //std::cout << "bool_true : " << bool_true << std::endl;
+    //std::cout << "bool_false : " << bool_false << std::endl;
+    if (bool_true == sign_bit.simplify()) // TODO not the correct way to compare two expressions
+    {
+        //std::cout << "----bool true\n" ;
+        return bool_true; //TODO the size of return value may be wrong; I am not sure what expressions are supposed to be combined with SignExpr
+    }
+    else
+    {
+        //std::cout << "----bool false\n" ;
+        return bool_false;
+    }
+    //return context_.bv_val(100, 64);
+//pp-e
 }
 
 z3::expr Z3Handler::Z3HandleNoSign(ExprPtr ptr){ // not sure how to write z3 expr
-    return context_.bv_val(100, 64);
+//pp-s frm Hx
+  NoSignExpr *nosign_expr = static_cast<NoSignExpr*>(ptr.get());
+    if (nosign_expr == NULL){
+        printf("\033[47;31m Z3 Handlering ERROR : NoSignExpr \033[0m\n");
+        throw nosign_expr;
+    }
+    expr x = Z3HandlingExprPtr(nosign_expr->getExprPtr());
+    // general idea: get the highest byte first, and then check the sign/unsign
+    int size = nosign_expr->getSize();
+    expr nosign_bit = x.extract(size * 8 - 1, size * 8 - 1);
+    expr bool_true = context_.bv_val(1, 1);
+    expr bool_false = context_.bv_val(0, 1);
+    if (bool_false == nosign_bit.simplify())
+        return bool_true;
+    else
+        return bool_false;
+    //return context_.bv_val(100, 64);
+//pp-e
 }
 
 z3::expr Z3Handler::Z3HandleOverflow(ExprPtr ptr){ // not sure how to write z3 expr

@@ -206,6 +206,9 @@ class ConstExpr : public Expr {
     // @THX add the implemenation of the virtual function
     Kind getKind() const { return Const; }
     uint64_t getValue() { return V; }
+//pp-s from Hx
+    int getSize() {return size;}
+//pp-e
 };
 
 class BinExpr : public Expr {
@@ -413,7 +416,10 @@ class SignExtExpr : public UryExpr {
     SignExtExpr(ExprPtr e, int sz, int off) : UryExpr(e, sz, off) {exprID = EXPR_SignEXT;}
 
     // @THX add the implemenation of the virtual function
-    Kind getKind() const { return Sign; }
+//pp-s frm Hx
+    //Kind getKind() const { return Sign; }
+    Kind getKind() const { return SignEXT; }
+//pp-e
     ExprPtr getExprPtr() { return E; }
 };
 
@@ -543,6 +549,9 @@ class SignExpr : public UryExpr {
     // @THX add the implemenation of the virtual function
     Kind getKind() const { return Sign; }
     ExprPtr getExprPtr() { return E; }
+//pp-s frm Hx
+    int getSize() {return size;}
+//pp-e
 } ;
 
 class NoSignExpr : public UryExpr {
@@ -553,6 +562,9 @@ class NoSignExpr : public UryExpr {
     // @THX add the implemenation of the virtual function
     Kind getKind() const { return NoSign; }
     ExprPtr getExprPtr() { return E; }
+//pp-s frm Hx
+    int getSize() {return size;}
+//pp-e
 } ;
 class OverflowExpr : public UryExpr {
     public:

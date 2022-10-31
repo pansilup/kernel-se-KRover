@@ -596,7 +596,10 @@ bool SymExecutor::process_cmp(VMState *vm, InstrInfoPtr &infoptr) {
         long v2;
         res = oisrc2->getConValue(v2);
         assert(res);
-        ExprPtr c2(new ConstExpr(v2, oisrc2->size, 0));
+        //pp-s
+        //ExprPtr c2(new ConstExpr(v2, oisrc2->size, 0));
+        ExprPtr c2(new ConstExpr(v2, oisrc1->size, 0)); 
+        //pp-e
         oe.reset(new SubExpr(e1, c2));
     }
 
@@ -608,7 +611,10 @@ bool SymExecutor::process_cmp(VMState *vm, InstrInfoPtr &infoptr) {
         long v1;
         res = oisrc1->getConValue(v1);
         assert(res);
-        ExprPtr c1(new ConstExpr(v1,oisrc1->size, 0));
+        //pp-s
+        //ExprPtr c1(new ConstExpr(v1,oisrc1->size, 0));
+        ExprPtr c1(new ConstExpr(v1,oisrc2->size, 0));
+        //pp-e
         oe.reset(new SubExpr(c1, e2));
     } else {
         ERRR_ME("Unexpected operands");
