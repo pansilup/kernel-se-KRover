@@ -18,6 +18,7 @@
 #define SCALL_ACCESS            21
 #define SCALL_SYSFS             139
 #define SCALL_UMASK             95    
+#define SCALL_DUP               32
 //pp-e
 
 // #include "fatctrl.h"

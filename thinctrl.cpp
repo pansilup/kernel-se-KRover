@@ -1171,7 +1171,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifdef DEBUG_LOG       
     printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
 #endif
-        //printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
+        printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
         /* get the Insn from the InsnCache or decoding on the site */
         dis_as0 = rdtsc();
         int idx = crtAddr & 0xFFFFFFF; 

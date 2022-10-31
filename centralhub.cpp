@@ -205,6 +205,14 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x8;  //adr of rdi
             declareSymbolicObject(tmp, 8, 1, 1, 0770, "mask_rdi");
         }   break;
+        case SCALL_DUP:
+        {
+        printf("case: %d\n", (int)scall_idx);
+        tmp += 0x68; //adr of rsi
+        //declareSymbolicObject(tmp, 8, 1, 1, 0x0, "mode_rsi");
+        tmp += 0x8;  //adr of rdi
+        declareSymbolicObject(tmp, 4, 1, 1, 1, "fd_rdi");
+        }   break;
         default:
         {
             ret = false;

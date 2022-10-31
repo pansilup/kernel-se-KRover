@@ -411,6 +411,7 @@ bool EFlagsManager::DependencyFlagConcreted(entryID instrID, bool &bExecute) {
         case e_jb:
         case e_jb_jnaej_j:
         case e_cmovnae:
+        case e_sbb:
         case e_setb:
             // B/NAE/Carry;		(CF=1)
             ret = (m_VM->FlagBitDefinited(x86_64::cf)) ;
@@ -865,6 +866,7 @@ KVExprPtr EFlagsManager::GetCondition(entryID instrID) {
         case e_jb_jnaej_j:
         case e_cmovnae:
         case e_setb:
+        case e_sbb:
             // B/NAE/Carry;		(CF=1)
             exprID = EXPR_Ult ;
             break ;
