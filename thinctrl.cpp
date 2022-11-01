@@ -712,9 +712,11 @@ bool CThinCtrl::dispatchBranch(Instruction* in, struct pt_regs* m_regs, ulong cr
         {
             tempTarget = res.convert<Address>();
             tempTarget -= in->size();//for direct transfer, dyninst implicitly adds insn->size() when getting oprand
+            std::cout << "tmpTgt : " << std::hex << tempTarget << std::endl;
             if (in->allowsFallThrough())
             {
                 bool bExecute = updateJCCDecision(in, m_regs, crtAddr, cc_insn_count);
+                std::cout << "bExecute : " << bExecute << std::endl;
                 //if not execute, change tempTarget to next instruction
                 if (!bExecute)
                 {
@@ -722,6 +724,7 @@ bool CThinCtrl::dispatchBranch(Instruction* in, struct pt_regs* m_regs, ulong cr
                 }
             }
             m_regs->rip = tempTarget;
+            std::cout << "rip : " << std::hex << m_regs->rip << std::endl;
         }
         else //indirect jmp through register 
         {
@@ -1171,7 +1174,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifdef DEBUG_LOG       
     printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
 #endif
-        //printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
+        printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
         /* get the Insn from the InsnCache or decoding on the site */
         dis_as0 = rdtsc();
         int idx = crtAddr & 0xFFFFFFF; 

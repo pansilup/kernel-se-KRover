@@ -19,7 +19,9 @@
 //#define PRINT_INFO_BEFOR
 //#define PRINT_INFO_AFTER
 
-
+//pp-s frm Hq
+#define signext_to_long(sz1, v) ((((v) & (1<<((sz1*8)-1))) == 0) ? (v) : ((long)(-1)) & ~((1UL << (sz1*8)) - 1) | (v))
+//pp-e
 using namespace std;
 using namespace Dyninst;
 using namespace ParseAPI;
@@ -596,9 +598,14 @@ bool SymExecutor::process_cmp(VMState *vm, InstrInfoPtr &infoptr) {
         long v2;
         res = oisrc2->getConValue(v2);
         assert(res);
+
+        //pp-s frm Hq
+        v2 = signext_to_long(oisrc2->size, v2) ;
+        //pp-e 
         //pp-s
         //ExprPtr c2(new ConstExpr(v2, oisrc2->size, 0));
         ExprPtr c2(new ConstExpr(v2, oisrc1->size, 0)); 
+        //std::cout << "size : " << std::dec << oisrc1->size << "sz 2 : " << oisrc2->size << " v2 : " << std::hex << v2 << std::endl;
         //pp-e
         oe.reset(new SubExpr(e1, c2));
     }

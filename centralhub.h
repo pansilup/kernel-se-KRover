@@ -39,6 +39,8 @@
 #define SCALL_SYMLINK           88
 #define SCALL_CHMOD             90
 #define SCALL_PERSONALITY       135
+#define SCALL_SWAPON            87
+#define SCALL_MMAP              9
 
 //pp-e
 

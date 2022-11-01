@@ -1843,7 +1843,7 @@ int main(void) {
     //execState->MoniStartOfSE(0xffffffff812db390);//addr of x64_sys_access
     //execState->MoniStartOfSE(0xffffffff81303920);//addr of x64_sys_sysfs
     //execState->MoniStartOfSE(0xffffffff810b5f10);//addr of x64_sys_umask
-    //execState->MoniStartOfSE(0xffffffff81303310);//addr of x64_sys_dup
+    execState->MoniStartOfSE(0xffffffff81303310);//addr of x64_sys_dup
     //execState->MoniStartOfSE(0xffffffff813023e0);//addr of x64_sys_dup2
     //execState->MoniStartOfSE(0xffffffff81144110);//addr of x64_sys_alarm
     //execState->MoniStartOfSE(0xffffffff810cf3b0);//addr of x64_sys_sched_get_priority_max
@@ -1865,7 +1865,9 @@ int main(void) {
     //execState->MoniStartOfSE(0xffffffff812f36e0);//addr of x64_sys_unlink
     //execState->MoniStartOfSE(0xffffffff812f38b0);//addr of x64_sys_symlink
     //execState->MoniStartOfSE(0xffffffff812db7e0);//addr of x64_sys_chmod
-    execState->MoniStartOfSE(0xffffffff8109fca0);//addr of x64_sys_personality
+    //execState->MoniStartOfSE(0xffffffff8109fca0);//addr of x64_sys_personality
+    //execState->MoniStartOfSE(0xffffffff81037c90);//addr of x64_sys_mmap
+
     
     //if uncommenting this, change the declaration of tmp in centralhub.cpp
     //execState->MoniStartOfSE(0xffffffff810041b0);//addr of indirect call in do_syscall_64 

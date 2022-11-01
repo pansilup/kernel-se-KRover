@@ -147,12 +147,12 @@ std::map<uint, DyinstEC> SYCPUState::DyinstEncoding = {
     {x86_64::bl, {RBX_PTRIDX, 1}},
     {x86_64::cl, {RCX_PTRIDX, 1}},
     {x86_64::dl, {RDX_PTRIDX, 1}},
- //pp-s
+    //pp-s
     {x86_64::ah, {RAX_PTRIDX, 1}},
     {x86_64::bh, {RBX_PTRIDX, 1}},
     {x86_64::ch, {RCX_PTRIDX, 1}},
     {x86_64::dh, {RDX_PTRIDX, 1}},
-//pp-e
+    //pp-e
     {x86_64::sil, {RSI_PTRIDX, 1}},
     {x86_64::dil, {RDI_PTRIDX, 1}},
     {x86_64::bpl, {RBP_PTRIDX, 1}},
