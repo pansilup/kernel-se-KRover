@@ -44,6 +44,7 @@ bool SymExecutor::run(VMState *vm) {
         m_RIPUpdated = false;
 
         entryID id = I->getOperation().getID() ;
+        std::cout << "id " << id << std::endl;
 
         switch (id) {
             case e_mov:
@@ -594,6 +595,11 @@ bool SymExecutor::process_cmp(VMState *vm, InstrInfoPtr &infoptr) {
         KVExprPtr e1(nullptr);
         res = oisrc1->getSymValue(e1);
         assert(res);
+
+        std::cout << "at process_cmp: \n";
+        e1->print();
+        std::cout << "\n";
+        
 
         long v2;
         res = oisrc2->getConValue(v2);
@@ -1603,7 +1609,6 @@ ulong SymExecutor::isUseGS(VMState* vm, DAPIInstrPtr& I)
     }
     return 0;
 }
-
 
 bool SymExecutor::_parseOperand_XX(VMState *vm, DAPIInstrPtr& I, OprndInfoPtr &oi) {
     bool res = false;  // Failed to parse the operand;

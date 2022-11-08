@@ -17,7 +17,6 @@
 #include "dyn_regs.h"
 
 using namespace Dyninst;
-
 // #define DBG(fmt, ...) \
 
 // #define DBG(fmt, ...) \
@@ -87,6 +86,10 @@ struct shar_arg
     volatile unsigned long guest_timeout_flag;
     volatile unsigned long exit_wrong_flag;
     volatile unsigned long cross_page_flag;
+    //pp-s fix for %ds %es
+    unsigned long es_base;
+    unsigned long ds_base;
+    //pp-e
 };
 struct shar_arg* ei_shar_args;
 
@@ -1578,6 +1581,10 @@ void init_t_ctx()
     assert(ei_shar_args->fs_base != 0);
     machRegs.fs_base = ei_shar_args->fs_base;
     machRegs.gs_base = ei_shar_args->msr_kernel_gs_base;
+    //pp-s fix for %ds %es
+    machRegs.ds_base = ei_shar_args->ds_base;
+    machRegs.es_base = ei_shar_args->es_base;
+    //pp-e
     return;
 }
 
@@ -1608,6 +1615,11 @@ void native_to_SE_ctx_switch()
     assert(ei_shar_args->fs_base != 0);
     machRegs.fs_base = ei_shar_args->fs_base;
     machRegs.gs_base = ei_shar_args->msr_kernel_gs_base;
+    //pp-s fix for %ds %es : is this required ?
+    machRegs.ds_base = ei_shar_args->ds_base;
+    machRegs.es_base = ei_shar_args->es_base;
+    //pp-e
+
     return;
 }
 
@@ -1829,10 +1841,14 @@ int main(void) {
     init_global_var();
     dump_regs();
     get_target();
+
+    //pp-s
+    printf("ds_base: %lx ,es_base: %lx\n", ei_shar_args->ds_base, ei_shar_args->es_base );
+    //pp-e
     execState->InitRediPagePool();
 
-    //execState->MoniStartOfSE(0xffffffff810b9710);//addr of x64_sys_setpriority
-    //execState->MoniStartOfSE(0xffffffff810b5fb0);//addr of x64_sys_getpriority
+    //execState->MoniStartOfSE(0xffffffff810b9440); //ffffffff810b9710);//addr of x64_sys_setpriority
+    //execState->MoniStartOfSE(0xffffffff810b5cd0); //ffffffff810b5fb0);//addr of x64_sys_getpriority
     //execState->MoniStartOfSE(0xffffffff812de980);//addr of x64_sys_writev
     //execState->MoniStartOfSE(0xffffffff812ddc30);//addr of x64_sys_lseek
     //execState->MoniStartOfSE(0xffffffff81910660);//addr of x64_sys_bind
@@ -1840,11 +1856,11 @@ int main(void) {
     //execState->MoniStartOfSE(0xffffffff812ea7f0);//addr of x64_sys_pipe
     //execState->MoniStartOfSE(0xffffffff812db7e0);//addr of x64_sys_chmod
     //execState->MoniStartOfSE(0xffffffff812f38b0);//addr of x64_sys_symlink
-    //execState->MoniStartOfSE(0xffffffff812db390);//addr of x64_sys_access
+    //execState->MoniStartOfSE(0xffffffff812d9840); //ffffffff812db390);//addr of x64_sys_access
     //execState->MoniStartOfSE(0xffffffff81303920);//addr of x64_sys_sysfs
     //execState->MoniStartOfSE(0xffffffff810b5f10);//addr of x64_sys_umask
-    execState->MoniStartOfSE(0xffffffff81303310);//addr of x64_sys_dup
-    //execState->MoniStartOfSE(0xffffffff813023e0);//addr of x64_sys_dup2
+    //execState->MoniStartOfSE(0xffffffff81301470); //ffffffff81303310);//addr of x64_sys_dup
+    //execState->MoniStartOfSE(0xffffffff813009d0); //ffffffff813023e0);//addr of x64_sys_dup2
     //execState->MoniStartOfSE(0xffffffff81144110);//addr of x64_sys_alarm
     //execState->MoniStartOfSE(0xffffffff810cf3b0);//addr of x64_sys_sched_get_priority_max
     //execState->MoniStartOfSE(0xffffffff810cf430);//addr of x64_sys_sched_get_priority_min
@@ -1853,7 +1869,7 @@ int main(void) {
     //execState->MoniStartOfSE(0xffffffff81268340);//addr of x64_sys_mlock
     //execState->MoniStartOfSE(0xffffffff812684b0);//addr of x64_sys_munlock
     //execState->MoniStartOfSE(0xffffffff812f4ed0);//addr of x64_sys_fcntl
-    //execState->MoniStartOfSE(0xffffffff812e0410);//addr of x64_sys_write
+    //execState->MoniStartOfSE(0xffffffff812de8c0); //ffffffff812e0410);//addr of x64_sys_write
     //execState->MoniStartOfSE(0xffffffff812dabc0);//addr of x64_sys_truncate
     //execState->MoniStartOfSE(0xffffffff812db4a0);//addr of x64_sys_chdir
     //execState->MoniStartOfSE(0xffffffff812f2510);//addr of x64_sys_rename
@@ -1867,6 +1883,9 @@ int main(void) {
     //execState->MoniStartOfSE(0xffffffff812db7e0);//addr of x64_sys_chmod
     //execState->MoniStartOfSE(0xffffffff8109fca0);//addr of x64_sys_personality
     //execState->MoniStartOfSE(0xffffffff81037c90);//addr of x64_sys_mmap
+    //execState->MoniStartOfSE(0xffffffff812de7a0); //ffffffff812e02f0);//addr of x64_sys_read
+    //execState->MoniStartOfSE(0xffffffff8126e470); //addr of x64_sys_mprotect
+
 
     
     //if uncommenting this, change the declaration of tmp in centralhub.cpp

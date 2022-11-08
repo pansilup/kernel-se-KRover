@@ -41,6 +41,8 @@
 #define SCALL_PERSONALITY       135
 #define SCALL_SWAPON            87
 #define SCALL_MMAP              9
+#define SCALL_READ              0
+#define SCALL_MPROTECT          10
 
 //pp-e
 

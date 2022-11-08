@@ -778,7 +778,7 @@ bool EFlagsManager::EvalCondition(entryID insnID)
         
 
         bExecute = m_Z3Handler->Z3SolveConcritize(symobjs, constraints);
-        //std::cout << "----------bExecute: " << bExecute << std::endl; 
+        std::cout << "----------bExecute: " << bExecute << std::endl; 
         //exprPtr->print() ;
         //std::cout << "\n" ;
 #ifdef DEBUG_LOG

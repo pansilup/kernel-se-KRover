@@ -47,6 +47,10 @@ enum PTREGS_ENCODING {
     SS_PTRIDX = 20,
     FS_PTRIDX = 21,
     GS_PTRIDX = 22,
+    //pp-s fix for %ds %es
+    DS_PTRIDX = 23,
+    ES_PTRIDX = 24,
+    //pp-e
 };
 
 std::map<uint, std::string> SYCPUState::PTRegsEncoding = {
@@ -73,6 +77,10 @@ std::map<uint, std::string> SYCPUState::PTRegsEncoding = {
     {SS_PTRIDX, "x86_64::ss"},
     {FS_PTRIDX, "x86_64::fs"},
     {GS_PTRIDX, "x86_64::gs"},
+    //pp-s fix for %ds %es
+    {DS_PTRIDX, "x86_64::ds"},
+    {ES_PTRIDX, "x86_64::es"},
+    //pp-e
 };
 
 std::map<uint, DyinstEC> SYCPUState::DyinstEncoding = {
@@ -97,9 +105,10 @@ std::map<uint, DyinstEC> SYCPUState::DyinstEncoding = {
     {x86_64::flags, {EFL_PTRIDX, 8}},
     {x86_64::fs, {FS_PTRIDX, 8}},
     {x86_64::gs, {GS_PTRIDX, 8}},
-//pp-s
-    //{x86_64::es, {GS_PTRIDX, 8}},
-//pp-e
+    //pp-s fix for %ds %es
+    {x86_64::ds, {DS_PTRIDX, 8}},
+    {x86_64::es, {ES_PTRIDX, 8}},
+    //pp-e
     // 32 bits
     {x86_64::r8d, {R8_PTRIDX, 4}},
     {x86_64::r9d, {R9_PTRIDX, 4}},

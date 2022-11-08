@@ -381,38 +381,50 @@ asm ("nop \n");
 // return value indicates how many bytes are copied
 int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* instr)
 {
-    char orig_insn[12];
+    //pp-s
+    //char orig_insn[12];
+    char orig_insn[12] = {0x0};
+    //pp-e
     // void* T_insn_no_r15 = (void*)((char*)InsnExecRIP + 0x6e);
     // memcpy (orig_insn, orig_insn_addr, 0x7);
     // memcpy (orig_insn, orig_insn_addr, 0x8);
     // void* T_insn_no_r15 = (void*)((char*)InsnExecRIP + 0x6c);
     
     entryID opcode = instr->getOperation().getID();
-
+    std::cout << "at RewRIPInsn: " << std::dec << opcode << std::endl;
     // printf ("T_insn_no_r15 at: %lx. \n", T_insn_no_r15);
         
     static Expression::Ptr x86_gs(new RegisterAST(x86_64::gs));
-  
-    if (opcode == e_mov || opcode == e_cmp || opcode == e_lea || opcode == e_add || opcode == e_sub)
+
+ //pp-s 
+    //if (opcode == e_mov || opcode == e_cmp || opcode == e_lea || opcode == e_add || opcode == e_sub)
+    if (opcode == e_mov || opcode == e_cmp || opcode == e_lea || opcode == e_add || opcode == e_sub || opcode == e_inc)
+//pp-e
     {
         memcpy (orig_insn, orig_insn_addr, 0x8);
     
         if (instr->isRead(x86_gs))
         {
             // printf ("gs base rip rel insn. \n");
-            if (opcode == e_mov || opcode == e_add)
+            //pp-s
+            //if (opcode == e_mov || opcode == e_add)
+            if (opcode == e_mov || opcode == e_add || opcode == e_inc)
+            //pp-e
             {
-                if (instr->size() == 7)
+                if (instr->size() == 7) //incl comes here
                 {
                     memcpy (orig_insn+2, (void *)((unsigned long)orig_insn_addr+0x1), 6);
                     orig_insn[1] = 0x41;
                 }
-                else if(instr->size() == 8)
+                else if(instr->size() == 8) //incq comes here
                 {
                     orig_insn[1] |= 0x1;
                 }
                 else
                 {
+                    //pp for incl and incq we havce not added support for the following gs base instruction formats yet
+                    //but, it is doable
+                    // incx %gs:0x1(%rip)   incx %gs:(%rip)
                     printf ("non recognised gs base insn. \n");
                     asm volatile ("vmcall; \n\t");
                 }
@@ -507,12 +519,13 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
             }
         }
     }
-    else if (opcode == e_and && instr->isRead(x86_gs))
+    //pp-s
+    /*else if (opcode == e_and && instr->isRead(x86_gs))
     { 
         if (instr->size() == 11)
         {
             memcpy (orig_insn, orig_insn_addr, 0x1);
-            memcpy (orig_insn+2, (void *)((unsigned long)orig_insn_addr+0x1), 10);
+            memcpy (orig_insn+2, orig_insn_addr+0x1, 10);
             orig_insn[1] = 0x41;
             // currently, only handles when the displacement is 32-bit
             if (orig_insn[4] != 0 && orig_insn[5] != 0 && orig_insn[6] != 0)
@@ -535,7 +548,70 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
         {
             assert(0);
         }
+    }*/
+    else if (opcode == e_and)
+    { 
+
+        if(instr->isRead(x86_gs))
+        {
+            if (instr->size() == 11)
+            {
+                memcpy (orig_insn, orig_insn_addr, 0x1);
+                memcpy (orig_insn+2, (void *)((unsigned long)orig_insn_addr+0x1), 10);
+                orig_insn[1] = 0x41;
+                // currently, only handles when the displacement is 32-bit
+                if (orig_insn[4] != 0 && orig_insn[5] != 0 && orig_insn[6] != 0)
+                {
+                    orig_insn[3] |= 0x82;
+                    // memcpy(T_insn_no_r15, orig_insn, 12);
+                    memcpy(T_insn, orig_insn, 12);
+                    return 12;
+                }
+                else
+                {
+                    assert(0);//TO FIX: For rip relative operand, the displacement is alway 4-byte long even if the displacement(offset) is 0. But if use r15 as base, the size for displacement is based on the displacement value, can be 0-bit, 8-bit, 16-bit or 32-bit. So, when change rip-->r15, be careful about the displacement size.
+
+                }
+                // unsigned long* tmp = (unsigned long*)T_insn_no_r15;
+                // printf ("new rip-relative and insn with gs base: %lx. \n", *tmp);
+                // printf ("new rip-relative and insn with gs base: %lx. \n", *(tmp+1));
+            }
+            else
+            {
+                assert(0);
+            }
+        }
+        else if (instr->size() == 6)//the non-rip rel operand is 4-byte
+        {   
+            std::cout << "handling and\n" ;
+            memcpy (orig_insn+1, orig_insn_addr, 6);
+            orig_insn[0] = 0x41;
+            if (orig_insn[3] == 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0)
+            {
+                orig_insn[2] |= 0x02;
+                memcpy(T_insn, orig_insn, 3);
+                return 3;
+            }
+            else if (orig_insn[3] != 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0) 
+            {
+                orig_insn[2] |= 0x42;
+                memcpy(T_insn, orig_insn, 4);
+                return 4;
+            }
+            else
+            {
+                orig_insn[2] |= 0x82;
+                memcpy(T_insn, orig_insn, 7);
+                return 7;
+            }
+
+        }
+        else //we do not handle otehr instruction lengths for the moment
+        {
+            assert(0);
+        }         
     }
+    //pp-e
     else if (opcode == e_xadd)
     {
         if (instr->size() == 8)
@@ -590,6 +666,95 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
         // printf ("new rip-relative test insn: %lx. \n", *tmp);
 
     }
+//pp-s    
+    else if(opcode == e_movsxd) //for-movslq
+    {
+        memcpy (orig_insn, orig_insn_addr, 0x8);
+        if (instr->size() == 7) //movslq
+        {
+            orig_insn[0] |= 0x1;
+            if (orig_insn[3] == 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0)
+            {
+                orig_insn[2] |= 0x02;
+                memcpy(T_insn, orig_insn, 3);
+                return 3;
+            }
+            else if (orig_insn[3] != 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0) 
+            {
+                orig_insn[2] |= 0x42;
+                memcpy(T_insn, orig_insn, 4);
+                return 4;
+            }
+            else
+            {
+                orig_insn[2] |= 0x82;
+                memcpy(T_insn, orig_insn, 7);
+                return 7;
+            }
+         }
+         else //we do not expect otehr instruction lengths for the moment
+         {
+            assert(0);
+         }        
+    }
+    else if(opcode == e_movzx) //pp-movzbl/movzbq-new : can not bring movslq here as ins len is 7 & len = 7 block below is no compatible
+    {
+        memcpy (orig_insn, orig_insn_addr, 0x8);
+        if (instr->size() == 8) //pp-movzbq - new
+        {
+            orig_insn[0] |= 0x1;
+            if (orig_insn[4] == 0 && orig_insn[5] == 0 && orig_insn[6] == 0  && orig_insn[7] == 0)
+            {
+                orig_insn[3] |= 0x02;
+                memcpy(T_insn, orig_insn, 4);
+                return 4;
+            }
+            else if (orig_insn[4] != 0 && orig_insn[5] == 0 && orig_insn[6] == 0  && orig_insn[7] == 0) 
+            {
+                orig_insn[3] |= 0x42;
+                memcpy(T_insn, orig_insn, 5);
+                return 5;
+            }
+            else
+            {
+                orig_insn[3] |= 0x82;
+                memcpy(T_insn, orig_insn, 8);
+                return 8;
+            }
+        }
+        else if(instr->size() == 7) //pp-movzbl - new
+        {
+            memcpy ((void*)&orig_insn[1], orig_insn_addr, 0x7);
+            
+            orig_insn[0] = 0x41;
+            if (orig_insn[4] == 0 && orig_insn[5] == 0 && orig_insn[6] == 0  && orig_insn[7] == 0)
+            {
+                orig_insn[3] |= 0x02;
+                // memcpy(T_insn_no_r15, orig_insn, 4);
+                memcpy(T_insn, orig_insn, 4);
+                return 4;
+            }
+            else if (orig_insn[4] != 0 && orig_insn[5] == 0 && orig_insn[6] == 0  && orig_insn[7] == 0) 
+            {
+                orig_insn[3] |= 0x42;
+                // memcpy(T_insn_no_r15, orig_insn, 5);
+                memcpy(T_insn, orig_insn, 5);
+                return 5;
+            }
+            else
+            {
+                orig_insn[3] |= 0x82;
+                // memcpy(T_insn_no_r15, orig_insn, 8);
+                memcpy(T_insn, orig_insn, 8);
+                return 8;
+            }
+        }
+        else
+        {
+            assert(0);
+        }
+    }
+//pp-e
     else
     {
         printf ("rip-relative instruction, type not handled. \n");
@@ -628,12 +793,17 @@ bool ConExecutor::InsnDispatch(Instruction* instr, struct pt_regs* regs)
     ulong crtAddr = regs->rip - InsnSize; 
     /* For RIP relative instruction: if r15 is not used in instruction, replace rip with r15 */
     Expression::Ptr thePC(new RegisterAST(MachRegister::getPC(Arch_x86_64)));
+    
+    //Expression::Ptr theR8(new RegisterAST(MachRegister(x86_64::r8)));
+    //std::cout << "%r8 is used ? : " << instr->isRead(theR8) << std::endl;
+
     if (instr->isRead(thePC))
     {
+        //std::cout << "%rip is used \n";
         Expression::Ptr theR15(new RegisterAST(MachRegister(x86_64::r15)));
         if (instr->isRead(theR15) || instr->isWritten(theR15))
         {
-            printf ("r15 is used, use another reg . \n");
+            //printf ("r15 is used, use another reg . \n");
             asm volatile ("movq $0x999999, %%rax; \n\t"
                     "vmcall; \n\t"
                     :::"%rax");
@@ -643,7 +813,7 @@ bool ConExecutor::InsnDispatch(Instruction* instr, struct pt_regs* regs)
             /* TODO: currently only handle cmp/mov/lea/sub/add which are
              * 7-bytes */
             // printf ("rip relative instruction, addr: %lx. \n", crtAddr);
-            
+            //std::cout << "%r15 not used \n";
             void* T_insn_no_r15 = (void*)((char*)InsnExecRIP + 0x6c);
             RewRIPInsn(T_insn_no_r15, (void*)crtAddr, instr);
             InsnExecRIP(regs);
@@ -657,7 +827,7 @@ bool ConExecutor::InsnDispatch(Instruction* instr, struct pt_regs* regs)
     /* For non-rip-relative instruction, */
     else 
     {
-        // printf ("non rip relative instruction, addr: %lx. \n", crtAddr);
+        //printf ("non rip relative instruction, addr: %lx. \n", crtAddr);
         // std::cout << "rdi: " << regs->rdi << std::endl;
         // std::cout << "rax: " << regs->rax << std::endl;
         void* T_insn = (void*)((char*)InsnExecNonRIP + 0x68);
@@ -671,6 +841,7 @@ bool ConExecutor::InsnDispatch(Instruction* instr, struct pt_regs* regs)
 #endif
 
         InsnExecNonRIP(regs);
+        //std::cout << "ret from InsnExecNonRIP\n";
         ClearTinsn(T_insn, InsnSize);
 
 #ifdef _DEBUG_OUTPUT            

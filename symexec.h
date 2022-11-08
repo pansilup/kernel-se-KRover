@@ -42,6 +42,7 @@ class SymExecutor {
     // bool _parseOperand_XW(VMState *vm, OprndInfoPtr &oi);
     // bool _parseOperand_RW(VMState *vm, OprndInfoPtr &oi);
     ulong isUseGS(VMState* vm, DAPIInstrPtr &I);
+
     bool _parseOperand_XX(VMState *vm, DAPIInstrPtr &I, OprndInfoPtr &oi);
     bool _parseOperand_RX(VMState *vm, DAPIInstrPtr &I, OprndInfoPtr &oi);
     bool _parseOperand_XW(VMState *vm, DAPIInstrPtr &I, OprndInfoPtr &oi);

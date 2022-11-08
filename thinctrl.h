@@ -183,6 +183,9 @@ class CThinCtrl {
     bool bindRegValForMemOpd(DIAPIOperandPtr op);
     
     ulong isUseGS(Instruction* in);
+    //pp-s fix for %ds %es
+    ulong getSegRegVal(Instruction* in);
+    //pp-e
     bool OpdhasSymReg(Operand* OP);
     bool OpdhasSymMemCell(Operand* OP, ulong gs_base);
     bool checkImplicitMemAccess(Instruction *I);

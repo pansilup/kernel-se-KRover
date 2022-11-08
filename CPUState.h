@@ -33,6 +33,9 @@ struct MacReg {
     struct pt_regs regs;
     ulong fs_base;
     ulong gs_base;
+    //pp-s fix for %ds %es
+    ulong ds_base;
+    ulong es_base;
 };
 
 

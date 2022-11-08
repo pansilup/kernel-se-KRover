@@ -712,11 +712,11 @@ bool CThinCtrl::dispatchBranch(Instruction* in, struct pt_regs* m_regs, ulong cr
         {
             tempTarget = res.convert<Address>();
             tempTarget -= in->size();//for direct transfer, dyninst implicitly adds insn->size() when getting oprand
-            std::cout << "tmpTgt : " << std::hex << tempTarget << std::endl;
+            //std::cout << "tmpTgt : " << std::hex << tempTarget << std::endl;
             if (in->allowsFallThrough())
             {
                 bool bExecute = updateJCCDecision(in, m_regs, crtAddr, cc_insn_count);
-                std::cout << "bExecute : " << bExecute << std::endl;
+                //std::cout << "bExecute : " << bExecute << std::endl;
                 //if not execute, change tempTarget to next instruction
                 if (!bExecute)
                 {
@@ -724,7 +724,7 @@ bool CThinCtrl::dispatchBranch(Instruction* in, struct pt_regs* m_regs, ulong cr
                 }
             }
             m_regs->rip = tempTarget;
-            std::cout << "rip : " << std::hex << m_regs->rip << std::endl;
+            //std::cout << "rip : " << std::hex << m_regs->rip << std::endl;
         }
         else //indirect jmp through register 
         {
@@ -920,6 +920,30 @@ ulong CThinCtrl::isUseGS(Instruction* in)
     }
     return 0;
 }
+
+//pp-s fix for %ds %es
+ulong CThinCtrl::getSegRegVal(Instruction* in)
+{
+    int r_id;
+    /* check if Insn uses gs as base in mem access, if yes, get gsbase first */
+    std::set<RegisterAST::Ptr> regrd = in->getOperation().implicitReads();
+    if (regrd.size() != 0)
+    {
+        for (auto it : regrd)
+        {
+            r_id = it->getID();
+            if (r_id == x86_64::gs || r_id == x86_64::ds || r_id == x86_64::es)
+            {
+                RegValue RV{it->getID(), 8};
+                bool ret = m_VM->readRegister(RV);
+                assert(ret);
+                return RV.u64;
+            }
+        }
+    }
+    return 0;
+}
+//pp-e
 
 bool CThinCtrl::hasSymOperand(Instruction* in)
 {
@@ -1156,7 +1180,10 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         }
 
         if (crtAddr == m_endRIP)
+        {
+            //printf ("at end rip\n");
             break;
+        }
     }
     pre_dis_as1 = rdtsc();
     /* / */
@@ -1178,14 +1205,17 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         /* get the Insn from the InsnCache or decoding on the site */
         dis_as0 = rdtsc();
         int idx = crtAddr & 0xFFFFFFF; 
+        //std::cout << "idx :" << std::hex << idx << std::endl;
+
+        //pp-s temporiliy disable checking against cache by commenting this if block
         if (m_InsnCache[idx] != nullptr)
         {
-            // printf ("insn hit , crtAddr: %lx. \n", crtAddr);
+            //printf ("insn hit , crtAddr: %lx. \n", crtAddr);
             in = m_InsnCache[idx];
             ins_cache_hit_count++;
             //printf("cache hit : count %d ", ins_cache_hit_count);
         }
-        else 
+        else
         {
             uni_insn ++;
             // tt0 = rdtsc();
@@ -1193,6 +1223,24 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             I = decoder->decode((unsigned char *)m_cr->getPtrToInstruction(crtAddr));
             in = new Instruction(I);
             m_InsnCache[idx] = in;
+            //std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
+
+
+            /*{
+                if (idx == 0x12a9680) {
+
+                    auto inn = m_InsnCache.find(0x12a967bUL) ;
+                    
+                    if (inn != m_InsnCache.end())                
+                        std::cout << "cache idx : " << std::hex << 0x12a967b << inn->second->format() <<  std::endl;
+                    else {
+                        std::cout << "not found, 0x12a967b" << std::endl;
+                        assert (0) ;
+                    }
+                    
+                }
+
+            }*/
             //dis_as1 = rdtsc();
             //printf("as0 %lu as1 %lu as %lu\n", dis_as0, dis_as1, dis_as);
             //dis_as += (dis_as1-dis_as0);  
@@ -1202,6 +1250,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             // tt1 = rdtsc();s
             // tt += (tt1-tt0);
         }
+        //std::cout << "##### " << in->format() << std::endl;
         dis_as1 = rdtsc();
         dis_as += (dis_as1-dis_as0);  
         // I = decoder->decode((unsigned char *)m_cr->getPtrToInstruction(crtAddr));
@@ -1359,7 +1408,10 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             symExe_count ++;
                             
                             sie_t0 = rdtsc();
-                            InstrInfo *ioi = new InstrInfo(in);
+                            //pp-s fixing uaf issue
+                            //InstrInfo *ioi = new InstrInfo(in);
+                            InstrInfo *ioi = new InstrInfo(new Instruction (*in));
+                            //pp-e
                             parseOperands(ioi);
                             InstrInfoPtr ptr(ioi);
                             
@@ -1389,11 +1441,15 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             std::cout << "insn count: " << insn_count << ". sym executed insn: " << symExe_count << std::endl;
                             
 #endif         
+                            //std::cout << "sym executed insn " << std::endl;
                             symExe_count ++;
                             
                             sie_t0 = rdtsc();
 
-                            InstrInfo *ioi = new InstrInfo(in);
+                            //pp-s fixing uaf issue
+                            //InstrInfo *ioi = new InstrInfo(in);
+                            InstrInfo *ioi = new InstrInfo(new Instruction (*in));
+                            //pp-e
                             // tt0 = rdtsc();
                             parseOperands(ioi);
                             // tt1 = rdtsc();
@@ -1410,7 +1466,8 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             // std::cout << in->format() << std::endl;
                             // tt0 = rdtsc();
 
-                            /* Instruction CIE */   
+                            /* Instruction CIE */  
+                            //std::cout << "dispatch for CIE\n"; 
                             cie_count++; 
                             cie_t0 = rdtsc();                       
                             m_ConExecutor->InsnDispatch(in, m_regs);
@@ -1475,7 +1532,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             std::cout << "######### at end of processFuncyion, rip " << std::hex << m_regs->rip << std::endl;
  
             printf ("\nSE ends~~~~~~~~~~~~, \ntotal insn\t\t: %lu \nsym flag depend insn\t: %lu \nsymbolic executed insn  : %lu \n", insn_count, symFlag_count, symExe_count);
-            printf ("nop count \t: %lu\ncie count \t: %lu\nsie count \t: %lu\nret count \t: %lu\ncall count \t: %lu\nbranch count \t: %lu\n", nop_count, cie_count, sie_count, ret_count, call_count, branch_count);
+            printf ("nop count \t: %lu\ncie count \t: %lu\nsie count \t: %lu\nret count \t: %lu\ncall count \t: %lu\nbranch count \t: %lu\n", nop_count, cie_count, symExe_count, ret_count, call_count, branch_count);
             printf ("uniq insn\t\t: %d \n", uni_insn);
             printf ("z3_api_calls\t\t: %lu\n", z3_api_calls);
            /*int i = 0;
@@ -1544,12 +1601,16 @@ bool CThinCtrl::parseOperands(InstrInfo *info) {
         // std::cout << "Operand " << O.format(Arch_x86_64) << std::endl;
         // std::cout<<"is read: " << O.readsMemory() << ". is write: " << O.writesMemory() << ". operand size: " << oi->size << std::endl;
         if (!O.readsMemory() && !O.writesMemory()) {
+            //std::cout << "1\n";
             res = _mayOperandUseSymbol_XX(oi);
         } else if (O.readsMemory() && !O.writesMemory()) {
+            //std::cout << "2\n";
             res = _mayOperandUseSymbol_RX(I, oi);
         } else if (!O.readsMemory() && O.writesMemory()) {
+            //std::cout << "3\n";
             res = _mayOperandUseSymbol_XW(I, oi);
         } else if (O.readsMemory() && O.writesMemory()) {
+            //std::cout << "4\n";
             res = _mayOperandUseSymbol_RW(I, oi);
         }
 
@@ -1830,7 +1891,10 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
         oi->opty = OPTY_MEMCELL;
         
         /* For a mem access insn, if it uses gs, mem access Operand should add gs base */
-        ulong gs_base = isUseGS(I.get()); 
+        //pp-s fix for %ds %es
+        //ulong gs_base = isUseGS(I.get());
+        ulong seg_base = getSegRegVal(I.get());
+        //pp-e
         /* / */
 
         O->getReadSet(rdwrRegs);
@@ -1855,7 +1919,10 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
             // assert(ret);
             // printf ("seg reg idx: %lx, value: %lx. \n", x86_64::fs, RV1.u64);
             // asm volatile ("vmcall; \n\t");
-            assert(gs_base != 0);
+            
+            //pp-s fix for %ds %es
+            //assert(gs_base != 0); //we do not segregate based on the type of seg reg. for now ...
+            //pp-e
                     
             std::vector<Expression::Ptr> exps;
             auto V = O->getValue();
@@ -1867,10 +1934,14 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
             auto RS = A->eval();
             assert(RS.defined);
             // oi->mem_conaddr = RS.convert<ulong>();
-            oi->mem_conaddr = RS.convert<ulong>() + gs_base;
-                
-            printf ("direct mem access through gs, memaddr: %lx. \n", oi->mem_conaddr);
+
+            //pp-s fix for %ds %es
+            //oi->mem_conaddr = RS.convert<ulong>() + gs_base;
+            //printf ("direct mem access through gs, memaddr: %lx. \n", oi->mem_conaddr);
+            oi->mem_conaddr = RS.convert<ulong>() + seg_base;            
+            printf ("direct mem access through seg reg, memaddr: %lx. \n", oi->mem_conaddr);
             printf ("size: %d. \n", oi->size);
+            //pp-e
             
             // asm volatile ("vmcall; \n\t");
 
@@ -1970,10 +2041,16 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
                 auto A = *exps.begin();
                 auto RS = A->eval();
                 assert(RS.defined);
-                if (gs_base == 0)
+                //pp-s fix for %ds %es
+                //if (gs_base == 0)
+                //    oi->mem_conaddr = RS.convert<ulong>();
+                //else
+                //    oi->mem_conaddr = RS.convert<ulong>() + gs_base;
+                if (seg_base == 0)
                     oi->mem_conaddr = RS.convert<ulong>();
                 else
-                    oi->mem_conaddr = RS.convert<ulong>() + gs_base;
+                    oi->mem_conaddr = RS.convert<ulong>() + seg_base;
+                //pp-e
 
                 // std::cout << O->format(Arch_x86_64) << std::endl;
                 // printf ("memaddr: %lx. \n", oi->mem_conaddr);
