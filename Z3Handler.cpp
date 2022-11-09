@@ -483,7 +483,7 @@ z3::expr Z3Handler::Z3HandleConst(ExprPtr const_expr_ptr){ // 3
     //std::cout << "value in ConstExpr : " << value << std::endl;
     //pp-s frm Hx
     int size = const_expr->getSize();
-    //std::cout << "size from z3: " << size << std::endl;
+    //std::cout << "at Z3HandleConst: size : " << size << std::endl;
     expr x = context_.bv_val(value, size * 8);
     //expr x = context_.bv_val(value, 32);
     //pp-e
@@ -799,7 +799,10 @@ z3::expr Z3Handler::Z3HandleExtract(ExprPtr ptr){
     //std::cout << "start : " << s << std::endl;
     //std::cout << "end : " << e << std::endl;
     // Finally, it should be 32-bit
-    return x.extract(e*8 - 1, s); // looks different with the existing implementation
+    //pp-s Hx
+    //return x.extract(e*8 - 1, s); //old
+    return x.extract(e*8 - 1, s*8); //new
+    //pp-e
     //return x.extract(63,  32); // looks different with the existing implementation
 }
 
@@ -820,9 +823,14 @@ z3::expr Z3Handler::Z3HandleCombineMulti(std::vector<ExprPtr> exprs){
     expr combmulti_expr = Z3HandlingExprPtr(exprs[0]);
     int nu = 1;
     for (; nu < exprs.size(); nu ++){
-        combmulti_expr = z3::concat(combmulti_expr, Z3HandlingExprPtr(exprs[nu]));
+        //pp-s Hx
+        //combmulti_expr = z3::concat(combmulti_expr, Z3HandlingExprPtr(exprs[nu])); //old
+        combmulti_expr = z3::concat(Z3HandlingExprPtr(exprs[nu]), combmulti_expr); //new
+        //pp-e
         if (nu == exprs.size() - 1)
            break;
     }
+    
+    //std::cout << "combmulti: " << combmulti_expr << std::endl;
     return combmulti_expr;
 }

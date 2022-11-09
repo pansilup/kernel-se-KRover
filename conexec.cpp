@@ -391,7 +391,7 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
     // void* T_insn_no_r15 = (void*)((char*)InsnExecRIP + 0x6c);
     
     entryID opcode = instr->getOperation().getID();
-    std::cout << "at RewRIPInsn: " << std::dec << opcode << std::endl;
+    //std::cout << "at RewRIPInsn: " << std::dec << opcode << std::endl;
     // printf ("T_insn_no_r15 at: %lx. \n", T_insn_no_r15);
         
     static Expression::Ptr x86_gs(new RegisterAST(x86_64::gs));

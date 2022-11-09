@@ -43,7 +43,12 @@
 #define SCALL_MMAP              9
 #define SCALL_READ              0
 #define SCALL_MPROTECT          10
-
+#define SCALL_MSYNC             26
+#define SCALL_MINCORE           27
+#define SCALL_GETITIMER         36
+#define SCALL_SETITIMER         38
+#define SCALL_FLOCK             73
+#define SCALL_GETRUSAGE         98
 //pp-e
 
 // #include "fatctrl.h"

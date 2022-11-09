@@ -768,17 +768,17 @@ bool EFlagsManager::EvalCondition(entryID insnID)
         constraints.insert(exprPtr);
         
         
-        std::cout << "constraints : \n";
+        /*std::cout << "constraints : \n";
         for(auto it : constraints)
         {
             it->print();
             std::cout << "\n";
-        }
+        }*/
         
         
 
         bExecute = m_Z3Handler->Z3SolveConcritize(symobjs, constraints);
-        std::cout << "----------bExecute: " << bExecute << std::endl; 
+        //std::cout << "----------bExecute: " << bExecute << std::endl; 
         //exprPtr->print() ;
         //std::cout << "\n" ;
 #ifdef DEBUG_LOG

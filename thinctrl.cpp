@@ -1379,7 +1379,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #endif                                    
                         symFlag_count ++;
                         //std::cout << "conditional instr at: " << crtAddr << " . fetch branch decision: " << bExecute << std::endl;
-                        
+                        std::cout << "conditional instr \n";
                         // bExecute = m_EFlagsMgr->findDecision(crtAddr, cc_insn_count); 
                         // m_EFlagsMgr->CreateConstraint(in->getOperation().getID(), bExecute) ;
         

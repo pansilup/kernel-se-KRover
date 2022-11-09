@@ -44,7 +44,7 @@ bool SymExecutor::run(VMState *vm) {
         m_RIPUpdated = false;
 
         entryID id = I->getOperation().getID() ;
-        std::cout << "id " << id << std::endl;
+        //std::cout << "id " << std::dec << id << std::endl;
 
         switch (id) {
             case e_mov:
@@ -596,22 +596,25 @@ bool SymExecutor::process_cmp(VMState *vm, InstrInfoPtr &infoptr) {
         res = oisrc1->getSymValue(e1);
         assert(res);
 
-        std::cout << "at process_cmp: \n";
-        e1->print();
-        std::cout << "\n";
-        
+        //std::cout << "at process_cmp: \n";
+        //e1->print();
+        //std::cout << "\n";
 
         long v2;
         res = oisrc2->getConValue(v2);
         assert(res);
+        //std::cout << "v2 before sign ext :" << std::hex << v2 << std::endl;
 
         //pp-s frm Hq
         v2 = signext_to_long(oisrc2->size, v2) ;
+        //std::cout << "v2 aft sign ext :" << std::hex << v2 << std::endl;
         //pp-e 
         //pp-s
         //ExprPtr c2(new ConstExpr(v2, oisrc2->size, 0));
         ExprPtr c2(new ConstExpr(v2, oisrc1->size, 0)); 
+        //std::cout << "constExpr sz: " << std::dec << c2->getExprSize() << std::endl;
         //std::cout << "size : " << std::dec << oisrc1->size << "sz 2 : " << oisrc2->size << " v2 : " << std::hex << v2 << std::endl;
+        
         //pp-e
         oe.reset(new SubExpr(e1, c2));
     }
