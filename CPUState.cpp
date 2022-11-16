@@ -210,6 +210,8 @@ bool SYCPUState::readConcreteCPUState(struct MacReg *regs) {
     return true;
 }
 
+//pp-s
+/*
 bool SYCPUState::clearAllSymFlag() {
     std::set<int> flags = {x86_64::cf, x86_64::pf, x86_64::af, x86_64::zf, x86_64::sf, x86_64::tf, x86_64::df, x86_64::of, x86_64::rf};
     int flag_index;
@@ -224,6 +226,45 @@ bool SYCPUState::clearAllSymFlag() {
     }
     return true;
 }
+*/
+
+bool SYCPUState::clearAllSymFlag() {
+    std::set<int> flags = {x86_64::cf, x86_64::pf, x86_64::af, x86_64::zf, x86_64::sf, x86_64::tf, x86_64::df, x86_64::of, x86_64::rf};
+    int flag_index;
+    int flag_count = 0;
+    int iteration = 0;
+
+    if(!flag_list.set){
+        //std::cout << "not set\n";
+        for (auto flag : flags)
+        {
+            flag_index = flag;
+            auto it = m_Regs.find(flag_index);
+            assert(it != m_Regs.end());
+            MachineReg *R = (it->second).get();
+
+            flag_list.regs[flag_count] = (ulong)R;
+            flag_count++;
+        }
+        flag_list.set = true;
+        flag_list.set_count = flag_count;
+        //std::cout << "clearAllSymFlag not set : set flg_count " << flag_count << std::endl;
+    }
+    else
+    {
+        //std::cout << "set\n";
+        while(iteration < flag_list.set_count)
+        {
+            MachineReg *R = (MachineReg *)(flag_list.regs[iteration]);
+            R->bsym_flag = false;
+            iteration++;
+        }
+        //std::cout << "clearAllSymFlag  set : set iteration " << iteration << std::endl;
+    }
+
+    return true;
+}
+//pp-e
 
 struct pt_regs* SYCPUState::getPTRegs(void) {
     return ((struct pt_regs*)(&m_PTRegs));

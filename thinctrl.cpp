@@ -1114,9 +1114,19 @@ bool CThinCtrl::processFunction(unsigned long addr) {
     cie_t0 = cie_t1 = cie_t = 0;
     sie_t0 = sie_t1 = sie_t = 0;
 
-
+    unsigned long ret_t0, ret_t;
+    ret_t0 = ret_t = 0;
+    unsigned long inscat_t0, inscat_t;
+    inscat_t0 = inscat_t = 0;
+    unsigned long find_dec_t0, find_dec_t;
+    find_dec_t0 = find_dec_t = 0;
+    unsigned long dep_t, dep_t0;
+    dep_t = dep_t0 = 0;
     unsigned long trans_rip;
-    bool is_prev_ctrl_trans;
+    bool is_prev_ctrl_trans = false;
+    unsigned long shouldsym_t0, shouldsym_t;
+    shouldsym_t0 = shouldsym_t = 0;
+
     uint64_t prev_insn_count;
     uint64_t insn_count_t = 0;
     uint64_t ins_cache_hit_count = 0;
@@ -1127,7 +1137,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
     ttt = ttt0 = ttt1 = 0;
 
 //#ifdef _PreDisassemble
-#if 0
+#if 1
 
 #ifdef DEBUG_LOG       
     printf("\nin pre-disassemble stage..................\n");
@@ -1201,7 +1211,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifdef DEBUG_LOG       
     printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
 #endif
-        printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
+        //printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
         /* get the Insn from the InsnCache or decoding on the site */
         dis_as0 = rdtsc();
         int idx = crtAddr & 0xFFFFFFF; 
@@ -1293,7 +1303,9 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         // std::cout << "R12: " << std::hex << m_regs->r12 << std::endl;
         // in->format();
 // #endif
+        //inscat_t0 = rdtsc();
         InsnCategory cate = in->getCategory();
+        //inscat_t += (rdtsc() - inscat_t0);
         m_regs->rip += in->size();
 
         /* To record the decision for conditional instruction */
@@ -1309,6 +1321,8 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         /* To count the number of conditional instruction and get bExecute
          * from map*/
         //printf("ins category : %d\n", cate);
+
+        //find_dec_t0 = rdtsc();
         if (m_EFlagsMgr->isConditionalExecuteInstr(in->getOperation().getID()))
         {
             cc_insn_count ++;
@@ -1317,14 +1331,16 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 //             std::cout << "conditional insn at: " << crtAddr << " . init bExecute " << bExecute << std::endl;
 // #endif
         }
+        //find_dec_t += (rdtsc() - find_dec_t0);
 // #endif
         switch (cate) {
             case c_ReturnInsn: 
                 {   
-                    //unsigned long ret_t0 = rdtsc();
+                    ret_t0 = rdtsc();
                     dispatchRet(in, m_regs);
                     //printf("ret cost : %lu", rdtsc()-ret_t0);
                     ret_count++;
+                    ret_t += (rdtsc() - ret_t0);
                     break;
                 }
             case c_CallInsn:
@@ -1370,7 +1386,11 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             default:
                 {
 
+                    //dep_t0 = rdtsc();
                     bExecute = false;
+                    bool tmp_p = dependFlagCon(in, bExecute);
+                    //dep_t += (rdtsc() -dep_t0);
+                    //if (!tmp_p) //instructions involving dependan flag eg : cmov
                     if (!dependFlagCon(in, bExecute)) //instructions involving dependan flag eg : cmov
                     {
 #ifdef _SYM_DEBUG_OUTPUT
@@ -1379,7 +1399,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #endif                                    
                         symFlag_count ++;
                         //std::cout << "conditional instr at: " << crtAddr << " . fetch branch decision: " << bExecute << std::endl;
-                        std::cout << "conditional instr \n";
+                        //std::cout << "conditional instr \n";
                         // bExecute = m_EFlagsMgr->findDecision(crtAddr, cc_insn_count); 
                         // m_EFlagsMgr->CreateConstraint(in->getOperation().getID(), bExecute) ;
         
@@ -1430,10 +1450,10 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                     }
                     else
                     {
-                        bool shouldSymExe = false;
-                        
+                        shouldsym_t0 = rdtsc();
+                        bool shouldSymExe = false;                       
                         shouldSymExe = hasSymOperand(in);
-
+                        shouldsym_t += (rdtsc() - shouldsym_t0);
                         if (shouldSymExe)
                         {
 #ifdef _SYM_DEBUG_OUTPUT
@@ -1530,7 +1550,8 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         {
             t1 = rdtsc();
             std::cout << "######### at end of processFuncyion, rip " << std::hex << m_regs->rip << std::endl;
- 
+            printf ("\ntot for everytng except pre-disas\t: %lu\n\n", (unsigned long)(t1-t0));
+
             printf ("\nSE ends~~~~~~~~~~~~, \ntotal insn\t\t: %lu \nsym flag depend insn\t: %lu \nsymbolic executed insn  : %lu \n", insn_count, symFlag_count, symExe_count);
             printf ("nop count \t: %lu\ncie count \t: %lu\nsie count \t: %lu\nret count \t: %lu\ncall count \t: %lu\nbranch count \t: %lu\n", nop_count, cie_count, symExe_count, ret_count, call_count, branch_count);
             printf ("uniq insn\t\t: %d \n", uni_insn);
@@ -1545,14 +1566,18 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             */
             printf ("total cyc for pre-disas: %lu\n", pre_dis_as1-pre_dis_as0);
             printf ("total cyc for ins decode: %lu\n", dis_as);
-            printf ("total cycles for z3 api\t: %lu \n", tt);
-            printf ("tot for everytng except pre-disas\t: %lu\n", t1-t0);
+            printf ("total cycles for z3 api\t: %lu \n", (unsigned long)tt);
+            printf ("tot for everytng except pre-disas\t: %lu\n", (unsigned long)(t1-t0));
             t = t1 - t0;
             //printf ("total-z3_api\t\t: %lu\n", t-tt);
-            printf ("total-z3_api-ins decode : %lu\n", t - tt- dis_as);
+            printf ("total-z3_api-ins decode : %lu\n", (unsigned long)(t - tt- dis_as));
             printf("\n\nbreakdown\ncyc for call \t: %lu\ncyc for branch \t: %lu\ncyc for sie \t: %lu\ncyc for cie \t: %lu\n", call_t, branch_t, sie_t, cie_t);
-
-            printf("cache_ins_hit_count: \n", ins_cache_hit_count);
+            printf("ret: %lu\n", ret_t);
+            //printf("inscat: %lu\n", inscat_t);
+            //printf("find_dec: %lu\n", find_dec_t);
+            //printf("dep: %lu\n", dep_t);
+            printf("shouldsym: %lu\n", shouldsym_t);
+            printf("cache_ins_hit_count: %lu\n", ins_cache_hit_count);
             /*
             tt0 = rdtsc();
             m_EFlagsMgr->SolveConstraints();

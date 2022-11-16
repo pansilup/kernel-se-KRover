@@ -49,6 +49,11 @@
 #define SCALL_SETITIMER         38
 #define SCALL_FLOCK             73
 #define SCALL_GETRUSAGE         98
+#define SCALL_GETRUSAGE         98
+#define SCALL_SETPGID           109
+#define SCALL_SETREUID          113
+#define SCALL_SETREGID          114
+#define SCALL_CAPGET            125
 //pp-e
 
 // #include "fatctrl.h"

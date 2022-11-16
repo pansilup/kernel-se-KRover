@@ -104,7 +104,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x60;  //adr of rdx
-            printf ("nice value: %d. \n", *((unsigned long*)tmp));
+            printf ("nice value: %lu. \n", *((unsigned long*)tmp));
             //declareSymbolicObject(tmp, 8, 1, 1, 19, "prio_rdx");
             tmp += 0x8;  //adr of rsi
             declareSymbolicObject(tmp, 8, 1, 1, 0, "who_rsi"); 
@@ -180,7 +180,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         case SCALL_DUP2:
         {
             printf("case: %d\n", (int)scall_idx);
-            printf(" new %d, old %d\n", *((unsigned long*)(tmp+0x68)), *((unsigned long*)(tmp+0x68+0x8)) );
+            printf(" new %lu, old %lu\n", *((unsigned long*)(tmp+0x68)), *((unsigned long*)(tmp+0x68+0x8)) );
             tmp += 0x68; //adr of rsi
             declareSymbolicObject(tmp, 8, 1, 1, 5, "newfd_rsi");
             tmp += 0x8;  //adr of rdi
@@ -463,6 +463,32 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x70; //adr of rdi
             declareSymbolicObject(tmp, 8, 0, 1, 0, "who_rdi"); 
+        }   break;
+        /*case SCALL_SETPGID:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x68; //adr of rdi
+            declareSymbolicObject(tmp, 8, 0, 1, 0, "pgid_rsi"); 
+        }   break;*/
+        /*case SCALL_SETREUID:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x68; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, -1, "euid_rsi"); 
+        }   break;*/
+        /*case SCALL_SETREGID:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x68; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, -1, "euid_rsi"); 
+        }   break;*/
+        case SCALL_CAPGET:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            ulong adr = *((ulong*)tmp);
+            printf("ver %x\n", *(int*)adr);
+            declareSymbolicObject(adr, 4, 0, 1, 0x20080522, "version"); //first element of  the struct pointed to by the %rdi
         }   break;
         default:
         {

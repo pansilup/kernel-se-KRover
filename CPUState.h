@@ -13,6 +13,10 @@
 #include "defines.h"
 #include "SymList.h"
 
+//pp-s
+#define FLAG_REG_CT 12
+//pp-e
+
 // CPU state
 struct pt_regs;
 // class CFacade;
@@ -38,12 +42,20 @@ struct MacReg {
     ulong es_base;
 };
 
+//pp-s
+struct FlagRegMgt {
+    bool set;
+    ulong set_count;
+    ulong regs[FLAG_REG_CT];
+};
+//pp-e
 
 // Manage CPU registers
 // #define PTREGS_REG_TOTAL 20  //~PTRegsEncoding.size()
 // #define DYINST_REG_TOTAL 30  //~DyinstEncoding.size()
 #define PTREGS_REG_TOTAL 23  //~PTRegsEncoding.size()
 #define DYINST_REG_TOTAL 32  //~DyinstEncoding.size()
+
 class SYCPUState {
     /*
     x86_64::FULL    0
@@ -118,7 +130,10 @@ class SYCPUState {
     // All used registers
     std::map<uint, MachineRegPtr> m_Regs;
 
-   public:
+//pp-s
+    struct FlagRegMgt flag_list;
+/*
+    public:
     SYCPUState(void) : m_Regs(), m_symList() {
         MachineReg *R;
         for (auto E : DyinstEncoding) {
@@ -138,6 +153,30 @@ class SYCPUState {
             m_Regs[iddy].reset(R);
         };
     }
+*/
+    public:
+    SYCPUState(void) : m_Regs(), m_symList(), flag_list() {
+        MachineReg *R;
+        for (auto E : DyinstEncoding) {
+            uint iddy = E.first;
+            uint idpt = E.second.offt;
+            uint size = E.second.size;
+            R = new MachineReg();
+            R->indx = iddy;
+            R->size = size;
+            R->pu64 = &m_ArrRegs[idpt];
+            R->pSymBitmap = &m_symBitmap[idpt];
+            R->pSymList = &m_symList[idpt] ;
+
+            // m_symMR[idpt][0].bValid = true ;
+            // R->p_symMR = m_symMR[idpt] ;
+            
+            m_Regs[iddy].reset(R);
+        };
+
+        flag_list.set = false;
+    }
+//pp-e
 
     ~SYCPUState(void) {
         m_Regs.clear();
@@ -151,6 +190,7 @@ class SYCPUState {
     // bool readConcreteCPUState(struct pt_regs *regs);
     bool readConcreteCPUState(struct MacReg *regs);
     bool clearAllSymFlag(void);
+
     struct pt_regs* getPTRegs(void);
     
     ulong readConReg(uint idx);

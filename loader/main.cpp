@@ -1847,7 +1847,7 @@ int main(void) {
     //pp-e
     execState->InitRediPagePool();
 
-    //execState->MoniStartOfSE(0xffffffff810baa50); //ffffffff810b9710);//addr of x64_sys_setpriority
+    execState->MoniStartOfSE(0xffffffff810baa50); //ffffffff810b9710);//addr of x64_sys_setpriority
     //execState->MoniStartOfSE(0xffffffff810ba7d0); //ffffffff810b5fb0);//addr of x64_sys_getpriority
     //execState->MoniStartOfSE(0xffffffff812de980);//addr of x64_sys_writev
     //execState->MoniStartOfSE(0xffffffff812e2800); //ffffffff812ddc30);//addr of x64_sys_lseek
@@ -1890,8 +1890,12 @@ int main(void) {
     //execState->MoniStartOfSE(0xffffffff811463a0); //); //addr of x64_sys_getitimer
     //execState->MoniStartOfSE(0xffffffff81146ab0); //); //addr of x64_sys_setitimer
     //execState->MoniStartOfSE(0xffffffff8135f070); //); //addr of x64_sys_flock
-    execState->MoniStartOfSE(0xffffffff810bca90); //); //addr of x64_sys_getrusage
-
+    //execState->MoniStartOfSE(0xffffffff810bca90); //); //addr of x64_sys_getrusage
+    //execState->MoniStartOfSE(0xffffffff810bca90); //); //addr of x64_sys_getrusage
+    //execState->MoniStartOfSE(0xffffffff810b8050); //); //addr of x64_sys_setpgid
+    //execState->MoniStartOfSE(0xffffffff810bb120); //); //addr of x64_sys_setreuid
+    //execState->MoniStartOfSE(0xffffffff810bae20); //); //addr of x64_sys_setregid
+    //execState->MoniStartOfSE(0xffffffff810ac790); //); //addr of x64_sys_capget
 
     //if uncommenting this, change the declaration of tmp in centralhub.cpp
     //execState->MoniStartOfSE(0xffffffff810041b0);//addr of indirect call in do_syscall_64 
