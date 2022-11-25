@@ -1,18 +1,19 @@
 # CFLAGS = -g -fpic -pie -O3 -std=c++0x
-CFLAGS = -g -fpic -pie -std=c++0x -fno-stack-protector 
+CFLAGS = -O3 -fpic -pie -std=c++0x -fno-stack-protector 
 # INC = -I/usr/local/include/
-DYNINST_PATH	:= /home/neo/smu/kernel-se/dyninst/dyninst_install
+DYNINST_PATH	:= /home/beverly/KRover/dyninst/install
 DYNINST_INC_PATH		:= ${DYNINST_PATH}/include
 DYNINST_LIB_PATH		:= ${DYNINST_PATH}/lib
 
-Z3_PATH	:= /home/neo/smu/kernel-se/z3
+Z3_PATH	:= /home/beverly/KRover/Z3/z3-solver/z3
 Z3_INC_PATH		:= ${Z3_PATH}/include
 Z3_LIB_PATH		:= ${Z3_PATH}/libz3.so
 
 # KSE_PATH 		:= /home/jqhong/Documents/OASISKernelSE
-KSE_PATH 		:= /home/neo/smu/kernel-se/KRover
+KSE_PATH 		:= /home/beverly/KRover/KRover/KRover
 
-LOADER_PATH		:= /home/neo/smu/kernel-se/u-loader/install
+# LOADER_PATH		:= /home/beverly/KRover/u-loader-2.27/install
+LOADER_PATH		:= /home/beverly/KRover/u-loader/install
 STDLIB_PATH 	:= ${LOADER_PATH}/lib
 STDINC_PATH 	:= ${LOADER_PATH}/include
 
@@ -27,7 +28,14 @@ LIB += -L${STDLIB_PATH}
 LIB += -L${DYNINST_LIB_PATH}
 LIB += -L${Z3_LIB_PATH}
 
-LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}:${KSE_PATH}:/usr/lib/x86_64-linux-gnu:${STDLIB_PATH}:/lib/x86_64-linux-gnu' '-Wl,--dynamic-linker=/home/neo/smu/kernel-se/u-loader/build-glibc/elf/ld.so'
+# LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}:${KSE_PATH}:/usr/lib/x86_64-linux-gnu:${STDLIB_PATH}:/lib/x86_64-linux-gnu' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader/build-glibc/elf/ld.so'
+# LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}:${KSE_PATH}:${STDLIB_PATH}:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader-2.27/build-glibc/elf/ld.so'
+# LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}:${KSE_PATH}:${STDLIB_PATH}:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader/build-glibc/elf/ld.so'
+LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}:${KSE_PATH}:${STDLIB_PATH}' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader/build-glibc/elf/ld.so'
+# LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu:${Z3_PATH}:${KSE_PATH}' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader-2.27/build-glibc/elf/ld.so'
+# LDFLAGS= '-Wl,--rpath=/usr/lib/x86_64-linux-gnu:${DYNINST_LIB_PATH}:${Z3_PATH}:${KSE_PATH}:${STDLIB_PATH}:/lib/x86_64-linux-gnu' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader-2.27/build-glibc/elf/ld.so'
+# LDFLAGS= '-Wl,--rpath=${STDLIB_PATH}:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu:${KSE_PATH}:${DYNINST_LIB_PATH}:${Z3_PATH}' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader/build-glibc/elf/ld.so'
+# LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}:${KSE_PATH}:${STDLIB_PATH}:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader-2.27/build-glibc/elf/ld.so'
 
 # DEP = -loasis -lparseAPI -linstructionAPI -lsymtabAPI -ldynDwarf -lelf -ldynElf -lcommon -lsymLite 
 DEP = -loasis 

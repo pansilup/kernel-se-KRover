@@ -81,6 +81,10 @@ class ConExecutor {
     // bool InsnDispatch(Instruction* instr, struct pt_regs* regs);
     // bool InsnDispatch(Instruction* instr);
     // bool InsnDispatch(Instruction* instr, struct pt_regs* regs, bool isRIP);
+    //pp-s
+    uint preCIE(Instruction* in);
+    bool InsnDispatch2(Instruction* instr, struct pt_regs* regs, uint mode);
+    //pp-e
     bool InsnDispatch(Instruction* instr, struct pt_regs* regs);
     // bool BlockDispatch(Address S_Addr, Address E_Addr);
     bool BlockDispatch(Address S_Addr, struct pt_regs* regs);

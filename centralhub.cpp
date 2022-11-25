@@ -266,14 +266,14 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x8;  //adr of rdi
             //declareSymbolicObject(tmp, 8, 1, 0x0, "fd_rdi");    
         }   break;
-        /*case SCALL_TRUNCATE:
+        case SCALL_TRUNCATE:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rsi
             declareSymbolicObject(tmp, 8, 1, 1, 0x5, "len_rsi");
             tmp += 0x8;  //adr of rdi
             //declareSymbolicObject(tmp, 8, 1, 1, 1, "filenm_rdi");
-        }   break;*/
+        }   break;
         /*case SCALL_CHDIR:
         {
             printf("case: %d\n", (int)scall_idx);
@@ -347,14 +347,14 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x8;  //adr of rdi
             declareSymbolicObject(tmp, 8, 1, 1, 0x7, "resource_rdi"); //seed val 7 : RLIMIT_NOFILE
         }   break;*/
-        /*case SCALL_SETRLIMIT:
+        case SCALL_SETRLIMIT:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rsi
             //declareSymbolicObject(tmp, 8, 1, 1, 0x0, "mode_rsi");
             tmp += 0x8;  //adr of rdi
             declareSymbolicObject(tmp, 8, 1, 1, 0x7, "resource_rdi"); //seed val 7 : RLIMIT_NOFILE
-        }   break;*/
+        }   break;
         /*case SCALL_UNLINK:
         {
             printf("case: %d\n", (int)scall_idx);
@@ -381,7 +381,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             declareSymbolicObject(old_filename_adr + 2, 1, 0, 1, 0x64, "fname_rdi_3"); //d
             //declareSymbolicObject(old_filename_adr + 3, 1, 0, 1, 0x00, "fname_rdi_4"); //\0
         }   break;*/
-        /*case SCALL_CHMOD:
+        case SCALL_CHMOD:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rsi
@@ -393,15 +393,15 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             //declareSymbolicObject(old_filename_adr + 1, 1, 0, 1, 0x6c, "fname_rdi_2"); //l
             //declareSymbolicObject(old_filename_adr + 2, 1, 0, 1, 0x64, "fname_rdi_3"); //d
             //declareSymbolicObject(old_filename_adr + 3, 1, 0, 1, 0x00, "fname_rdi_4"); //\0
-        }   break;*/
-        /*case SCALL_PERSONALITY:
+        }   break;
+        case SCALL_PERSONALITY:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rsi
             //declareSymbolicObject(tmp, 8, 1, 1, 0x0, "mode_rsi");
             tmp += 0x8;  //adr of rdi
             declareSymbolicObject(tmp, 8, 0, 1, 0x0, "persona_rdi");
-        }   break;*/
+        }   break;
         /*case SCALL_SWAPON:
         {
             printf("case: %d\n", (int)scall_idx);
@@ -414,12 +414,12 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x60; //adr of rdx
             declareSymbolicObject(tmp, 8, 0, 1, 0x3, "prot_rdx"); 
         }   break;*/
-        /*case SCALL_READ:
+        case SCALL_READ:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x60; //adr of rdx
             declareSymbolicObject(tmp, 8, 0, 1, 0x10, "count_rdx"); 
-        }   break;*/
+        }   break;
         /*case SCALL_MSYNC:
         {
             printf("case: %d\n", (int)scall_idx);
@@ -432,26 +432,26 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x60; //adr of rdx
             declareSymbolicObject(tmp, 8, 0, 1, 0x3, "prot_rdx"); 
         }   break;*/
-        /*
+        
         case SCALL_MINCORE:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rsi
             declareSymbolicObject(tmp, 8, 0, 1, 0, "len_rsi"); 
         }   break;
-        */
-        /*case SCALL_GETITIMER:
+        
+        case SCALL_GETITIMER:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x70; //adr of rdi
-            //declareSymbolicObject(tmp, 8, 0, 1, 0, "which_rdi"); //ITIMER_REAL 0
-        }   break;*/
-        /*case SCALL_SETITIMER:
+            declareSymbolicObject(tmp, 8, 0, 1, 0, "which_rdi"); //ITIMER_REAL 0
+        }   break;
+        case SCALL_SETITIMER:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x70; //adr of rdi
-            //declareSymbolicObject(tmp, 8, 0, 1, 0, "which_rdi"); //ITIMER_REAL 0
-        }   break;*/
+            declareSymbolicObject(tmp, 8, 0, 1, 0, "which_rdi"); //ITIMER_REAL 0
+        }   break;
         /*case SCALL_FLOCK:
         {
             printf("case: %d\n", (int)scall_idx);
@@ -464,24 +464,24 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x70; //adr of rdi
             declareSymbolicObject(tmp, 8, 0, 1, 0, "who_rdi"); 
         }   break;
-        /*case SCALL_SETPGID:
+        case SCALL_SETPGID:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rdi
             declareSymbolicObject(tmp, 8, 0, 1, 0, "pgid_rsi"); 
-        }   break;*/
-        /*case SCALL_SETREUID:
+        }   break;
+        case SCALL_SETREUID:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rdi
             declareSymbolicObject(tmp, 8, 1, 1, -1, "euid_rsi"); 
-        }   break;*/
-        /*case SCALL_SETREGID:
+        }   break;
+        case SCALL_SETREGID:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rdi
             declareSymbolicObject(tmp, 8, 1, 1, -1, "euid_rsi"); 
-        }   break;*/
+        }   break;
         case SCALL_CAPGET:
         {
             printf("case: %d\n", (int)scall_idx);
@@ -489,6 +489,108 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             ulong adr = *((ulong*)tmp);
             printf("ver %x\n", *(int*)adr);
             declareSymbolicObject(adr, 4, 0, 1, 0x20080522, "version"); //first element of  the struct pointed to by the %rdi
+        }   break;
+        case SCALL_SETUID:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 0, 1, 2000, "uid_rdi"); 
+        }   break;
+        case SCALL_SETGID:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 0, 1, 2000, "gid_rdi");
+        }   break;
+        case SCALL_GETGROUPS:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 0, 1, 32, "size_rdi");
+        }   break;
+        case SCALL_SETGROUPS:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 0, 1, 0, "size_rdi");
+        }   break;
+        case SCALL_SETRESUID:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x68; //adr of rsi
+            declareSymbolicObject(tmp, 8, 1, 1, -1, "euid_rsi"); 
+        }   break;
+        case SCALL_SETRESGID:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x68; //adr of rsi
+            declareSymbolicObject(tmp, 8, 1, 1, -1, "euid_rsi"); 
+        }   break;
+        case SCALL_SETFSUID:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; 
+            declareSymbolicObject(tmp, 8, 1, 1, 2000, "uid_rdi"); 
+        }   break;
+        case SCALL_SETFSGID:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; 
+            declareSymbolicObject(tmp, 8, 1, 1, 2000, "uid_rdi"); 
+        }   break;
+        case SCALL_GETSID:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, 0, "pid_rdi"); 
+        }   break;
+        case SCALL_SCHED_GETPARAM:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, 0, "pid_rdi"); 
+        }   break;
+        case SCALL_SCHED_SETPARAM:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, 0, "pid_rdi"); 
+        }   break;
+        case SCALL_OPEN:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x60; 
+            declareSymbolicObject(tmp, 8, 1, 1, 777, "mode_rdx");
+            tmp += 0x8;
+            //declareSymbolicObject(tmp, 8, 0, 1, 2000, "flags_rsi");
+        }   break;
+        case SCALL_IOPL:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, 0x1, "pid_rdi"); 
+        }   break;
+        case SCALL_IOPERM:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x60;  //adr of rdx
+            declareSymbolicObject(tmp, 8, 1, 1, 0, "turn_on_rdx");
+            tmp += 0x8;  //adr of rsi
+            //declareSymbolicObject(tmp, 8, 1, 1, 32, "num_rsi"); 
+            tmp += 0x8;  //adr of rdi
+            //declareSymbolicObject(tmp, 8, 1, 1, 0x378 "from_rdi");    
+        }   break;
+        case SCALL_UTIME:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x68; //adr of rsi
+            declareSymbolicObject(tmp, 8, 1, 1, 0x0, "times_rsi"); 
+        }   break;
+        case SCALL_SCHED_GETSCHDLR:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, 0, "pid_rdi"); 
         }   break;
         default:
         {

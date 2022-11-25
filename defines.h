@@ -22,7 +22,11 @@
 //#ifndef DEBUG_LOG
 //#define DEBUG_LOG
 //#endif
-
+#if 0
+    #ifndef _PROD_PERF
+    #define _PROD_PERF
+    #endif
+#endif
 
 #include <linux/types.h>
 

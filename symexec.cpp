@@ -1719,8 +1719,8 @@ bool SymExecutor::_parseOperand_RX(VMState *vm, DAPIInstrPtr& I, OprndInfoPtr &o
             // oi->mem_conaddr = RS.convert<ulong>();
             oi->mem_conaddr = RS.convert<ulong>() + gs_base;
                 
-            printf ("direct mem access through gs, memaddr: %lx. \n", oi->mem_conaddr);
-            printf ("size: %d. \n", oi->size);
+            //printf ("direct mem access through gs, memaddr: %lx. \n", oi->mem_conaddr);
+            //printf ("size: %d. \n", oi->size);
             
             // asm volatile ("vmcall; \n\t");
 

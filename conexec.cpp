@@ -405,7 +405,7 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
     
         if (instr->isRead(x86_gs))
         {
-            // printf ("gs base rip rel insn. \n");
+            //printf ("gs base rip rel insn. \n");
             //pp-s
             //if (opcode == e_mov || opcode == e_add)
             if (opcode == e_mov || opcode == e_add || opcode == e_inc)
@@ -538,7 +538,6 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
             else
             {
                 assert(0);//TO FIX: For rip relative operand, the displacement is alway 4-byte long even if the displacement(offset) is 0. But if use r15 as base, the size for displacement is based on the displacement value, can be 0-bit, 8-bit, 16-bit or 32-bit. So, when change rip-->r15, be careful about the displacement size.
-
             }
             // unsigned long* tmp = (unsigned long*)T_insn_no_r15;
             // printf ("new rip-relative and insn with gs base: %lx. \n", *tmp);
@@ -754,6 +753,69 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
             assert(0);
         }
     }
+    else if(opcode == e_cmove)
+    {
+        if(instr->size() == 7) //pp-cmove - new
+        {
+            memcpy ((void*)&orig_insn[1], orig_insn_addr, 0x7);
+            
+            orig_insn[0] = 0x41;
+            if (orig_insn[4] == 0 && orig_insn[5] == 0 && orig_insn[6] == 0  && orig_insn[7] == 0)
+            {
+                orig_insn[3] |= 0x02;
+                memcpy(T_insn, orig_insn, 4);
+                return 4;
+            }
+            else if (orig_insn[4] != 0 && orig_insn[5] == 0 && orig_insn[6] == 0  && orig_insn[7] == 0) 
+            {
+                orig_insn[3] |= 0x42;
+                memcpy(T_insn, orig_insn, 5);
+                return 5;
+            }
+            else
+            {
+                orig_insn[3] |= 0x82;
+                memcpy(T_insn, orig_insn, 8);
+                return 8;
+            }
+        }
+        else
+        {
+            printf ("cmove : rip-relative instruction, unhandled ins len \n");
+            assert(0);
+        }
+    }
+    else if(opcode == e_bt) //pp-new
+    {
+        memcpy (orig_insn, orig_insn_addr, 0x8);
+        if (instr->size() == 8) 
+        {
+            orig_insn[0] |= 0x1;
+            if (orig_insn[4] == 0 && orig_insn[5] == 0 && orig_insn[6] == 0  && orig_insn[7] == 0)
+            {
+                orig_insn[3] |= 0x02;
+                memcpy(T_insn, orig_insn, 4);
+                return 4;
+            }
+            else if (orig_insn[4] != 0 && orig_insn[5] == 0 && orig_insn[6] == 0  && orig_insn[7] == 0) 
+            {
+                orig_insn[3] |= 0x42;
+                memcpy(T_insn, orig_insn, 5);
+                return 5;
+            }
+            else
+            {
+                orig_insn[3] |= 0x82;
+                memcpy(T_insn, orig_insn, 8);
+                return 8;
+            }
+        }
+        else
+        {
+            printf ("e_bt : rip-relative instruction, unhandled ins len \n");
+            assert(0);
+        }
+    }
 //pp-e
     else
     {
@@ -774,6 +836,55 @@ bool ConExecutor::ClearTinsn(void* T_addr, int size)
     memcpy(T_addr, (void*)&NopBytes[0], size);
     return true;
 }
+
+//pp-s
+uint ConExecutor::preCIE(Instruction* in)
+{
+    uint cie_mode = 2; //just CIE, no rewriting of ins
+
+    Expression::Ptr thePC(new RegisterAST(MachRegister::getPC(Arch_x86_64)));
+    Expression::Ptr theR15(new RegisterAST(MachRegister(x86_64::r15)));
+
+    if(in->isRead(thePC))
+    {
+        if (in->isRead(theR15) || in->isWritten(theR15))
+            cie_mode = 0; //can not CIE
+        else
+            cie_mode = 1; //can CIE by replacing RIP with R15
+    }
+
+    return cie_mode;
+}
+
+bool ConExecutor::InsnDispatch2(Instruction* instr, struct pt_regs* regs, uint mode)
+{
+    int InsnSize = instr->size();
+
+    ulong crtAddr = regs->rip - InsnSize; 
+    if(mode == 2) //rip is not used, no instruction rewriting is required
+    {
+        void* T_insn = (void*)((char*)InsnExecNonRIP + 0x68);
+        memcpy(T_insn, (void*)crtAddr, InsnSize);
+        InsnExecNonRIP(regs);
+        ClearTinsn(T_insn, InsnSize);
+    }
+    else if(mode == 1) //rip is used, can replace rip with r15
+    {
+        void* T_insn_no_r15 = (void*)((char*)InsnExecRIP + 0x6c);
+        RewRIPInsn(T_insn_no_r15, (void*)crtAddr, instr);
+        InsnExecRIP(regs);
+        ClearTinsn(T_insn_no_r15, 12);
+    }
+    else
+    {
+        assert(0);
+    }
+
+    return 0;
+}
+//pp-e
+
+
 
 /* InsnDispatch: execute one Insn per time, update T_RIP. Different return value
  * is to facilate Testing */
@@ -1127,6 +1238,9 @@ bool ConExecutor::BlockDispatch(Address S_Addr, struct pt_regs* m_regs)
     Address crtAddr = S_Addr;
     Instruction* in;
     Instruction I;
+    //pp-s
+    wrapInstruction* win;
+    //pp-e
     InsnCategory cate;
 
     printf("block dispatch...\n");
@@ -1179,14 +1293,25 @@ loop:
         {
             I = m_ThinCtrl->decoder->decode((unsigned char *)m_ThinCtrl->m_cr->getPtrToInstruction(crtAddr));
             in = new Instruction(I);
-            m_ThinCtrl->m_InsnCache[idx] = in;
+            //pp-s
+            win = new wrapInstruction(in);
+            win->cie_mode = preCIE(in);
+            win->igs_base = m_ThinCtrl->isUseGS(in);
+            win->in= in;
+            //m_ThinCtrl->m_InsnCache[idx] = in;
+            m_ThinCtrl->m_InsnCache[idx] = win;
+            //pp-e
             // printf("idx: %x, crtAddr: %lx. \n", idx, crtAddr);
             printf ("insn not found in cache :%lx. \n", crtAddr);
             // PreParseOperand(in);
         }
         else
         {
-            in = m_ThinCtrl->m_InsnCache[idx];
+            //pp-s
+            //in = m_ThinCtrl->m_InsnCache[idx];
+            win = m_ThinCtrl->m_InsnCache[idx];
+            in = win->in;
+            //pp-e
         }
         cate = in->getCategory();
 
@@ -1244,7 +1369,10 @@ loop:
             }
             else
             {
-                shouldSymExe = m_ThinCtrl->hasSymOperand(in);
+                //pp-s
+                //shouldSymExe = m_ThinCtrl->hasSymOperand(in);
+                shouldSymExe = m_ThinCtrl->hasSymOperand(win);
+                //pp-e
                 if (shouldSymExe)
                     EndPatch = true;
                 else
@@ -1273,7 +1401,10 @@ loop:
         }
         else 
         {
-            shouldSymExe = m_ThinCtrl->hasSymOperand(in);
+            //pp-s
+            //shouldSymExe = m_ThinCtrl->hasSymOperand(in);
+            shouldSymExe = m_ThinCtrl->hasSymOperand(win);
+            //pp-e
             if (shouldSymExe)
                 EndPatch = true;
             else
@@ -1363,9 +1494,16 @@ loop:
             assert(T_insn_addr);
             m_regs->rip = T_insn_addr;
             int idx = T_insn_addr & 0xFFFFFFF;
-            in = m_ThinCtrl->m_InsnCache[idx];
+            //pp-s
+            //in = m_ThinCtrl->m_InsnCache[idx];
+            win = m_ThinCtrl->m_InsnCache[idx];
+            in = win->in;
+            //pp-e
             assert(in);
-            shouldSymExe = m_ThinCtrl->hasSymOperand(in);
+            //pp-s
+            //shouldSymExe = m_ThinCtrl->hasSymOperand(in);
+            shouldSymExe = m_ThinCtrl->hasSymOperand(win);
+            //pp-e
             
             t1 = rdtsc();
             t += t1 - t0;
@@ -1412,7 +1550,11 @@ loop:
     if (isR15Used)
     {
         int idx = crtAddr & 0xFFFFFFF;
-        in = m_ThinCtrl->m_InsnCache[idx];
+        //pp-s
+        //in = m_ThinCtrl->m_InsnCache[idx];
+        win = m_ThinCtrl->m_InsnCache[idx];
+        in = win->in;
+        //pp-e
         assert(in);
         m_regs->rip += in->size();
 #ifdef _DEBUG_OUTPUT
@@ -1475,4 +1617,3 @@ ConExecutor::ConExecutor()
     // *BlkExec_T_page = (unsigned long)T_page;
     /* / */
 }
-

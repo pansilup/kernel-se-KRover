@@ -33,6 +33,18 @@ using namespace std;
 //pp-s
 unsigned long z3_api_calls = 0;
 unsigned long z3_api_clk_cycls[100];
+unsigned long tr_0 = 0;
+unsigned long tr = 0;
+unsigned long tm_0 = 0;
+unsigned long tmm = 0;
+unsigned long ti_0 = 0;
+unsigned long ti = 0;
+unsigned long st1_0 = 0;
+unsigned long st1 = 0;
+unsigned long st2_0 = 0;
+unsigned long st2 = 0;
+unsigned long st3_0 = 0;
+unsigned long st3 = 0;
 //pp-e
 
 /********************************* MyCodeRegion  *******************************/
@@ -792,9 +804,39 @@ bool CThinCtrl::dispatchBranch(Instruction* in, struct pt_regs* m_regs, ulong cr
     return true;
 }
 
+//pp-s
+bool CThinCtrl::OpdhasSymReg(opData* OD)
+{
+    // check if a read reg is symbol 
+    for (auto rid : OD->readRegIds)
+    {
+        if (m_VM->isSYReg(rid))
+        {
+#ifdef _SYM_DEBUG_OUTPUT    
+            printf ("read reg %lx is sym. \n", R->getID());
+#endif
+            return true;
+        }
+    }
+
+    // if no, further check if a write reg is symbol 
+    for (auto rid : OD->writeRegIds)
+    {
+        if (m_VM->isSYReg(rid))
+        {
+#ifdef _SYM_DEBUG_OUTPUT    
+            printf ("write reg %lx is sym. \n", R->getID());
+#endif
+            return true;
+        }
+    }
+    return false; 
+}
+
+/*
 bool CThinCtrl::OpdhasSymReg(Operand* OP)
 {
-    /* check if a read reg is symbol */
+    // check if a read reg is symbol 
     std::set<RegisterAST::Ptr> readRegs;
     OP->getReadSet(readRegs);
     for (auto R : readRegs)
@@ -808,7 +850,7 @@ bool CThinCtrl::OpdhasSymReg(Operand* OP)
         }
     }
 
-    /* if no, further check if a write reg is symbol */
+    // if no, further check if a write reg is symbol 
     std::set<RegisterAST::Ptr> writeRegs;
     OP->getWriteSet(writeRegs);
     for (auto R : writeRegs)
@@ -823,8 +865,13 @@ bool CThinCtrl::OpdhasSymReg(Operand* OP)
     }
     return false; 
 }
+*/
+//pp-e
 
-bool CThinCtrl::OpdhasSymMemCell(Operand* OP, ulong gs_base)
+//pp-s
+//bool CThinCtrl::OpdhasSymMemCell(Operand* OP, ulong gs_base)
+bool CThinCtrl::OpdhasSymMemCell(opData* OD, Operand* OP, ulong gs_base)
+//pp-e
 {
     ulong mem_addr;
 
@@ -839,8 +886,12 @@ bool CThinCtrl::OpdhasSymMemCell(Operand* OP, ulong gs_base)
     //     struct pt_regs* m_regs = m_VM->getPTRegs();
     //     printf ("r12: %lx. \n", m_regs->r12);
     // }
+    //std::cout << "dd\n";
 
-    if (OP->readsMemory())
+    //pp-s
+    //if (OP->readsMemory())
+    if (OD->rdmem)
+    //pp-e
     {
         std::set<Expression::Ptr> memrd;
         OP->addEffectiveReadAddresses(memrd);
@@ -870,7 +921,10 @@ bool CThinCtrl::OpdhasSymMemCell(Operand* OP, ulong gs_base)
     }
 
     /* if no, further check if a write mem is symbol */
-    if (OP->writesMemory())
+    //pp-s
+    //if (OP->writesMemory())
+    if (OD->wrmem)
+    //pp-e
     {
         std::set<Expression::Ptr> memwr;
         OP->addEffectiveWriteAddresses(memwr);
@@ -945,30 +999,156 @@ ulong CThinCtrl::getSegRegVal(Instruction* in)
 }
 //pp-e
 
-bool CThinCtrl::hasSymOperand(Instruction* in)
+//pp-s
+//bool CThinCtrl::hasSymOperand(Instruction* in)
+bool CThinCtrl::hasSymOperand(wrapInstruction* win)
 {
-    std::vector<Operand> oprands;
-    in->getOperands(oprands);
+    //pp-s
+    Instruction* in = win->in;
+    //std::vector<Operand> oprands;
+    std::vector<Operand> oprands = win->ioperands;
+    std::vector<opData*> od_ptrs = win->opdata_ptrs;
+    int i = 0;
+    //pp-e
+#ifndef _PROD_PERF
+    st1_0 = rdtsc();
+#endif
+    //pp-s
+    //in->getOperands(oprands);
+    //pp-e
+#ifndef _PROD_PERF
+    st1 += (rdtsc() - st1_0);
+#endif
     bool ret = false;
     for (auto O : oprands) {
-        if (!O.readsMemory() && !O.writesMemory())
+#ifndef _PROD_PERF
+        st2_0 = rdtsc();
+#endif
+        //bool rm = O.readsMemory();
+        //bool wm = O.writesMemory();
+        bool rm = od_ptrs[i]->rdmem;
+        bool wm = od_ptrs[i]->wrmem;  
+#ifndef _PROD_PERF
+        st2 += (rdtsc() - st2_0);
+#endif
+        //if (!O.readsMemory() && !O.writesMemory())
+        if(!rm && !wm)
         {
-            ret = OpdhasSymReg(&O);
+#ifndef _PROD_PERF
+            tr_0 = rdtsc();
+#endif
+            //pp-s
+            //ret = OpdhasSymReg(&O);
+            ret = OpdhasSymReg(od_ptrs[i]);
+            //pp-e
+#ifndef _PROD_PERF
+            tr += (rdtsc() - tr_0);
+#endif
             if (ret)
                 return true;
         }
         else
         {
-            /* For a mem access insn, if it uses gs, mem access Operand should add gs base */
-            ulong gs_base = isUseGS(in); 
+            // For a mem access insn, if it uses gs, mem access Operand should add gs base //
+#ifndef _PROD_PERF
+            st3_0 = rdtsc();
+#endif
+            //pp-s
+            //ulong gs_base = isUseGS(in);
+            ulong gs_base = win->igs_base;
+            //pp-e
+#ifndef _PROD_PERF
+            st3 += (rdtsc() - st3_0);
+            tm_0 = rdtsc(); 
+#endif
+            //pp-s
+            //ret = OpdhasSymMemCell(&O, gs_base);
+            ret = OpdhasSymMemCell(od_ptrs[i], &O, gs_base);
+            //pp-e
+#ifndef _PROD_PERF
+            tmm += (rdtsc() - tm_0);
+#endif
+            if (ret)
+                return true;
+        }
+        i++;
+    }
+#ifndef _PROD_PERF
+    ti_0 = rdtsc();
+#endif
+    ret = checkImplicitMemAccess(in);
+#ifndef _PROD_PERF
+    ti += (rdtsc() - ti_0);
+#endif
+
+    return ret;
+}
+
+/*
+bool CThinCtrl::hasSymOperand(Instruction* in)
+{
+    std::vector<Operand> oprands;
+#ifndef _PROD_PERF
+    st1_0 = rdtsc();
+#endif
+    in->getOperands(oprands);
+#ifndef _PROD_PERF
+    st1 += (rdtsc() - st1_0);
+#endif
+    bool ret = false;
+    for (auto O : oprands) {
+#ifndef _PROD_PERF
+        st2_0 = rdtsc();
+#endif
+        bool rm = O.readsMemory();
+        bool wm = O.writesMemory();
+#ifndef _PROD_PERF
+        st2 += (rdtsc() - st2_0);
+#endif
+        //if (!O.readsMemory() && !O.writesMemory())
+        if(!rm && !wm)
+        {
+#ifndef _PROD_PERF
+            tr_0 = rdtsc();
+#endif
+            ret = OpdhasSymReg(&O);
+#ifndef _PROD_PERF
+            tr += (rdtsc() - tr_0);
+#endif
+            if (ret)
+                return true;
+        }
+        else
+        {
+            // For a mem access insn, if it uses gs, mem access Operand should add gs base 
+#ifndef _PROD_PERF
+            st3_0 = rdtsc();
+#endif
+            ulong gs_base = isUseGS(in);
+#ifndef _PROD_PERF
+            st3 += (rdtsc() - st3_0);
+            tm_0 = rdtsc(); 
+#endif
             ret = OpdhasSymMemCell(&O, gs_base);
+#ifndef _PROD_PERF
+            tmm += (rdtsc() - tm_0);
+#endif
             if (ret)
                 return true;
         }
     }
+#ifndef _PROD_PERF
+    ti_0 = rdtsc();
+#endif
     ret = checkImplicitMemAccess(in);
+#ifndef _PROD_PERF
+    ti += (rdtsc() - ti_0);
+#endif
+
     return ret;
 }
+*/
+//pp-e
 
 #ifdef _PreDisassemble
 bool CThinCtrl::PreParseOperand(Instruction* in)
@@ -1018,7 +1198,8 @@ bool CThinCtrl::PreParseOperand(Instruction* in)
 bool CThinCtrl::ReadNextIPFromFile()
 {
     ifstream theFile;
-    string fname = "/home/neo/smu/kernel-se/KRover/nextIPofTransInsn.txt";
+    //string fname = "/home/neo/smu/kernel-se/KRover/nextIPofTransInsn.txt";
+    string fname = "/home/beverly/KRover/KRover/KRover/nextIPofTransInsn.txt";
     string line;
     ulong endRIP;
     ulong crtRIP, nextRIP;
@@ -1038,11 +1219,12 @@ bool CThinCtrl::ReadNextIPFromFile()
 #ifdef DEBUG_LOG
     std::cout << "end rip " << m_endRIP << std::endl;
 #endif
-
+    //ulong r = 0;
     while (std::getline(theFile, line)) {
         counter ++;
         sscanf(line.c_str(), "%lx, %lx.", &crtRIP, &nextRIP);
         key = crtRIP & 0xFFFFFFFF;
+        //std::cout << "key " << r++ << ": " << key << std::endl;
         key = key | (counter << 48);
         val = nextRIP & 0xFFFFFFFFFFFFFFFF;
         m_NextIP[key] = val;
@@ -1065,6 +1247,9 @@ bool CThinCtrl::processFunction(unsigned long addr) {
     
     Instruction I;
     Instruction* in;
+    //pp-s
+    wrapInstruction* win;
+    //pp-e
     struct pt_regs* m_regs = m_VM->getPTRegs();
     Address crtAddr;
       
@@ -1130,6 +1315,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
     uint64_t prev_insn_count;
     uint64_t insn_count_t = 0;
     uint64_t ins_cache_hit_count = 0;
+    ulong pi = 1;
     //pp-e
 
     int uni_insn = 0;
@@ -1137,7 +1323,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
     ttt = ttt0 = ttt1 = 0;
 
 //#ifdef _PreDisassemble
-#if 1
+#if 0
 
 #ifdef DEBUG_LOG       
     printf("\nin pre-disassemble stage..................\n");
@@ -1164,13 +1350,28 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         {
             I = decoder->decode((unsigned char *)m_cr->getPtrToInstruction(crtAddr));
             in = new Instruction(I);
-            m_InsnCache[idx] = in;
+            //pp-s
+            win = new wrapInstruction(in);
+            win->cie_mode = m_ConExecutor->preCIE(in);
+            win->igs_base = isUseGS(in);
+            //m_InsnCache[idx] = in;
+            m_InsnCache[idx] = win;
+            //pp-e
+
             new_ins_count++;
             //printf("new_ins_ct : %d, idx: %x, crtAddr: %lx. \n", new_ins_count, idx, crtAddr);
-            PreParseOperand(in);
+            //pp-s
+            //PreParseOperand(in);
+            //pp-e
         }
         else
-            in = m_InsnCache[idx];
+        {        
+            //pp-s
+            //in = m_InsnCache[idx];
+            win = m_InsnCache[idx];
+            in = win->in;
+            //pp-e
+        }
         
          count ++;
          //printf ("end of round : %d. \n", count);
@@ -1211,31 +1412,44 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifdef DEBUG_LOG       
     printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
 #endif
-        //printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
+        //printf("\n-------------------instruction %lu: adr : %lx\n", insn_count, crtAddr);
         /* get the Insn from the InsnCache or decoding on the site */
+#ifndef _PROD_PERF
         dis_as0 = rdtsc();
+#endif
         int idx = crtAddr & 0xFFFFFFF; 
         //std::cout << "idx :" << std::hex << idx << std::endl;
 
-        //pp-s temporiliy disable checking against cache by commenting this if block
+        //pp temporiliy disable checking against cache by commenting this if block
         if (m_InsnCache[idx] != nullptr)
         {
             //printf ("insn hit , crtAddr: %lx. \n", crtAddr);
-            in = m_InsnCache[idx];
+            //pp-s
+            //in = m_InsnCache[idx];
+            win = m_InsnCache[idx];
+            in = win->in;
+            //pp-e
+#ifndef _PROD_PERF
             ins_cache_hit_count++;
+#endif
             //printf("cache hit : count %d ", ins_cache_hit_count);
         }
         else
         {
+//#ifndef _PROD_PERF
             uni_insn ++;
+//#endif
             // tt0 = rdtsc();
             //dis_as0 = rdtsc();
             I = decoder->decode((unsigned char *)m_cr->getPtrToInstruction(crtAddr));
             in = new Instruction(I);
-            m_InsnCache[idx] = in;
-            //std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
-
-
+            //pp-s
+            win = new wrapInstruction(in);
+            win->cie_mode = m_ConExecutor->preCIE(in);
+            win->igs_base = isUseGS(in);
+            //m_InsnCache[idx] = in;
+            m_InsnCache[idx] = win;
+            //pp-e
             /*{
                 if (idx == 0x12a9680) {
 
@@ -1251,20 +1465,24 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                 }
 
             }*/
-            //dis_as1 = rdtsc();
-            //printf("as0 %lu as1 %lu as %lu\n", dis_as0, dis_as1, dis_as);
-            //dis_as += (dis_as1-dis_as0);  
+
 #ifdef DEBUG_LOG       
             printf ("----insn not found in cache :%lx. \n", crtAddr);
 #endif
-            // tt1 = rdtsc();s
-            // tt += (tt1-tt0);
+
         }
-        //std::cout << "##### " << in->format() << std::endl;
+        //std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
+        /*int i = 0;
+        while( i < 10)
+        {
+            printf("%02x ", *((uint8_t*)(crtAddr+i)));
+            i++;
+        }
+        printf("\n");*/
+#ifndef _PROD_PERF
         dis_as1 = rdtsc();
         dis_as += (dis_as1-dis_as0);  
-        // I = decoder->decode((unsigned char *)m_cr->getPtrToInstruction(crtAddr));
-        // in = new Instruction(I);
+#endif
 
 #if 0 //to generate nextPofTransInsn.txt
         InsnCategory cate_t = in->getCategory();
@@ -1277,70 +1495,60 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         {
             trans_rip = crtAddr;
             is_prev_ctrl_trans = true;
-            //std::cout << "trans ins ";
+            //std::cout << "trans ins "<< pi << std::endl;
+            //pi++;
         }
 
 
 #endif
 
-
+#ifndef _PROD_PERF
         insn_count ++;
-
+#endif
         if (in->getOperation().getID() == e_nop)
         {
-            //std::cout << "nop : size : " << in->size() << std::endl;
             m_regs->rip += in->size();
+#ifndef _PROD_PERF
             nop_count++;
+#endif
             continue;
         }
-
-       
-        //insn_count ++;
-
-// #ifdef _DEBUG_OUTPUT
-        // std::cout << "--------------rip: " << crtAddr << " Instruction: " << in->format() << std::endl;
-        // std::cout << "RSP: " << std::hex << m_regs->rsp << std::endl;
-        // std::cout << "R12: " << std::hex << m_regs->r12 << std::endl;
-        // in->format();
-// #endif
-        //inscat_t0 = rdtsc();
         InsnCategory cate = in->getCategory();
-        //inscat_t += (rdtsc() - inscat_t0);
         m_regs->rip += in->size();
 
-        /* To record the decision for conditional instruction */
-        // if (m_EFlagsMgr->isConditionalExecuteInstr(in->getOperation().getID()))
-        // {
-        //     bool bExecute = true;
-        //     int tmpret = dependFlagCon(in, bExecute);
-        //     std::cout << "conditional instr at: " << crtAddr << " . branch decision: " << bExecute << std::endl;
-        // }
-        /* / */ 
+        //To record the decision for conditional instruction
+        /* 
+         if (m_EFlagsMgr->isConditionalExecuteInstr(in->getOperation().getID()))
+         {
+             bool bExecute = true;
+             int tmpret = dependFlagCon(in, bExecute);
+             std::cout << "conditional instr at: " << crtAddr << " . branch decision: " << bExecute << std::endl;
+         }
+        */
 
-// #ifdef _DEBUG_OUTPUT
-        /* To count the number of conditional instruction and get bExecute
-         * from map*/
-        //printf("ins category : %d\n", cate);
-
-        //find_dec_t0 = rdtsc();
+        //To count the number of conditional instruction and get bExecute
+        /*
+        //not required as we now use z3 api
         if (m_EFlagsMgr->isConditionalExecuteInstr(in->getOperation().getID()))
         {
             cc_insn_count ++;
             bExecute = m_EFlagsMgr->findDecision(crtAddr, cc_insn_count);
-// #ifdef _DEBUG_OUTPUT
-//             std::cout << "conditional insn at: " << crtAddr << " . init bExecute " << bExecute << std::endl;
-// #endif
+            std::cout << "conditional insn at: " << crtAddr << " . init bExecute " << bExecute << std::endl;
+
         }
-        //find_dec_t += (rdtsc() - find_dec_t0);
-// #endif
+        */
+
         switch (cate) {
             case c_ReturnInsn: 
                 {   
+#ifndef _PROD_PERF
                     ret_t0 = rdtsc();
+#endif
                     dispatchRet(in, m_regs);
-                    //printf("ret cost : %lu", rdtsc()-ret_t0);
+#ifndef _PROD_PERF
                     ret_count++;
                     ret_t += (rdtsc() - ret_t0);
+#endif
                     break;
                 }
             case c_CallInsn:
@@ -1367,56 +1575,55 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                         printf ("%d func. call at: %lx. \n", func_count, crtAddr);
                     /* / */
 #endif
+#ifndef _PROD_PERF
                     call_count++;
                     call_t0 = rdtsc();
+#endif
                     dispatchCall(in, m_regs);
+#ifndef _PROD_PERF
                     call_t1 = rdtsc();
                     call_t += (call_t1 - call_t0);
+#endif
                     break;
                 }
             case c_BranchInsn:
                 {
+#ifndef _PROD_PERF
                     branch_count++;
                     branch_t0 = rdtsc();
+#endif
                     dispatchBranch(in, m_regs, crtAddr, cc_insn_count);
+#ifndef _PROD_PERF
                     branch_t1 = rdtsc();
                     branch_t += (branch_t1 - branch_t0);
+#endif
                     break;
                 }
             default:
                 {
-
-                    //dep_t0 = rdtsc();
-                    bExecute = false;
-                    bool tmp_p = dependFlagCon(in, bExecute);
-                    //dep_t += (rdtsc() -dep_t0);
-                    //if (!tmp_p) //instructions involving dependan flag eg : cmov
                     if (!dependFlagCon(in, bExecute)) //instructions involving dependan flag eg : cmov
                     {
 #ifdef _SYM_DEBUG_OUTPUT
                         // std::cout << "depend on sym flag, at rip " << crtAddr << std::endl;
                         std::cout << "++++++++++depend on sym flag, create constraint at ip" << std::hex << crtAddr << std::endl; 
 #endif                                    
+#ifndef _PROD_PERF
                         symFlag_count ++;
-                        //std::cout << "conditional instr at: " << crtAddr << " . fetch branch decision: " << bExecute << std::endl;
-                        //std::cout << "conditional instr \n";
-                        // bExecute = m_EFlagsMgr->findDecision(crtAddr, cc_insn_count); 
-                        // m_EFlagsMgr->CreateConstraint(in->getOperation().getID(), bExecute) ;
-        
+#endif
                         /* Evaluate bExecute based on concrete value of symbols */
+#ifndef _PROD_PERF
                         tt0 = rdtsc();
+#endif
                         bExecute = m_EFlagsMgr->EvalCondition(in->getOperation().getID());
+#ifndef _PROD_PERF
                         tt1 = rdtsc();
                         tt += (tt1-tt0);
                         z3_api_clk_cycls[z3_api_calls] = tt1 - tt0;
                         z3_api_calls++;
-                        // printf ("tt0: %lx, tt1: %lx, tt: %lx. \n", tt0, tt1, tt);
+#endif
 #ifdef _DEBUG_OUTPUT
                         std::cout << "bExecute: " << bExecute << std::endl; 
 #endif
-                        //pp-s
-                        //m_EFlagsMgr->ConcreteFlag(in->getOperation().getID(), bExecute) ;
-                        //pp-e
                         if (bExecute == false)
                             continue;
                         else
@@ -1425,20 +1632,22 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             std::cout << "---------To symexecutor due to depend on sym flag, at rip "<< std::hex  << crtAddr << " . "  << in->format() << ". insn idex: " << insn_count << ". sym executed insn: " << symExe_count << std::endl;
                             // std::cout << "--------------rip: " << crtAddr << " Instruction: " << in->format() << std::endl;
 #endif            
+#ifndef _PROD_PERF
                             symExe_count ++;
-                            
                             sie_t0 = rdtsc();
+#endif
                             //pp-s fixing uaf issue
                             //InstrInfo *ioi = new InstrInfo(in);
                             InstrInfo *ioi = new InstrInfo(new Instruction (*in));
                             //pp-e
                             parseOperands(ioi);
                             InstrInfoPtr ptr(ioi);
-                            
                             m_SymExecutor->pushInstr(ptr);
                             m_SymExecutor->run(m_VM);
+#ifndef _PROD_PERF
                             sie_t1 = rdtsc();
                             sie_t += (sie_t1 - sie_t0);
+#endif
                         }
                         //pp-s
                         //unsigned long tc, td;
@@ -1450,10 +1659,17 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                     }
                     else
                     {
+#ifndef _PROD_PERF
                         shouldsym_t0 = rdtsc();
-                        bool shouldSymExe = false;                       
-                        shouldSymExe = hasSymOperand(in);
+#endif
+                        bool shouldSymExe = false;    
+                        //pp-s                   
+                        //shouldSymExe = hasSymOperand(in);
+                        shouldSymExe = hasSymOperand(win);
+                        //pp-e
+#ifndef _PROD_PERF
                         shouldsym_t += (rdtsc() - shouldsym_t0);
+#endif
                         if (shouldSymExe)
                         {
 #ifdef _SYM_DEBUG_OUTPUT
@@ -1462,10 +1678,10 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             
 #endif         
                             //std::cout << "sym executed insn " << std::endl;
+#ifndef _PROD_PERF
                             symExe_count ++;
-                            
                             sie_t0 = rdtsc();
-
+#endif
                             //pp-s fixing uaf issue
                             //InstrInfo *ioi = new InstrInfo(in);
                             InstrInfo *ioi = new InstrInfo(new Instruction (*in));
@@ -1478,26 +1694,30 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             InstrInfoPtr ptr(ioi);
                             m_SymExecutor->pushInstr(ptr);
                             m_SymExecutor->run(m_VM);
-
+#ifndef _PROD_PERF
                             sie_t1 = rdtsc();
                             sie_t += (sie_t1 - sie_t0);
-
+#endif
                         } else {
-                            // std::cout << in->format() << std::endl;
-                            // tt0 = rdtsc();
-
                             /* Instruction CIE */  
                             //std::cout << "dispatch for CIE\n"; 
+#ifndef _PROD_PERF
                             cie_count++; 
-                            cie_t0 = rdtsc();                       
-                            m_ConExecutor->InsnDispatch(in, m_regs);
+                            cie_t0 = rdtsc();     
+#endif                  
+                            //pp-s
+                            //m_ConExecutor->InsnDispatch(in, m_regs);
+                            m_ConExecutor->InsnDispatch2(in, m_regs, win->cie_mode);
+                            //pp-e
                             if (m_EFlagsMgr->isFlagChangingInstr(in->getOperation().getID()))
                             {
                                 m_VM->clearAllSymFlag();
                             }
+#ifndef _PROD_PERF
                             cie_t1 = rdtsc();
                             //std::cout << "insn : " << insn_count << " , cie cost : " << std::dec << t1_cie - t0_cie << std::endl;
                             cie_t += (cie_t1 - cie_t0);
+#endif
                             /* Instrumentation based block CIE */ //pp-this is not used - no perf improvement lah
                             /*
                             shouldSymExe = m_ConExecutor->BlockDispatch(crtAddr, m_regs);
@@ -1551,7 +1771,8 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             t1 = rdtsc();
             std::cout << "######### at end of processFuncyion, rip " << std::hex << m_regs->rip << std::endl;
             printf ("\ntot for everytng except pre-disas\t: %lu\n\n", (unsigned long)(t1-t0));
-
+            printf ("\ninsns not found in cache\t\t: %d \n", uni_insn);
+#ifndef _PROD_PERF
             printf ("\nSE ends~~~~~~~~~~~~, \ntotal insn\t\t: %lu \nsym flag depend insn\t: %lu \nsymbolic executed insn  : %lu \n", insn_count, symFlag_count, symExe_count);
             printf ("nop count \t: %lu\ncie count \t: %lu\nsie count \t: %lu\nret count \t: %lu\ncall count \t: %lu\nbranch count \t: %lu\n", nop_count, cie_count, symExe_count, ret_count, call_count, branch_count);
             printf ("uniq insn\t\t: %d \n", uni_insn);
@@ -1576,8 +1797,11 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             //printf("inscat: %lu\n", inscat_t);
             //printf("find_dec: %lu\n", find_dec_t);
             //printf("dep: %lu\n", dep_t);
-            printf("shouldsym: %lu\n", shouldsym_t);
-            printf("cache_ins_hit_count: %lu\n", ins_cache_hit_count);
+            printf("\nshouldsym: %lu\n", shouldsym_t);
+            printf("st1: %lu \nst2: %lu \nst3: %lu \n", st1, st2, st3);
+            printf("tr : %lu \ntm : %lu \nti : %lu \n", tr, tmm, ti);
+
+            printf("\ncache_ins_hit_count: %lu\n", ins_cache_hit_count);
             /*
             tt0 = rdtsc();
             m_EFlagsMgr->SolveConstraints();
@@ -1585,6 +1809,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             tt = tt1 - tt0;
             printf ("tt: %llx. \n", tt);
             */
+#endif
             m_EFlagsMgr->PrintConstraint();
             
             printf ("SE ends~~~~~~~~~~~~, rax: %lx. \n", m_regs->rax);
@@ -1697,6 +1922,60 @@ bool CThinCtrl::setReadRegs(DAPIInstrPtr &I) {
     return setReadRegs(I.get());
 }
 
+//pp-s Hq
+bool CThinCtrl::calculateBinaryFunction (BinaryFunction* bf, KVExprPtr &exprPtr) {
+
+    bool res = false;
+    std::vector<Expression::Ptr> exps;
+    bf->getChildren(exps);
+    std::vector<KVExprPtr> KVE;
+    for (auto E : exps) {
+        // we already assert exps.size() == 2.
+        RegisterAST* R = dynamic_cast<RegisterAST*>(E.get());
+        Immediate* IMM = dynamic_cast<Immediate*>(E.get());
+        BinaryFunction* binF = dynamic_cast<BinaryFunction*>(E.get());
+        if (R != nullptr) {
+
+            RegValue RV{R->getID(), (uint)R->size()};
+            res = m_VM->readRegister(RV);
+            assert(res);
+            // assert(RV.bsym);
+            if (RV.bsym)
+                KVE.push_back(RV.expr);
+            else {
+                KVExprPtr expr ;
+                expr.reset ((new ConstExpr(RV.u64, (uint)R->size(), 0))) ;
+                KVE.push_back (expr) ;
+            }
+
+        } else if (IMM != nullptr) {
+
+            Result imm = IMM->eval();
+            assert(imm.defined);
+            long cval = imm.convert<long>();
+            KVExprPtr eptr;
+            eptr.reset(new ConstExpr(cval, IMM->size(), 0));
+            KVE.push_back(eptr);
+
+        } else if (binF != nullptr) {
+            KVExprPtr eptr;
+            calculateBinaryFunction(binF, eptr) ;
+            KVE.push_back(eptr);
+        } else {
+            std::cout << "Unsupported pointer, add your support!" << std::endl ;
+            assert (0) ;
+        }
+    }
+    if(bf->isAdd()) {
+        exprPtr.reset(new AddExpr(KVE[0], KVE[1])) ;
+    } else if(bf->isMultiply()) {
+        exprPtr.reset(new MulExpr(KVE[0], KVE[1])) ;
+    } else {
+        std::cout << "Unsupported pointer, add your support!" << std::endl ;
+    }
+    return true ;
+}
+
 // Case 1: no memory access
 // eg1: mov $0x0,0xfffffff4(%rbp) -> $0x0
 // eg2: mov 0xffffffe8(%rbp),%rax -> %rax
@@ -1727,6 +2006,123 @@ bool CThinCtrl::_mayOperandUseSymbol_XX(OprndInfoPtr &oi) {
             // assert(rdwrRegs.size() == 1);
            
             /* */
+            bool symReg = false;
+            for (auto R : rdwrRegs)
+            {
+                RegValue RV{R->getID(), (uint)R->size()};
+                res = m_VM->readRegister(RV);
+                assert(res);
+                if (RV.bsym)
+                {
+                    symReg = true;
+                    break;
+                }
+            }
+
+            if(symReg == false)
+            {
+                oi->reg_index = (*rdwrRegs.begin())->getID();//symexecutor needs rsp index when handling push & pop instrution
+                
+                oi->opty = OPTY_REGCON;
+                auto RS = O->getValue()->eval();//The operand uses singel/multiple Concrete registers and/or Imm, evalute directly.
+                assert(RS.defined);
+                oi->reg_conval = RS.convert<ulong>();
+            }
+            else
+            {
+                oi->opty = OPTY_REGSYM;//it may be a single symbolic reg, or a combination
+                oi->symb = true;
+                auto V = O->getValue();
+                std::vector<Expression::Ptr> exps;
+                V->getChildren(exps);
+
+                // reg/imm expr has no child expr
+                if (exps.size() == 0) {
+                    auto R = *rdwrRegs.begin();//The Operand is a symbolic register
+                    oi->reg_index = R->getID();
+
+                    RegValue RV{oi->reg_index, (uint)R->size()};
+                    res = m_VM->readRegister(RV);
+                    assert(res);
+                    oi->reg_symval = RV.expr;
+                } else {
+                    //pp-s
+                    //FIX_ME();  // Add up child expresses
+                    //std::cout << O->format(Arch_x86_64) << std::endl;
+                    //std::cout << "*****************expr size " << exps.size() << std::endl;
+                    //pp-e
+                    BinaryFunction* bf = dynamic_cast<BinaryFunction*>(V.get());
+                    assert(bf != nullptr) ;
+                    assert(exps.size() == 2) ;
+                    KVExprPtr exprPTR ;
+                    calculateBinaryFunction (bf, exprPTR) ;
+                    oi->reg_symval = exprPTR ;
+                    //std::cout << "create expr in parseOperand " << std::endl;
+                    //pp-s
+                    //oi->reg_symval->print();
+                    //std::cout << "\n" ;
+                    //pp-e
+                }
+            }
+            return true;
+        }
+    } else if (O->isWritten()) {
+        // Write into a register oprand:
+        // eg2: mov 0xffffffe8(%rbp),%rax -> %rax
+        std::set<RegisterAST::Ptr> rdwrRegs;
+        oi->rdwr = OPAC_WR;
+
+        // Should be a register operand
+        O->getWriteSet(rdwrRegs);
+        // oi->opty = OPTY_REG;
+        assert(rdwrRegs.size() == 1);
+        auto R = *rdwrRegs.begin();
+        oi->reg_index = R->getID();
+        oi->symb = m_VM->isSYReg(oi->reg_index);
+        if (oi->symb)
+            oi->opty = OPTY_REGSYM;
+        else
+            oi->opty = OPTY_REGCON;
+
+        return true;
+    } else {
+        ERRR_ME("Unexpected operand");
+        exit(EXIT_FAILURE);
+        return false;
+    }
+}
+
+/*
+// Case 1: no memory access
+// eg1: mov $0x0,0xfffffff4(%rbp) -> $0x0
+// eg2: mov 0xffffffe8(%rbp),%rax -> %rax
+// eg3: mov %rax,0xfffffff8(%rbp) -> %rax
+// eg4: jmp 0xb(%rip) -> 0xb(%rip)
+bool CThinCtrl::_mayOperandUseSymbol_XX(OprndInfoPtr &oi) {
+    bool res = false;  // Failed to parse the operand;
+    DIAPIOperandPtr &O = oi->PO;
+    if (O->isRead()) {
+        std::set<RegisterAST::Ptr> rdwrRegs;
+        oi->rdwr = OPAC_RD;
+
+        O->getReadSet(rdwrRegs);
+        if (rdwrRegs.size() == 0) {
+            // Read immediate operand:
+            // eg1: mov $0x0,0xfffffff4(%rbp) -> $0x0
+            oi->opty = OPTY_IMM;
+            auto RS = O->getValue()->eval();
+            assert(RS.defined);
+            oi->imm_value = RS.convert<ulong>();
+            return true;
+        } else {
+            // Read a register operand or RIP-relative instruction:
+            // eg3: mov %rax,0xfffffff8(%rbp) -> %rax
+            // eg4: jmp 0xb(%rip) -> 0xb(%rip)
+            // cout << O->format(Arch_x86_64) << endl;
+            oi->opty = OPTY_REG;
+            // assert(rdwrRegs.size() == 1);
+           
+            
             bool symReg = false;
             for (auto R : rdwrRegs)
             {
@@ -1820,7 +2216,7 @@ bool CThinCtrl::_mayOperandUseSymbol_XX(OprndInfoPtr &oi) {
                     }
                 }
             }
-            /* / */
+            
 
             // if (rdwrRegs.size() != 1) //TO FIX!!!: for lea insn, one operand may contain multiple reg, thinctrl is not able to entirly parse its operand since it may need to generate new expr
             // {
@@ -1853,11 +2249,11 @@ bool CThinCtrl::_mayOperandUseSymbol_XX(OprndInfoPtr &oi) {
             //         if (exps.size() > 1) {
             //             FIX_ME();  // Add up child expresses
             //         
-            //             /* testing */
+            //             // testing //
             //             // V->isAdd();
             //             // V->getID();
             //             // RegisterAST& tt = dynamic_cast<RegisterAST&>(*V);
-            //             /* / */
+            //             
 
             //         } else {
             //             oi->reg_symval = RV.expr;
@@ -1899,7 +2295,8 @@ bool CThinCtrl::_mayOperandUseSymbol_XX(OprndInfoPtr &oi) {
         return false;
     }
 }
-        
+*/
+
 // For a memory read/write operand, it may involve multiple registers. 
 // All involved registers are read regsiters except those push/pop or mov to
 // regs? 
@@ -1964,8 +2361,8 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
             //oi->mem_conaddr = RS.convert<ulong>() + gs_base;
             //printf ("direct mem access through gs, memaddr: %lx. \n", oi->mem_conaddr);
             oi->mem_conaddr = RS.convert<ulong>() + seg_base;            
-            printf ("direct mem access through seg reg, memaddr: %lx. \n", oi->mem_conaddr);
-            printf ("size: %d. \n", oi->size);
+            //printf ("direct mem access through seg reg, memaddr: %lx. \n", oi->mem_conaddr);
+            //printf ("size: %d. \n", oi->size);
             //pp-e
             
             // asm volatile ("vmcall; \n\t");

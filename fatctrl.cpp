@@ -139,7 +139,10 @@ CFattCtrl::CFattCtrl(VMState *VM, EveMeta* meta) {
     probe_orig_inst = (struct hook_info*)malloc(MAX_INT3*sizeof(struct hook_info));
 
     /* Init Func call info database */
-    std::string filename = "/home/neo/smu/kernel-se/k-test/ker_func.txt";
+    //pp-s
+    //std::string filename = "/home/neo/smu/kernel-se/k-test/ker_func.txt";
+    std::string filename = "/home/beverly/KRover/KRover/KRover/stc-files/ker_func.txt";
+    //pp-e
     m_func_call = (struct CallInAllFuncs*)malloc(sizeof(struct CallInAllFuncs)*44020);
     InitFuncDB(filename.c_str());
     /* /Jiaqi */

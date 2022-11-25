@@ -54,6 +54,22 @@
 #define SCALL_SETREUID          113
 #define SCALL_SETREGID          114
 #define SCALL_CAPGET            125
+#define SCALL_SETUID            105
+#define SCALL_SETGID            106
+#define SCALL_GETGROUPS         115
+#define SCALL_SETGROUPS         116
+#define SCALL_SETRESUID         117
+#define SCALL_SETRESGID         119
+#define SCALL_SETFSUID          122
+#define SCALL_SETFSGID          123
+#define SCALL_GETSID            124
+#define SCALL_SCHED_GETPARAM    143
+#define SCALL_SCHED_SETPARAM    142
+#define SCALL_OPEN              2
+#define SCALL_IOPL              172
+#define SCALL_IOPERM            173
+#define SCALL_UTIME             132
+#define SCALL_SCHED_GETSCHDLR   145
 //pp-e
 
 // #include "fatctrl.h"

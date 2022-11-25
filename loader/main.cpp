@@ -17,6 +17,7 @@
 #include "dyn_regs.h"
 
 using namespace Dyninst;
+
 // #define DBG(fmt, ...) \
 
 // #define DBG(fmt, ...) \
@@ -86,10 +87,6 @@ struct shar_arg
     volatile unsigned long guest_timeout_flag;
     volatile unsigned long exit_wrong_flag;
     volatile unsigned long cross_page_flag;
-    //pp-s fix for %ds %es
-    unsigned long es_base;
-    unsigned long ds_base;
-    //pp-e
 };
 struct shar_arg* ei_shar_args;
 
@@ -418,7 +415,7 @@ extern "C" void nme_pf_handler (unsigned long, unsigned long*);
 void nme_pf_handler (unsigned long cr2, unsigned long* pf_stack)
 {
     int err_code = *pf_stack;
-    printf ("cr2: %lx, err_code: %lx. \n", cr2, (unsigned long)err_code);
+    printf ("cr2: %lx, err_code in decimal: %d. \n", cr2, err_code);
 
     // asm volatile ("mov $0xabcdabcd, %rax; \n\t"
     //         "vmcall; \n\t");
@@ -460,7 +457,11 @@ asm ("pf_store_context: \n");
 asm ("movq $0xabcdabcd, %rax \n");
 asm ("vmcall \n");
 asm ("movq %rsp, %rax \n");
-asm ("movq $0xfffffeffffffecc0, %rsp \n");//switch to analyser's secure stack
+//QHQHQHQHQ change:
+// asm ("movq $0xfffffeffffffecc0, %rsp \n");//switch to analyser's secure stack
+// to:
+asm ("movq $0x7f7fffffecc0, %rsp \n");//switch to analyser's secure stack
+//QHQHQHQ ----------------
 asm ("pushq %rax \n"); // save pf handler rsp in nme stack
 asm ("pushq %rdi \n");// 6 syscall args
 asm ("pushq %rsi \n");
@@ -1423,7 +1424,7 @@ void init_global_var ()
     // uk_offset = 0xffff7f0000000000;
     // uk_offset = 0x0;
     uk_offset = 0xffffff8000000000;
-    exit_gate_va = 0x7f9000900000+uk_offset;
+    exit_gate_va =  0x7f9000900000+uk_offset;
     idt_va = 0x7f9000901000 + uk_offset;
     gdt_va = 0x7f9000902000 + uk_offset;
     tss_va = 0x7f9000903000 + uk_offset;
@@ -1480,7 +1481,8 @@ void init_global_var ()
     nme_fsbase = read_fs();
     printf ("nme_fsbase: %lx. \n", nme_fsbase);
 
-    unsigned long* tmp_ptr = (unsigned long*)0x555555554760;
+    //unsigned long* tmp_ptr = (unsigned long*)0x555555554760;
+    unsigned long* tmp_ptr = (unsigned long*)0x555555755010 ;
     printf ("test: %p. %lx. \n", tmp_ptr, *tmp_ptr);
     
     /* initialize addr_gdt_base, addr_tss_base */
@@ -1581,10 +1583,6 @@ void init_t_ctx()
     assert(ei_shar_args->fs_base != 0);
     machRegs.fs_base = ei_shar_args->fs_base;
     machRegs.gs_base = ei_shar_args->msr_kernel_gs_base;
-    //pp-s fix for %ds %es
-    machRegs.ds_base = ei_shar_args->ds_base;
-    machRegs.es_base = ei_shar_args->es_base;
-    //pp-e
     return;
 }
 
@@ -1615,11 +1613,6 @@ void native_to_SE_ctx_switch()
     assert(ei_shar_args->fs_base != 0);
     machRegs.fs_base = ei_shar_args->fs_base;
     machRegs.gs_base = ei_shar_args->msr_kernel_gs_base;
-    //pp-s fix for %ds %es : is this required ?
-    machRegs.ds_base = ei_shar_args->ds_base;
-    machRegs.es_base = ei_shar_args->es_base;
-    //pp-e
-
     return;
 }
 
@@ -1823,36 +1816,97 @@ void to_native(void)
             "vmcall; \n\t");
 
 }
+//#define TEST 1
+static unsigned long rdfsbase(void)
+{
+    volatile unsigned long fsbase = 0;
 
-int main(void) {
-    printf("start ana : krover\n");
+    // read fs register.
+    asm volatile("rdfsbase %0" : "=r" (fsbase) :: "memory");
 
-    unsigned long ts, te;
-    ts = rdtsc();
-    rdtsc();
-    te = rdtsc();
-    printf("cost %lu\n", te- ts);
+    return fsbase;
+}
 
+void test_bp(void) {
+    while (1) ;
+} 
+int main(int argc, char** argv) {
+    // return 0;
+    
+    /* init execState */
     unsigned long adds, adde;
+//    int i , j;
     adds = 0x0;
     adde = 0xfffffffffffff000;
+//    for (i = 1; i!=0; i++) 
+//        for(j=0; j<10; j++) 
+//        ;
+
+    //sleep (30) ;
+    //asm volatile("xgetbv");
+    /*
+    asm volatile("vmovaps  %xmm0, -0x10(%rsp) \n");
+    asm volatile("movq $0x86919128,  %r8");
+    asm volatile("vmovd  %esi, %xmm0 \n");
+    asm volatile("vmovd  %xmm0, %esi \n");
+    asm volatile("vmovd  %edi, %xmm0 \n");
+    asm volatile("vmovd  %esi, %xmm1 \n");
+
+    asm volatile("vpxor  %xmm9, %xmm9, %xmm9 \n");
+    asm volatile("vpxor  %xmm0, %xmm0, %xmm0 \n");
+    */
+    //printf ("================fsbase: 0x%lx\n", rdfsbase()) ;
+    printf ("======================%p, %p\n", &argc, &argv) ;
+    //while(1) ;
+#ifdef TEST
+    extern void fftest_map() ;
+    //printf ("0x%llx", (uint64_t) fftest_map);
+    
+    fftest_map() ;
+#endif    
+    printf ("================\n") ;
+    //test_bp() ;
+    //while (1) ;
+/*
+    {
+        uint64_t addr ;
+        uint8_t data[8] ;
+        addr = 0xffffffff810041b0 ;
+        printf("0x%016lx\n", *(uint64_t*)data);
+        memcpy(&data, (void*)addr, 8) ;
+        printf("0x%016lx\n", *(uint64_t*)data);
+    }
+*/
+    
+    // 
+    // asm volatile ("movq $0x1289ff, %rax; \n\t"
+    //         "vmcall; \n\t");
     
     execState = new ExecState(adds, adde);
+  
+    printf ("%s:\t %d\n", __FILE__, __LINE__) ;
+
+    //exit (0) ;
+    // return 0;
+    // target_ctx = (struct target_context*)malloc(sizeof(struct target_context));
+    // return 0; 
     init_global_var();
+    printf ("%s:\t %d\n", __FILE__, __LINE__) ;
     dump_regs();
+//printf ("%d, =========\n", __LINE__);
     get_target();
-
-    //pp-s
-    printf("ds_base: %lx ,es_base: %lx\n", ei_shar_args->ds_base, ei_shar_args->es_base );
-    //pp-e
+    // return 0;
+//printf ("%d, =========\n", __LINE__);
     execState->InitRediPagePool();
-
+//printf ("%d, =========\n", __LINE__);   
+    // return 0;
+    
     execState->MoniStartOfSE(0xffffffff810baa50); //ffffffff810b9710);//addr of x64_sys_setpriority
     //execState->MoniStartOfSE(0xffffffff810ba7d0); //ffffffff810b5fb0);//addr of x64_sys_getpriority
     //execState->MoniStartOfSE(0xffffffff812de980);//addr of x64_sys_writev
     //execState->MoniStartOfSE(0xffffffff812e2800); //ffffffff812ddc30);//addr of x64_sys_lseek
     //execState->MoniStartOfSE(0xffffffff81910660);//addr of x64_sys_bind
-    //execState->MoniStartOfSE(0xffffffff81910250);//addr of x64_sys_socket
+    //execState->MoniStartOfSE(0xffffffff8191e250);//addr of sys_socket
     //execState->MoniStartOfSE(0xffffffff812ea7f0);//addr of x64_sys_pipe
     //execState->MoniStartOfSE(0xffffffff812db7e0);//addr of x64_sys_chmod
     //execState->MoniStartOfSE(0xffffffff812f38b0);//addr of x64_sys_symlink
@@ -1861,16 +1915,16 @@ int main(void) {
     //execState->MoniStartOfSE(0xffffffff810b7250); //ffffffff810b5f10);//addr of x64_sys_umask
     //execState->MoniStartOfSE(0xffffffff81301470); //ffffffff81303310);//addr of x64_sys_dup
     //execState->MoniStartOfSE(0xffffffff813071e0); //ffffffff813023e0);//addr of x64_sys_dup2
-    //execState->MoniStartOfSE(0xffffffff81144110);//addr of x64_sys_alarm
+    //execState->MoniStartOfSE(0xffffffff81146770);//addr of x64_sys_alarm
     //execState->MoniStartOfSE(0xffffffff810cf3b0);//addr of x64_sys_sched_get_priority_max
     //execState->MoniStartOfSE(0xffffffff810cf430);//addr of x64_sys_sched_get_priority_min
     //execState->MoniStartOfSE(0xffffffff8131cfc0);//addr of x64_sys_getcwd
     //execState->MoniStartOfSE(0xffffffff812f3c90);//addr of x64_sys_link
-    //execState->MoniStartOfSE(0xffffffff81268340);//addr of x64_sys_mlock
-    //execState->MoniStartOfSE(0xffffffff812684b0);//addr of x64_sys_munlock
-    //execState->MoniStartOfSE(0xffffffff812f4ed0);//addr of x64_sys_fcntl
+    //execState->MoniStartOfSE(0xffffffff8126c9e0); //ffffffff81268340);//addr of x64_sys_mlock
+    //execState->MoniStartOfSE(0xffffffff8126cb50); //ffffffff812684b0);//addr of x64_sys_munlock
+    //execState->MoniStartOfSE(0xffffffff812f9ca0);//addr of x64_sys_fcntl
     //execState->MoniStartOfSE(0xffffffff812de8c0); //ffffffff812e0410);//addr of x64_sys_write
-    //execState->MoniStartOfSE(0xffffffff812dabc0);//addr of x64_sys_truncate
+    //execState->MoniStartOfSE(0xffffffff812df790);//addr of x64_sys_truncate
     //execState->MoniStartOfSE(0xffffffff812db4a0);//addr of x64_sys_chdir
     //execState->MoniStartOfSE(0xffffffff812f2510);//addr of x64_sys_rename
     //execState->MoniStartOfSE(0xffffffff812f30b0);//addr of x64_sys_mkdir
@@ -1880,10 +1934,10 @@ int main(void) {
     //execState->MoniStartOfSE(0xffffffff810bc0e0); //ffffffff810bad40);//addr of x64_sys_setrlimit
     //execState->MoniStartOfSE(0xffffffff812f36e0);//addr of x64_sys_unlink
     //execState->MoniStartOfSE(0xffffffff812f38b0);//addr of x64_sys_symlink
-    //execState->MoniStartOfSE(0xffffffff812db7e0);//addr of x64_sys_chmod
+    //execState->MoniStartOfSE(0xffffffff812e03b0); //ffffffff812db7e0);//addr of x64_sys_chmod
     //execState->MoniStartOfSE(0xffffffff810a0cf0); //ffffffff8109fca0);//addr of x64_sys_personality
     //execState->MoniStartOfSE(0xffffffff81037c90);//addr of x64_sys_mmap
-    //execState->MoniStartOfSE(0xffffffff812de7a0); //ffffffff812e02f0);//addr of x64_sys_read
+    //execState->MoniStartOfSE(0xffffffff812e4ec0);//addr of x64_sys_read
     //execState->MoniStartOfSE(0xffffffff8126e470); //addr of x64_sys_mprotect
     //execState->MoniStartOfSE(0xffffffff812763e0); //); //addr of x64_sys_mprotect
     //execState->MoniStartOfSE(0xffffffff8126b630); //); //addr of x64_sys_mincore
@@ -1891,19 +1945,108 @@ int main(void) {
     //execState->MoniStartOfSE(0xffffffff81146ab0); //); //addr of x64_sys_setitimer
     //execState->MoniStartOfSE(0xffffffff8135f070); //); //addr of x64_sys_flock
     //execState->MoniStartOfSE(0xffffffff810bca90); //); //addr of x64_sys_getrusage
-    //execState->MoniStartOfSE(0xffffffff810bca90); //); //addr of x64_sys_getrusage
     //execState->MoniStartOfSE(0xffffffff810b8050); //); //addr of x64_sys_setpgid
     //execState->MoniStartOfSE(0xffffffff810bb120); //); //addr of x64_sys_setreuid
     //execState->MoniStartOfSE(0xffffffff810bae20); //); //addr of x64_sys_setregid
     //execState->MoniStartOfSE(0xffffffff810ac790); //); //addr of x64_sys_capget
+    //execState->MoniStartOfSE(0xffffffff810bb260); //); //addr of x64_sys_setuid
+    //execState->MoniStartOfSE(0xffffffff810baf20); //); //addr of x64_sys_setgid
+    //execState->MoniStartOfSE(0xffffffff810d0640); //); //addr of x64_sys_getgroups
+    //execState->MoniStartOfSE(0xffffffff810d08a0); //); //addr of x64_sys_setgroups
+    //execState->MoniStartOfSE(0xffffffff810bb490); //); //addr of x64_sys_setresuid
+    //->MoniStartOfSE(0xffffffff810bb660); //); //addr of x64_sys_setresgid
+    //execState->MoniStartOfSE(0xffffffff810bb770); //); //addr of x64_sys_setfsuid
+    //execState->MoniStartOfSE(0xffffffff810bb870); //); //addr of x64_sys_setfsgid
+    //execState->MoniStartOfSE(0xffffffff810b9cb0); //); //addr of x64_sys_getsid
+    //execState->MoniStartOfSE(0xffffffff810d3540); //); //addr of x64_sys_sched_getparam
+    //execState->MoniStartOfSE(0xffffffff810d6ec0); //); //addr of x64_sys_sched_setparam
+    //execState->MoniStartOfSE(0xffffffff812e0bf0); //); //addr of x64_sys_open
+    //execState->MoniStartOfSE(0xffffffff81035ee0); ; //addr of x64_sys_iopl
+    //execState->MoniStartOfSE(0xffffffff810361a0); ; //addr of x64_sys_ioperm
+    //execState->MoniStartOfSE(0xffffffff813212a0); ; //addr of x64_sys_utime
+    //execState->MoniStartOfSE(0xffffffff810d3230); ; //addr of x64_sys_sched_getscheduler
 
-    //if uncommenting this, change the declaration of tmp in centralhub.cpp
-    //execState->MoniStartOfSE(0xffffffff810041b0);//addr of indirect call in do_syscall_64 
-    
+    // return 0;
+//printf ("%d, =========\n", __LINE__);
+   // printf ("=====press any key to continue:====\n");
+    //getc(stdin) ;
     to_native();
+//printf ("%d, =========\n", __LINE__);
 
     init_t_ctx(); 
+//printf ("%d, =========\n", __LINE__);
     dump_regs(); 
+    // unsigned long addr;
+    // int size;
+    // execState->declareSymbolicObject(addr, size);
+
+    // asm volatile ("movq $0xffff, %rax; \n\t"
+    //         "vmcall; \n\t");
+  
+//printf ("%d, =========\n", __LINE__);
+    execState->SynRegsFromNative(&machRegs);
+printf ("%s:\t %d\n", __FILE__, __LINE__) ;    
+//printf ("%d, =========\n", __LINE__);    
+    // // dump_regs();
+    // // return 0;
+    // int index= x86_64::rdx;
+    // // int index= Arch_x86_64;
+    // std::string name = "rdx";
+    // execState->declareSymbolicRegister(index, 8, &name[0]);
+    execState->processAt(machRegs.regs.rip);
+//printf ("%d, =========\n", __LINE__);    
+    return 0;
+
+    //invoke fatctrl;
+    
+
+    // oasis_run_emulation();
 
     return 0;
 }
+#if TEST
+struct test_struct {
+    int index;
+    int index2 ;
+    int array[256] ;
+    test_struct() {
+        index = index2 = 0 ;
+        array[0]=0 ;
+    }
+    ~test_struct () {};
+};
+
+typedef std::shared_ptr<struct test_struct> test_struct_ptr;
+typedef std::map<uint, test_struct_ptr> test_map ;
+test_map *ttmmm ;
+
+typedef void (*foo)(int) ;
+void fftest_map() {
+    ttmmm = new (test_map) ;
+    ttmmm->clear() ;
+
+    test_struct * t = new test_struct() ;
+
+    test_struct_ptr tptr(new test_struct()) ;
+
+    for (int i = 0; i<256; i++) {
+        //test_struct * t = new test_struct() ;
+
+        test_struct_ptr tptr ;
+        tptr.reset(new test_struct()) ;
+
+        //(*ttmmm)[i*3568] = tptr ;
+        ttmmm->insert({i*3568, tptr}) ;
+        printf ("%d++++%d\n", i, getpid());
+    }
+    printf ("------------\n");
+    if (0) {
+        foo fp ;
+        int x = 0 ;
+        // x = *(uint64_t*)(uint64_t)0x8f8000000000 ;
+        fp = (foo)(void*)(uint64_t)0x8f8000000000 ;
+        fp(x) ;
+    }
+}
+
+#endif

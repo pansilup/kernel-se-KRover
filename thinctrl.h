@@ -46,6 +46,67 @@ static __attribute__ ((noinline)) unsigned long long rdtsc(void)
     // asm volatile ("int $3;\n\t");
     return ((unsigned long long) lo | ((unsigned long long) hi << 32));
 }
+
+//pp-s
+
+class opData {
+
+    public :
+        Operand *O;
+        bool rdmem; //O->readsMemory
+        bool wrmem; //O->writesMemory
+        bool hasregs; 
+        std::set<RegisterAST::Ptr> readRegs;  //read reg list
+        std::set<RegisterAST::Ptr> writeRegs; //write reg list
+        std::set<uint> readRegIds;  //IDs of read regs
+        std::set<uint> writeRegIds; //IDs of write regs
+
+};
+
+
+class wrapInstruction {
+
+    public:
+        Instruction * in;
+        std::vector<Operand> ioperands;
+        std::vector<opData*> opdata_ptrs;
+        ulong igs_base;
+
+        //for cie
+        uint cie_mode = 2; //whether a given instruction can be CIE and in which way?
+
+    wrapInstruction(Instruction* I){
+        in = I;
+        in->getOperands(ioperands);
+
+        for (auto O : ioperands)
+        {
+            uint rid;
+            opData* OD = new opData;
+            OD->O = &O;
+            OD->rdmem = O.readsMemory();
+            OD->wrmem = O.writesMemory();
+            
+            O.getReadSet(OD->readRegs); //get read registers
+            for (auto R : OD->readRegs){
+                rid = R->getID();
+                OD->readRegIds.insert(rid); //record reg_id for each reg
+            }
+            O.getWriteSet(OD->writeRegs); //get write registers
+            for (auto R : OD->writeRegs){
+                rid = R->getID();
+                OD->writeRegIds.insert(rid); //record reg-id for each reg
+            }
+            if((OD->writeRegs.size() + OD->readRegs.size()) >= 0) //record if operand has read or write regs
+                OD->hasregs = true;
+            else
+                OD->hasregs = false;
+
+            opdata_ptrs.push_back(OD);
+        }
+    }
+};
+
 /* MyCodeRegion */
 // class PARSER_EXPORT MyCodeRegion : public CodeRegion {
 class MyCodeRegion : public CodeRegion {
@@ -121,8 +182,12 @@ class CThinCtrl {
     CodeRegion* m_cr;
 
     InstructionDecoder* decoder;
-    std::map<uint, Instruction*> m_InsnCache;
-    
+    //pp-s
+    //std::map<uint, Instruction*> m_InsnCache;
+    std::map<uint, wrapInstruction*> m_InsnCache;
+    //pp-e
+
+
     VMState *m_VM;
     
     std::shared_ptr<SymExecutor> m_SymExecutor;
@@ -150,7 +215,13 @@ class CThinCtrl {
     /* to concretely execute one instruction */
     bool ExecOneInsn(ulong addr);
     
-    bool hasSymOperand(Instruction* in);
+    //pp-s
+    //bool hasSymOperand(Instruction* in);
+    bool hasSymOperand(wrapInstruction* win);
+    //pp-e
+    //pp-s
+    ulong isUseGS(Instruction* in);
+    //pp-e
 
    private:
     // CThinCtrl(VMState *VM);  // used for unit-testing
@@ -182,13 +253,21 @@ class CThinCtrl {
     
     bool bindRegValForMemOpd(DIAPIOperandPtr op);
     
-    ulong isUseGS(Instruction* in);
+    //pp-s
+    //ulong isUseGS(Instruction* in);
+    //pp-e
     //pp-s fix for %ds %es
     ulong getSegRegVal(Instruction* in);
+    bool calculateBinaryFunction (Dyninst::InstructionAPI::BinaryFunction* bf, KVExprPtr &exprPtr) ;
     //pp-e
-    bool OpdhasSymReg(Operand* OP);
-    bool OpdhasSymMemCell(Operand* OP, ulong gs_base);
+    //pp-s
+    //bool OpdhasSymReg(Operand* OP);
+    bool OpdhasSymReg(opData* OD);
+    //bool OpdhasSymMemCell(Operand* OP, ulong gs_base);
+    bool OpdhasSymMemCell(opData* OD, Operand* O, ulong gs_base);
+    //pp-e
     bool checkImplicitMemAccess(Instruction *I);
+
 };
 
 #endif  // !_THINCTRL_H__

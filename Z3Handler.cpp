@@ -721,6 +721,22 @@ z3::expr Z3Handler::Z3HandleShrd(ExprPtr r, ExprPtr m, ExprPtr l){  // not sure 
     return context_.bv_val(100, 64);
 }
 
+//pp-s frm Hx
+z3::expr Z3Handler::Z3HandleSign(ExprPtr ptr){
+    SignExpr *sign_expr = static_cast<SignExpr*>(ptr.get());
+    if (sign_expr == NULL){
+        printf("\033[47;31m Z3 Handlering ERROR : SignExpr \033[0m\n");
+        throw sign_expr;
+    }
+    expr x = Z3HandlingExprPtr(sign_expr->getExprPtr());
+    //std::cout << "before sign : " << x << std::endl;
+    int size = sign_expr->getSize();
+    //std::cout << "size from Z3HandleSign : " << size << std::endl;
+    expr sign_bit = x.extract(size * 8 - 1, size  * 8 - 1);
+    return sign_bit == 1;
+}
+
+/*
 z3::expr Z3Handler::Z3HandleSign(ExprPtr ptr){ // not sure how to write z3 expr
 //pp-s frm Hx
     SignExpr *sign_expr = static_cast<SignExpr*>(ptr.get());
@@ -752,7 +768,22 @@ z3::expr Z3Handler::Z3HandleSign(ExprPtr ptr){ // not sure how to write z3 expr
     //return context_.bv_val(100, 64);
 //pp-e
 }
+*/
+//pp-e
 
+//pp-s frm Hx
+z3::expr Z3Handler::Z3HandleNoSign(ExprPtr ptr){
+    NoSignExpr *nosign_expr = static_cast<NoSignExpr*>(ptr.get());
+    if (nosign_expr == NULL){
+        printf("\033[47;31m Z3 Handlering ERROR : NoSignExpr \033[0m\n");
+        throw nosign_expr;
+    }
+    expr x = Z3HandlingExprPtr(nosign_expr->getExprPtr());
+    int size = nosign_expr->getSize();
+    expr nosign_bit = x.extract(size * 8 - 1, size * 8 - 1);
+    return nosign_bit == 0;
+}
+/*
 z3::expr Z3Handler::Z3HandleNoSign(ExprPtr ptr){ // not sure how to write z3 expr
 //pp-s frm Hx
   NoSignExpr *nosign_expr = static_cast<NoSignExpr*>(ptr.get());
@@ -773,6 +804,8 @@ z3::expr Z3Handler::Z3HandleNoSign(ExprPtr ptr){ // not sure how to write z3 exp
     //return context_.bv_val(100, 64);
 //pp-e
 }
+*/
+//pp-e
 
 z3::expr Z3Handler::Z3HandleOverflow(ExprPtr ptr){ // not sure how to write z3 expr
     return context_.bv_val(100, 64);
