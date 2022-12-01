@@ -102,11 +102,13 @@ bool Z3Handler::Z3ExpressionEvaluator(expr org_expr, expr sym_expr, expr con_exp
  *
 */
 bool Z3Handler::Z3SolveConcritize(std::vector<VMState::SYMemObject*> symobjs_all, std::set<KVExprPtr> constraints){
+    std::cout << "at Z3SolveConcritize\n";
     bool ret = 0;
     expr exprs = context_.bool_val(1);
     for (auto it = constraints.begin(); it != constraints.end(); it++){
         exprs = exprs & Z3HandlingExprPtr(*it);
     }
+
     // Filter the symbolic variables that are not marked with seed
     std::vector<VMState::SYMemObject*> symobjs; // symbolic variables in the seed mode
     for (auto symobj : symobjs_all) {
@@ -226,6 +228,7 @@ bool Z3Handler::Z3SolveConcritize(std::vector<VMState::SYMemObject*> symobjs_all
             }
         }
     }
+    std::cout <<"bf ret\n";
     return ret;
 }
 
@@ -256,6 +259,9 @@ z3::expr Z3Handler::Z3HandlingExprPtr(ExprPtr ptr){
         case Expr::Kind::Add: { // 7
             AddExpr * expr_r = static_cast<AddExpr*>(ptr.get());
             ExprPtr R = expr_r->getExprPtrR();
+            //std::cout << "size of add right : " << expr_r->getExprPtrR()->getSize() << std::endl;
+            //std::cout << "size of add left : " << expr_r->getExprPtrL()->getSize() << std::endl;
+
             ExprPtr L = expr_r->getExprPtrL();
             return Z3HandleAdd(R, L);
         }
@@ -483,7 +489,7 @@ z3::expr Z3Handler::Z3HandleConst(ExprPtr const_expr_ptr){ // 3
     //std::cout << "value in ConstExpr : " << value << std::endl;
     //pp-s frm Hx
     int size = const_expr->getSize();
-    //std::cout << "at Z3HandleConst: size : " << size << std::endl;
+    std::cout << "at Z3HandleConst: size : " << size << std::endl;
     expr x = context_.bv_val(value, size * 8);
     //expr x = context_.bv_val(value, 32);
     //pp-e

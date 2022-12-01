@@ -70,6 +70,10 @@
 #define SCALL_IOPERM            173
 #define SCALL_UTIME             132
 #define SCALL_SCHED_GETSCHDLR   145
+#define SCALL_MLOCKALL          151
+#define SCALL_PRCTL             157
+#define SCALL_ARCH_PRCTL        158
+#define SCALL_ACCT              163
 //pp-e
 
 // #include "fatctrl.h"

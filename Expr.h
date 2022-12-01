@@ -162,6 +162,9 @@ class Expr {
         // @THX : add a function to get Kind
         virtual Kind getKind() const = 0;
         int getExprSize() { return size; }
+        //pp-s
+        void setExprSize(int sz) { size = sz; }
+        //pp-e
 
 };
 

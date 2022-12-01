@@ -22,11 +22,19 @@
 //#ifndef DEBUG_LOG
 //#define DEBUG_LOG
 //#endif
+//pp-s
 #if 0
     #ifndef _PROD_PERF
-    #define _PROD_PERF
+        #define _PROD_PERF
     #endif
 #endif
+
+#if 0
+    #ifndef _TRACE_INS
+        #define _TRACE_INS
+    #endif
+#endif
+//pp-e
 
 #include <linux/types.h>
 

@@ -816,6 +816,7 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
             assert(0);
         }
     }
+    //else if(opcode == e_jmp)
 //pp-e
     else
     {
@@ -859,10 +860,11 @@ uint ConExecutor::preCIE(Instruction* in)
 bool ConExecutor::InsnDispatch2(Instruction* instr, struct pt_regs* regs, uint mode)
 {
     int InsnSize = instr->size();
-
+    //std::cout << "at InsnDispatch2\n";
     ulong crtAddr = regs->rip - InsnSize; 
     if(mode == 2) //rip is not used, no instruction rewriting is required
     {
+        //std::cout <<"non rip relative instruction\n";
         void* T_insn = (void*)((char*)InsnExecNonRIP + 0x68);
         memcpy(T_insn, (void*)crtAddr, InsnSize);
         InsnExecNonRIP(regs);
@@ -870,6 +872,7 @@ bool ConExecutor::InsnDispatch2(Instruction* instr, struct pt_regs* regs, uint m
     }
     else if(mode == 1) //rip is used, can replace rip with r15
     {
+        //std::cout <<"rip reative instruction\n";
         void* T_insn_no_r15 = (void*)((char*)InsnExecRIP + 0x6c);
         RewRIPInsn(T_insn_no_r15, (void*)crtAddr, instr);
         InsnExecRIP(regs);
@@ -879,6 +882,7 @@ bool ConExecutor::InsnDispatch2(Instruction* instr, struct pt_regs* regs, uint m
     {
         assert(0);
     }
+    //std::cout <<"end fun InsnDispatch2\n";
 
     return 0;
 }

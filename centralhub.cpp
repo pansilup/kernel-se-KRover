@@ -98,7 +98,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x68; //adr of rsi
             //declareSymbolicObject(tmp, 8, 1, 1, 0x0, "who_rsi");
             tmp += 0x8;  //adr of rdi
-            declareSymbolicObject(tmp, 8, 1, 1, 1, "which_rdi");
+            declareSymbolicObject(tmp, 8, 1, 1, 1, "which_rdi"); //symbol
         }   break;
         case SCALL_SETPRIORITY:
         {
@@ -192,7 +192,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x68; //adr of rsi
             //declareSymbolicObject(tmp, 8, 1, 1, 0x0, "mode_rsi");
             tmp += 0x8;  //adr of rdi
-            declareSymbolicObject(tmp, 4, 1, 1, 1, "seconds_rdi");
+            declareSymbolicObject(tmp, 4, 1, 1, 100, "seconds_rdi");
         }   break;
         case SCALL_SCH_GET_PRIO_MAX:
         {
@@ -227,8 +227,8 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             unsigned long old_filename_adr = *(unsigned long*)tmp;
             printf("file nm :%c%c%c%c\n", *(char*)old_filename_adr, *(char*)(old_filename_adr+1), *(char*)(old_filename_adr+2), *(char*)(old_filename_adr+3) );
             declareSymbolicObject(old_filename_adr    , 1, 0, 1, 0x6f, "fname_rdi_1"); //o
-            declareSymbolicObject(old_filename_adr + 1, 1, 0, 1, 0x6c, "fname_rdi_2"); //l
-            declareSymbolicObject(old_filename_adr + 2, 1, 0, 1, 0x64, "fname_rdi_3"); //d
+            //declareSymbolicObject(old_filename_adr + 1, 1, 0, 1, 0x6c, "fname_rdi_2"); //l
+            //declareSymbolicObject(old_filename_adr + 2, 1, 0, 1, 0x64, "fname_rdi_3"); //d
             //declareSymbolicObject(old_filename_adr + 3, 1, 0, 1, 0x00, "fname_rdi_4"); //\0
         }   break;
         case SCALL_MLOCK:
@@ -368,7 +368,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             declareSymbolicObject(old_filename_adr + 2, 1, 0, 1, 0x64, "fname_rdi_3"); //d
             //declareSymbolicObject(old_filename_adr + 3, 1, 0, 1, 0x00, "fname_rdi_4"); //\0
         }   break;*/
-        /*case SCALL_SYMLINK:
+        case SCALL_SYMLINK:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rsi
@@ -380,14 +380,14 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             declareSymbolicObject(old_filename_adr + 1, 1, 0, 1, 0x6c, "fname_rdi_2"); //l
             declareSymbolicObject(old_filename_adr + 2, 1, 0, 1, 0x64, "fname_rdi_3"); //d
             //declareSymbolicObject(old_filename_adr + 3, 1, 0, 1, 0x00, "fname_rdi_4"); //\0
-        }   break;*/
+        }   break;
         case SCALL_CHMOD:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rsi
             declareSymbolicObject(tmp, 8, 1, 1, 777, "mode_rsi");
-            //tmp += 0x8;  //adr of rdi
-            //unsigned long old_filename_adr = *(unsigned long*)tmp;
+            tmp += 0x8;  //adr of rdi
+            unsigned long old_filename_adr = *(unsigned long*)tmp;
             //printf("file nm :%c%c%c%c\n", *(char*)old_filename_adr, *(char*)(old_filename_adr+1), *(char*)(old_filename_adr+2), *(char*)(old_filename_adr+3) );
             //declareSymbolicObject(old_filename_adr    , 1, 0, 1, 0x6f, "fname_rdi_1"); //o
             //declareSymbolicObject(old_filename_adr + 1, 1, 0, 1, 0x6c, "fname_rdi_2"); //l
@@ -408,24 +408,24 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x68; //adr of rsi
             declareSymbolicObject(tmp, 8, 0, 1, 0x10000, "flag_rsi"); //SWAP_FLAG_DISCARD	0x10000 
         }   break;*/
-        /*case SCALL_MMAP:
+        case SCALL_MMAP:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x60; //adr of rdx
             declareSymbolicObject(tmp, 8, 0, 1, 0x3, "prot_rdx"); 
-        }   break;*/
+        }   break;
         case SCALL_READ:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x60; //adr of rdx
             declareSymbolicObject(tmp, 8, 0, 1, 0x10, "count_rdx"); 
         }   break;
-        /*case SCALL_MSYNC:
+        case SCALL_MSYNC:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x60; //adr of rdx
             declareSymbolicObject(tmp, 8, 0, 1, 0x1, "flags_rdx"); 
-        }   break;*/
+        }   break;
         /*case SCALL_MPROTECT:
         {
             printf("case: %d\n", (int)scall_idx);
@@ -452,12 +452,12 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x70; //adr of rdi
             declareSymbolicObject(tmp, 8, 0, 1, 0, "which_rdi"); //ITIMER_REAL 0
         }   break;
-        /*case SCALL_FLOCK:
+        case SCALL_FLOCK:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rsi
             declareSymbolicObject(tmp, 8, 0, 1, 1, "operation_rdi"); 
-        }   break;*/
+        }   break;
         case SCALL_GETRUSAGE:
         {
             printf("case: %d\n", (int)scall_idx);
@@ -480,7 +480,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rdi
-            declareSymbolicObject(tmp, 8, 1, 1, -1, "euid_rsi"); 
+            declareSymbolicObject(tmp, 8, 1, 1, -1, "egid_rsi"); 
         }   break;
         case SCALL_CAPGET:
         {
@@ -530,13 +530,13 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x70; 
-            declareSymbolicObject(tmp, 8, 1, 1, 2000, "uid_rdi"); 
+            declareSymbolicObject(tmp, 8, 1, 1, 2000, "fsuid_rdi"); 
         }   break;
         case SCALL_SETFSGID:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x70; 
-            declareSymbolicObject(tmp, 8, 1, 1, 2000, "uid_rdi"); 
+            declareSymbolicObject(tmp, 8, 1, 1, 2000, "fsgid_rdi"); 
         }   break;
         case SCALL_GETSID:
         {
@@ -592,6 +592,30 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x70; //adr of rdi
             declareSymbolicObject(tmp, 8, 1, 1, 0, "pid_rdi"); 
         }   break;
+        case SCALL_MLOCKALL:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, 1, "flags_rdi"); 
+        }   break;
+        case SCALL_PRCTL:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, 15, "arg1_rdi"); 
+        }   break;
+        case SCALL_ARCH_PRCTL:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, 0x1004, "code_rdi"); 
+        }   break;
+        case SCALL_ACCT:
+        {
+            printf("case: %d\n", (int)scall_idx);
+            tmp += 0x70; //adr of rdi
+            declareSymbolicObject(tmp, 8, 1, 1, 0x0, "code_rdi"); 
+        }   break;
         default:
         {
             ret = false;
@@ -603,20 +627,28 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
 
 // bool ExecState::processAt(ulong addr, struct pt_regs *regs) {
 bool ExecState::processAt(ulong addr) {
-    
+    printf("at processAt\n");
+
     //pp-s
     unsigned long scall;
     //pp-e
-    
+        
     struct MacReg* m_regs = (struct MacReg*) m_VM->getPTRegs();
-    printf ("rax: %lx, rdi:%lx, rsi: %lx, rdx: %lx. \n", m_regs->regs.rax, m_regs->regs.rdi, m_regs->regs.rsi, m_regs->regs.rdx);
+    //printf ("rax: %lx, rdi:%lx, rsi: %lx, rdx: %lx. \n", m_regs->regs.rax, m_regs->regs.rdi, m_regs->regs.rsi, m_regs->regs.rdx);
     
+//pp-s ---------------------------------------------------------------------------------------
+    //use this to trace control flow using CIE, else comment this
+#ifdef _TRACE_INS
+    return m_FattCtrl->processFunc(addr);
+#endif
+//pp-e ---------------------------------------------------------------------------------------
+
     //pp-s
     unsigned long tmp = m_regs->regs.rdi; //base address of pt_regs object passed to syscall handler
     //unsigned long tmp = m_regs->regs.rsi; //base address of pt_regs object passed to do_syscall_64
     //pp-e
 
-    printf ("fs_base: %lx, gs_base:%lx . \n", m_regs->fs_base, m_regs->gs_base);
+    //printf ("fs_base: %lx, gs_base:%lx . \n", m_regs->fs_base, m_regs->gs_base);
     
     //pp-s
     scall = *((unsigned long*)(tmp+0x8*15)); //16th element in pt_regs is syscall no
