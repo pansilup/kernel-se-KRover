@@ -74,6 +74,21 @@
 #define SCALL_PRCTL             157
 #define SCALL_ARCH_PRCTL        158
 #define SCALL_ACCT              163
+#define SCALL_SCHED_SETSCHDLR   144
+#define SCALL_SCHED_GETAFFINITY 204
+#define SCALL_SCHED_SETAFFINITY 203
+#define SCALL_SCHED_RR_GT_INTVL 148
+#define SCALL_UNSHARE           272
+#define SCALL_STATX             332
+#define SCALL_TEE               276
+#define SCALL_SET_ROBUST_LIST   273
+#define SCALL_GET_ROBUST_LIST   274
+#define SCALL_MLOCK2            325
+#define SCALL_MPROTECT          10
+#define SCALL_USERFAULTFD       323
+#define SCALL_KCMP              312
+#define SCALL_PIPE2             293
+#define SCALL_DUP3              292
 //pp-e
 
 // #include "fatctrl.h"

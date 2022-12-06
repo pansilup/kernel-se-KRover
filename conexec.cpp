@@ -582,7 +582,7 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
         }
         else if (instr->size() == 6)//the non-rip rel operand is 4-byte
         {   
-            std::cout << "handling and\n" ;
+            //std::cout << "handling and\n" ;
             memcpy (orig_insn+1, orig_insn_addr, 6);
             orig_insn[0] = 0x41;
             if (orig_insn[3] == 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0)
@@ -604,6 +604,30 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
                 return 7;
             }
 
+        }
+        //pp-s
+        else if(instr->size() == 7)
+        {
+            memcpy (orig_insn, orig_insn_addr, 0x8);
+            orig_insn[0] |= 0x1;
+            if (orig_insn[3] == 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0)
+            {
+                orig_insn[2] |= 0x02;
+                memcpy(T_insn, orig_insn, 3);
+                return 3;
+            }
+            else if (orig_insn[3] != 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0) 
+            {
+                orig_insn[2] |= 0x42;
+                memcpy(T_insn, orig_insn, 4);
+                return 4;
+            }
+            else
+            {
+                orig_insn[2] |= 0x82;
+                memcpy(T_insn, orig_insn, 7);
+                return 7;
+            }
         }
         else //we do not handle otehr instruction lengths for the moment
         {
@@ -817,6 +841,39 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
         }
     }
     //else if(opcode == e_jmp)
+//pp-e
+//pp-s
+    else if(opcode == e_or) //pp-new
+    {
+        memcpy (orig_insn, orig_insn_addr, 0x8);
+        if (instr->size() == 7) 
+        {
+            orig_insn[0] |= 0x1;
+            if (orig_insn[3] == 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0)
+            {
+                orig_insn[2] |= 0x02;
+                memcpy(T_insn, orig_insn, 3);
+                return 3;
+            }
+            else if (orig_insn[3] != 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0) 
+            {
+                orig_insn[2] |= 0x42;
+                memcpy(T_insn, orig_insn, 4);
+                return 4;
+            }
+            else
+            {
+                orig_insn[2] |= 0x82;
+                memcpy(T_insn, orig_insn, 7);
+                return 7;
+            }
+        }
+        else
+        {
+            printf ("e_or : rip-relative instruction, unhandled ins len \n");
+            assert(0);
+        }
+    }
 //pp-e
     else
     {

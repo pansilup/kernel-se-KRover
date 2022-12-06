@@ -1026,7 +1026,7 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
     bool ret = false;
     int tmp_idx = 0;
     for (auto O : oprands) {
-        std::cout << "operand " << tmp_idx++ << std::endl;
+        //std::cout << "operand " << tmp_idx++ << std::endl;
 #ifndef _PROD_PERF
         st2_0 = rdtsc();
 #endif
@@ -1040,7 +1040,7 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
         //if (!O.readsMemory() && !O.writesMemory())
         if(!rm && !wm)
         {
-            std::cout << "reg ...\n";
+            //std::cout << "reg ...\n";
 #ifndef _PROD_PERF
             tr_0 = rdtsc();
 #endif
@@ -1052,13 +1052,13 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
             tr += (rdtsc() - tr_0);
 #endif
             if (ret){
-                std::cout << "sym reg ...\n";
+                //std::cout << "sym reg ...\n";
                 return true;
             }
         }
         else
         {
-            std::cout << "mem ...\n";
+            //std::cout << "mem ...\n";
             // For a mem access insn, if it uses gs, mem access Operand should add gs base //
 #ifndef _PROD_PERF
             st3_0 = rdtsc();
@@ -1079,7 +1079,7 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
             tmm += (rdtsc() - tm_0);
 #endif
             if (ret){
-                std::cout << "sym mem ...\n";
+                //std::cout << "sym mem ...\n";
                 return true;
             }
         }
@@ -1092,7 +1092,7 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
 #ifndef _PROD_PERF
     ti += (rdtsc() - ti_0);
 #endif
-    std::cout << "implicit mem " << ret << std::endl;
+    //std::cout << "implicit mem " << ret << std::endl;
     return ret;
 }
 
@@ -1343,7 +1343,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifdef DEBUG_LOG       
     printf("\nin pre-disassemble stage..................\n");
 #endif
-    printf("\nin pre-disassemble stage..................\n");
+    //printf("\nin pre-disassemble stage..................\n");
     //pre_dis_as0 = rdtsc();
 
     /* pre disassembling and parsing Operand */
@@ -1420,17 +1420,6 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifdef DEBUG_LOG       
     //printf("\nnext `process insn one by one` stage..................\n");
 #endif
-    
-    {
-        unsigned long tmp_Addr = 0xffffffff81e00c60;
-        int i = 0;
-        while( i < 10)
-        {
-            printf("%02x ", *((uint8_t*)(tmp_Addr+i)));
-            i++;
-        }
-        printf("\n"); 
-    }
 
     t0 = rdtsc();
     while (true) {
@@ -1497,7 +1486,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #endif
 
         }
-        std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
+        //std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
         /*int i = 0;
         while( i < 10)
         {
@@ -1724,7 +1713,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             std::cout << "insn count: " << insn_count << ". sym executed insn: " << symExe_count << std::endl;
                             
 #endif         
-                            std::cout << "sym executed insn " << std::endl;
+                            //std::cout << "sym executed insn \n\n\n\n\n" << std::endl;
 #ifndef _PROD_PERF
                             symExe_count ++;
                             sie_t0 = rdtsc();
@@ -1898,16 +1887,16 @@ bool CThinCtrl::parseOperands(InstrInfo *info) {
         // std::cout << "Operand " << O.format(Arch_x86_64) << std::endl;
         // std::cout<<"is read: " << O.readsMemory() << ". is write: " << O.writesMemory() << ". operand size: " << oi->size << std::endl;
         if (!O.readsMemory() && !O.writesMemory()) {
-            std::cout << "1\n";
+            //std::cout << "1\n";
             res = _mayOperandUseSymbol_XX(oi);
         } else if (O.readsMemory() && !O.writesMemory()) {
-            std::cout << "2\n";
+            //std::cout << "2\n";
             res = _mayOperandUseSymbol_RX(I, oi);
         } else if (!O.readsMemory() && O.writesMemory()) {
-            std::cout << "3\n";
+            //std::cout << "3\n";
             res = _mayOperandUseSymbol_XW(I, oi);
         } else if (O.readsMemory() && O.writesMemory()) {
-            std::cout << "4\n";
+            //std::cout << "4\n";
             res = _mayOperandUseSymbol_RW(I, oi);
         }
 
@@ -2009,7 +1998,7 @@ bool CThinCtrl::calculateBinaryFunction (BinaryFunction* bf, KVExprPtr &exprPtr)
             assert(imm.defined);
             long cval = imm.convert<long>();
             KVExprPtr eptr;
-            std::cout << "IMM size " << IMM->size() << std::endl;
+            //std::cout << "IMM size " << IMM->size() << std::endl;
             eptr.reset(new ConstExpr(cval, IMM->size(), 0));
             KVE.push_back(eptr);
 
@@ -2028,8 +2017,8 @@ bool CThinCtrl::calculateBinaryFunction (BinaryFunction* bf, KVExprPtr &exprPtr)
         int exp_sz0 = KVE[0]->getExprSize();
         int exp_sz1 = KVE[1]->getExprSize();
         int mx_sz = exp_sz0;
-        std::cout << "sz0 " << exp_sz0 << std::endl;
-        std::cout << "sz1 " << exp_sz1 << std::endl;
+        //std::cout << "sz0 " << exp_sz0 << std::endl;
+        //std::cout << "sz1 " << exp_sz1 << std::endl;
         if((KVE[0]->getKind() == EXPR::Expr::Const) && (exp_sz0 < exp_sz1))
         {
             mx_sz = exp_sz1;
@@ -2040,17 +2029,17 @@ bool CThinCtrl::calculateBinaryFunction (BinaryFunction* bf, KVExprPtr &exprPtr)
             mx_sz = exp_sz0;
             KVE[1]->setExprSize(exp_sz0);
         }
-        std::cout << "sz0 " << KVE[0]->getExprSize() << std::endl;
-        std::cout << "sz1 " << KVE[1]->getExprSize() << std::endl;
+        //std::cout << "sz0 " << KVE[0]->getExprSize() << std::endl;
+        //std::cout << "sz1 " << KVE[1]->getExprSize() << std::endl;
 
         if(bf->isAdd())
             exprPtr.reset(new AddExpr(KVE[0], KVE[1], mx_sz, 0)) ;
         if(bf->isMultiply())
             exprPtr.reset(new MulExpr(KVE[0], KVE[1], mx_sz, 0)) ;
-        std::cout << " expr sz " << exprPtr->getExprSize() << std::endl;
-        std::cout << " expr ";
-        exprPtr->print();
-        std::cout << std::endl;
+        //std::cout << " expr sz " << exprPtr->getExprSize() << std::endl;
+        //std::cout << " expr ";
+        //exprPtr->print();
+        //std::cout << std::endl;
     }
     /*
     if(bf->isAdd()) {
@@ -2152,7 +2141,7 @@ bool CThinCtrl::_mayOperandUseSymbol_XX(OprndInfoPtr &oi) {
                     //std::cout << "create expr in parseOperand " << std::endl;
                     //pp-s
                     oi->reg_symval->print();
-                    std::cout << "size: " << oi->reg_symval->getExprSize() << "\n" ;
+                    //std::cout << "size: " << oi->reg_symval->getExprSize() << "\n" ;
                     //pp-e
                 }
             }
@@ -2175,7 +2164,6 @@ bool CThinCtrl::_mayOperandUseSymbol_XX(OprndInfoPtr &oi) {
             oi->opty = OPTY_REGSYM;
         else
             oi->opty = OPTY_REGCON;
-
         return true;
     } else {
         ERRR_ME("Unexpected operand");

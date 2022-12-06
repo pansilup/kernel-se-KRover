@@ -102,7 +102,7 @@ bool Z3Handler::Z3ExpressionEvaluator(expr org_expr, expr sym_expr, expr con_exp
  *
 */
 bool Z3Handler::Z3SolveConcritize(std::vector<VMState::SYMemObject*> symobjs_all, std::set<KVExprPtr> constraints){
-    std::cout << "at Z3SolveConcritize\n";
+    //std::cout << "at Z3SolveConcritize\n";
     bool ret = 0;
     expr exprs = context_.bool_val(1);
     for (auto it = constraints.begin(); it != constraints.end(); it++){
@@ -228,7 +228,7 @@ bool Z3Handler::Z3SolveConcritize(std::vector<VMState::SYMemObject*> symobjs_all
             }
         }
     }
-    std::cout <<"bf ret\n";
+    //std::cout <<"bf ret\n";
     return ret;
 }
 
@@ -489,7 +489,7 @@ z3::expr Z3Handler::Z3HandleConst(ExprPtr const_expr_ptr){ // 3
     //std::cout << "value in ConstExpr : " << value << std::endl;
     //pp-s frm Hx
     int size = const_expr->getSize();
-    std::cout << "at Z3HandleConst: size : " << size << std::endl;
+    //std::cout << "at Z3HandleConst: size : " << size << std::endl;
     expr x = context_.bv_val(value, size * 8);
     //expr x = context_.bv_val(value, 32);
     //pp-e
