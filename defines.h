@@ -23,7 +23,7 @@
 //#define DEBUG_LOG
 //#endif
 //pp-s
-#if 0
+#if 1
     #ifndef _PROD_PERF
         #define _PROD_PERF
     #endif

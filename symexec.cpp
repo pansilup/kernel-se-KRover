@@ -453,6 +453,7 @@ bool SymExecutor::process_mov(VMState *vm, InstrInfoPtr &infoptr) {
 
 bool SymExecutor::process_add(VMState *vm, InstrInfoPtr &infoptr) {
     // Process addition
+    //std::cout << "at process_add\n";
     auto &vecOI = infoptr->vecOI;
     OprndInfoPtr &oisrc1 = vecOI[0];
     OprndInfoPtr &oisrc2 = vecOI[1];

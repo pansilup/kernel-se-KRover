@@ -1982,7 +1982,7 @@ int main(int argc, char** argv) {
     //execState->MoniStartOfSE(0xffffffff812dc170);//addr of x64_sys_creat
     //execState->MoniStartOfSE(0xffffffff810badc0);//addr of x64_sys_getrlimit
     //execState->MoniStartOfSE(0xffffffff810bc0e0);//addr of x64_sys_setrlimit
-    //execState->MoniStartOfSE(0xffffffff812f8460);//addr of x64_sys_unlink
+    execState->MoniStartOfSE(0xffffffff812f8460);//addr of x64_sys_unlink
     //execState->MoniStartOfSE(0xffffffff812f8630);//addr of x64_sys_symlink
     //execState->MoniStartOfSE(0xffffffff812e03b0);//addr of x64_sys_chmod
     //execState->MoniStartOfSE(0xffffffff810a0cf0);//addr of x64_sys_personality
@@ -2016,7 +2016,7 @@ int main(int argc, char** argv) {
     //execState->MoniStartOfSE(0xffffffff813212a0); //addr of x64_sys_utime
     //execState->MoniStartOfSE(0xffffffff810d3230); //addr of x64_sys_sched_getscheduler
     //execState->MoniStartOfSE(0xffffffff8126cf00); //addr of x64_sys_sched_mlockall
-    execState->MoniStartOfSE(0xffffffff810bd1e0); //addr of x64_sys_sched_prctl
+    //execState->MoniStartOfSE(0xffffffff810bd1e0); //addr of x64_sys_sched_prctl
     //execState->MoniStartOfSE(0xffffffff810315f0); //addr of x64_sys_sched_arch_prctl
     //execState->MoniStartOfSE(0xffffffff81159680); //addr of x64_sys_sched_acct
     //execState->MoniStartOfSE(0xffffffff812763e0); //addr of x64_sys_msync

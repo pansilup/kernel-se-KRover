@@ -1338,7 +1338,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
     ttt = ttt0 = ttt1 = 0;
 
 //#ifdef _PreDisassemble
-#if 0
+#if 1
 
 #ifdef DEBUG_LOG       
     printf("\nin pre-disassemble stage..................\n");
@@ -1427,7 +1427,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifdef DEBUG_LOG       
     printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
 #endif
-        printf("\n-------------------instruction %lu: adr : %lx\n", insn_count, crtAddr);
+        //printf("\n-------------------instruction %lu: adr : %lx\n", insn_count, crtAddr);
         /* get the Insn from the InsnCache or decoding on the site */
 #ifndef _PROD_PERF
         dis_as0 = rdtsc();
@@ -2140,7 +2140,7 @@ bool CThinCtrl::_mayOperandUseSymbol_XX(OprndInfoPtr &oi) {
                     oi->reg_symval = exprPTR ;
                     //std::cout << "create expr in parseOperand " << std::endl;
                     //pp-s
-                    oi->reg_symval->print();
+                    //oi->reg_symval->print();
                     //std::cout << "size: " << oi->reg_symval->getExprSize() << "\n" ;
                     //pp-e
                 }
@@ -2635,7 +2635,7 @@ bool CThinCtrl::_mayOperandUseSymbol_XW(DAPIInstrPtr& I, OprndInfoPtr &oi) {
             }
         }
     } else if (O->isWritten()) {
-        std::cout << "operand writes\n";
+        //std::cout << "operand writes\n";
         // eg1: mov $0x0,0xfffffff4(%rbp) -> 0xfffffff4(%rbp)
         std::set<RegisterAST::Ptr> rdwrRegs;
         oi->rdwr = OPAC_WR;       // Write into a memory cell
@@ -2681,7 +2681,7 @@ bool CThinCtrl::_mayOperandUseSymbol_XW(DAPIInstrPtr& I, OprndInfoPtr &oi) {
                 //      << "\n";
                 return false;
             } else {
-                std::cout << "not a sym reg\n";
+                //std::cout << "not a sym reg\n";
                 // Memory access without symbolic register
                 
                 
