@@ -434,6 +434,9 @@ class ZeroExtExpr : public UryExpr {
     // @THX add the implemenation of the virtual function
     Kind getKind() const { return ZeroEXT; }
     ExprPtr getExprPtr() { return E; }
+    //pp-s Hx
+    int getSize() {return size;}
+    //pp-e
 };
 
 class EqualExpr : public UryExpr {

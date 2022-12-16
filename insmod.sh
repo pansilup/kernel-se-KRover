@@ -1,1 +1,1 @@
-sudo insmod ../../k-loader/KRover-k-loader/ld.ko
+sudo insmod /home/neo/smu/oasis/k-loader/ld.ko

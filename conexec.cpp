@@ -402,7 +402,7 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
 //pp-e
     {
         memcpy (orig_insn, orig_insn_addr, 0x8);
-    
+        std::cout << "instr size " << instr->size() << std::endl;
         if (instr->isRead(x86_gs))
         {
             //printf ("gs base rip rel insn. \n");
@@ -461,6 +461,30 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
         }
         else
         {
+            //pp-s
+            if(instr->size() == 8) //cmpq
+            {
+                orig_insn[0] |= 0x1;
+                if (orig_insn[3] == 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0)
+                {
+                    orig_insn[2] |= 0x02;
+                    memcpy(T_insn, orig_insn, 4);
+                    return 4;
+                }
+                else if (orig_insn[3] != 0 && orig_insn[4] == 0 && orig_insn[5] == 0  && orig_insn[6] == 0) 
+                {
+                    orig_insn[2] |= 0x42;
+                    memcpy(T_insn, orig_insn, 5);
+                    return 5;
+                }
+                else
+                {
+                    orig_insn[2] |= 0x82;
+                    memcpy(T_insn, orig_insn, 8);
+                    return 8;
+                }
+            }
+            //pp-e
             if (instr->size() == 7)//both operand size are 8-byte
             {
                 orig_insn[0] |= 0x1;
@@ -515,6 +539,7 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
             }
             else
             {
+                std::cout << "unhandled instruction len\n";
                 asm volatile ("vmcall; \n\t");
             }
         }

@@ -302,10 +302,19 @@ class ExprEvalVisitor : public Visitor {
             if (RV.bsym) {
                 // Do nothing
                 cout << r->format() << " is sym!!!" << "\n";
+                RV.expr->print() ;
+                std::cout << std::endl;
             } else {
+                //unsigned long vts = Result(s64, RV.i64) ;
+                //std::cout << "At ExprEvalVisitor : r->getID " << indx << " RV.i64 " << RV.i64 << " val set to reg : " << vts << std::endl; 
                 switch (size) {
                     case 8:
+                    {   
+                        //Result R = Result(s64, RV.i64);
+                        //std::cout << "result : " << R.val.s64val << std::endl;
                         r->setValue(Result(s64, RV.i64));
+
+                    }
                         break;
                     case 4:
                         r->setValue(Result(s32, RV.i32));
@@ -535,6 +544,15 @@ bool CThinCtrl::checkImplicitMemAccess(Instruction *I)
 #ifdef _DEBUG_OUTPUT
             std::cout << "$$$$$$$$$$$$check implicit read for insn " << I->format() << " at addr " << std::hex << rdaddr.convert<ulong>() << std::endl;
 #endif
+            
+            /*if(I->getOperation().getID() == e_pop) {
+                struct pt_regs* m_regs2 = m_VM->getPTRegs();
+                if ((rdaddr.convert<ulong>()) != (m_regs2->rsp)) 
+                {
+                    std::cout << "incorrect implicit address in pop\n";
+                }
+            }*/
+            
             if (m_VM->isSYMemoryCell(rdaddr.convert<ulong>(), (ulong)it->size()))
                 return true;
         }
@@ -548,12 +566,63 @@ bool CThinCtrl::checkImplicitMemAccess(Instruction *I)
             it->apply(&visitor);
             auto wraddr = it->eval();
             assert(wraddr.defined);
-
+            /*if(I->getOperation().getID() == e_push){
+                //std::cout << "at impmemchk wraddr.convert<ulong>(): " << std::hex << wraddr.convert<ulong>() << std::endl;
+                //std::cout << "at impmemchk wraddr.val.s64val: " << std::hex << wraddr.val.s64val << " Result type: " << wraddr.type << std::endl;
+            }*/
 #ifdef _DEBUG_OUTPUT
             std::cout << "@@@@@@@@@@222check implicit write for insn " << I->format() << " at addr " << std::hex << wraddr.convert<ulong>() << std::endl;
 #endif
+
             if (m_VM->isSYMemoryCell(wraddr.convert<ulong>(), (ulong)it->size()))
                 return true;
+        
+            if(I->getOperation().getID() == e_push) {
+                
+                struct pt_regs* m_regs2 = m_VM->getPTRegs();
+                if ((wraddr.convert<ulong>()) != (m_regs2->rsp - 8)) {
+
+                    std::cout << "(ulong)it->size() " << (ulong)it->size() << std::endl;
+                    std::vector<Expression::Ptr> children;
+                    it->getChildren(children);
+
+                    for (auto c : children)
+                    {
+                        RegisterAST* R = dynamic_cast<RegisterAST*>(c.get());
+                        Immediate* IMM = dynamic_cast<Immediate*>(c.get());
+
+                        if(R != nullptr)
+                        {
+                            
+                            RegValue RV{R->getID(), (uint)R->size()};
+                            bool res = m_VM->readRegister(RV);
+                            assert(res);
+                            assert(!RV.bsym);
+                            std::cout << "reg : " << std::hex << RV.u64 << std::endl; 
+                        }
+                        else if(IMM != nullptr)
+                        {
+                            Result imm = IMM->eval();
+                            assert(imm.defined);
+                            long cval = imm.convert<long>();
+                            std::cout << "imm : " << cval << std::endl;
+                        }
+                        else
+                        {
+                            assert(0);
+                        }
+                    }
+                }
+            }
+        
+        }
+        struct pt_regs* m_regs2 = m_VM->getPTRegs();
+        if(I->getOperation().getID() == e_push)
+        {
+            if (m_VM->isSYMemoryCell(m_regs2->rsp - 8, 8)) {
+                std::cout << "symbolic : " << std::hex << m_regs2->rsp - 8 << std::endl;
+                return true;
+            }
         }
     }
     return false;
@@ -691,7 +760,7 @@ bool CThinCtrl::updateJCCDecision(Instruction* in, struct pt_regs* m_regs, ulong
         z3_api_calls++;
         // printf ("tt0: %lx, tt1: %lx, tt: %lx. \n", tt0, tt1, tt);
                         
-        // std::cout << "bExecute: " << bExecute << std::endl; 
+        std::cout << "bExecute: " << bExecute << std::endl; 
         
         //!-n concretize eflags based on the decision we took
         m_EFlagsMgr->ConcreteFlag(in->getOperation().getID(), bExecute) ;
@@ -1007,6 +1076,7 @@ ulong CThinCtrl::getSegRegVal(Instruction* in)
 //bool CThinCtrl::hasSymOperand(Instruction* in)
 bool CThinCtrl::hasSymOperand(wrapInstruction* win)
 {
+    //bool wt = false;
     //pp-s
     Instruction* in = win->in;
     //std::vector<Operand> oprands;
@@ -1052,8 +1122,10 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
             tr += (rdtsc() - tr_0);
 #endif
             if (ret){
-                //std::cout << "sym reg ...\n";
-                return true;
+                std::cout << "sym reg ...\n";
+                return true; 
+                //if(wt == false)
+                //    wt = true;
             }
         }
         else
@@ -1079,8 +1151,10 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
             tmm += (rdtsc() - tm_0);
 #endif
             if (ret){
-                //std::cout << "sym mem ...\n";
-                return true;
+                std::cout << "sym mem ...\n";
+                return true; 
+                //if(wt == false)
+                //    wt = true;
             }
         }
         i++;
@@ -1092,8 +1166,11 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
 #ifndef _PROD_PERF
     ti += (rdtsc() - ti_0);
 #endif
-    //std::cout << "implicit mem " << ret << std::endl;
-    return ret;
+    std::cout << "implicit mem " << ret << std::endl;
+    //if(wt == false && ret)
+    //    wt = true;
+    return ret;  
+    //return wt;
 }
 
 /*
@@ -1338,7 +1415,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
     ttt = ttt0 = ttt1 = 0;
 
 //#ifdef _PreDisassemble
-#if 1
+#if 0
 
 #ifdef DEBUG_LOG       
     printf("\nin pre-disassemble stage..................\n");
@@ -1427,7 +1504,10 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifdef DEBUG_LOG       
     printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
 #endif
-        //printf("\n-------------------instruction %lu: adr : %lx\n", insn_count, crtAddr);
+        printf("\n-------------------instruction %lu: adr : %lx\n", insn_count, crtAddr);
+        if(insn_count == 420){
+            printf("%r10 : %lx %r11 : %lx\n", m_regs->r10, m_regs->r11);
+        }
         /* get the Insn from the InsnCache or decoding on the site */
 #ifndef _PROD_PERF
         dis_as0 = rdtsc();
@@ -1486,7 +1566,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #endif
 
         }
-        //std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
+        std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
         /*int i = 0;
         while( i < 10)
         {
@@ -1637,7 +1717,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                 }
             default:
                 {
-                    if (!dependFlagCon(in, bExecute)) //instructions involving dependan flag eg : cmov
+                    if (!dependFlagCon(in, bExecute)) //instructions involving dependan flag eg : cmov, sbb
                     {
 #ifdef _SYM_DEBUG_OUTPUT
                         // std::cout << "depend on sym flag, at rip " << crtAddr << std::endl;
@@ -1660,6 +1740,65 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifdef _DEBUG_OUTPUT
                         std::cout << "bExecute: " << bExecute << std::endl; 
 #endif
+                        //pp-s
+                        //concretize the flags based on the decision taken i.e. 'bExecute'
+                        //this concretization should take place before 'sbb' is dispatched for SIE
+                        m_EFlagsMgr->ConcreteFlag(in->getOperation().getID(), bExecute) ;
+                        //pp-e
+                        
+                        //pp-s
+                        //not all instructions involving a dependent flag are similar to cmov
+                        //eg: sbb ; the instruction uses CF during its operation
+                        if(in->getOperation().getID() == e_sbb)
+                        {
+#ifndef _PROD_PERF
+                            shouldsym_t0 = rdtsc();
+#endif
+                            bool shouldSymExe = false;    
+                            //pp-s                   
+                            //shouldSymExe = hasSymOperand(in);
+                            shouldSymExe = hasSymOperand(win);
+                            //pp-e
+#ifndef _PROD_PERF
+                            shouldsym_t += (rdtsc() - shouldsym_t0);
+#endif
+                            if (shouldSymExe)
+                            {
+#ifndef _PROD_PERF
+                                symExe_count ++;
+                                sie_t0 = rdtsc();
+#endif
+                                InstrInfo *ioi = new InstrInfo(new Instruction (*in));
+                                parseOperands(ioi);
+                                InstrInfoPtr ptr(ioi);
+                                m_SymExecutor->pushInstr(ptr);
+                                m_SymExecutor->run(m_VM);
+#ifndef _PROD_PERF
+                                sie_t1 = rdtsc();
+                                sie_t += (sie_t1 - sie_t0);
+    #endif
+                            }
+                            else
+                            {
+                                //std::cout << "dispatch for CIE\n"; 
+#ifndef _PROD_PERF
+                                cie_count++; 
+                                cie_t0 = rdtsc();     
+#endif                  
+                                m_ConExecutor->InsnDispatch2(in, m_regs, win->cie_mode);
+                                if (m_EFlagsMgr->isFlagChangingInstr(in->getOperation().getID()))
+                                {
+                                    m_VM->clearAllSymFlag();
+                                }
+#ifndef _PROD_PERF
+                                cie_t1 = rdtsc();
+                                cie_t += (cie_t1 - cie_t0);
+#endif
+                            }
+                            break;
+                        }
+                        //pp-e
+
                         if (bExecute == false)
                             continue;
                         else
@@ -1688,7 +1827,11 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                         //pp-s
                         //unsigned long tc, td;
                         //tc = rdtsc();
-                        m_EFlagsMgr->ConcreteFlag(in->getOperation().getID(), bExecute) ;
+
+                        //Currently we concretize the flags only in bExecute == noptrue scenatio
+                        //movig this above the if-else to concretize for bExecute == false cases as well
+                        //m_EFlagsMgr->ConcreteFlag(in->getOperation().getID(), bExecute) ;
+
                         //td = rdtsc();
                         //printf("time : %lu\n", td-tc);
                         //pp-e
@@ -1713,7 +1856,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             std::cout << "insn count: " << insn_count << ". sym executed insn: " << symExe_count << std::endl;
                             
 #endif         
-                            //std::cout << "sym executed insn \n\n\n\n\n" << std::endl;
+                            std::cout << "sym executed insn \n" << std::endl;
 #ifndef _PROD_PERF
                             symExe_count ++;
                             sie_t0 = rdtsc();
@@ -1736,7 +1879,9 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #endif
                         } else {
                             /* Instruction CIE */  
-                            //std::cout << "dispatch for CIE\n"; 
+                            std::cout << "dispatch for CIE\n"; 
+                            if(in->getOperation().getID() == e_push)
+                            printf ("~~~~~~~~~~~~, rsp: %lx. rbp %lx \n", m_regs->rsp, m_regs->rbp);
 #ifndef _PROD_PERF
                             cie_count++; 
                             cie_t0 = rdtsc();     
@@ -1749,6 +1894,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             {
                                 m_VM->clearAllSymFlag();
                             }
+                            printf ("after CIE ~~~~~~~~~~~~, rsp: %lx. rbp %lx \n", m_regs->rsp, m_regs->rbp);
 #ifndef _PROD_PERF
                             cie_t1 = rdtsc();
                             //std::cout << "insn : " << insn_count << " , cie cost : " << std::dec << t1_cie - t0_cie << std::endl;

@@ -119,6 +119,10 @@ struct shar_arg
     volatile unsigned long guest_timeout_flag;
     volatile unsigned long exit_wrong_flag;
     volatile unsigned long cross_page_flag;
+    //pp-s
+    unsigned long idtr_base;
+    unsigned long idtr_limit_u16;
+    //pp-e
 };
 struct shar_arg* ei_shar_args;
 
@@ -1951,19 +1955,23 @@ int main(int argc, char** argv) {
     execState->InitRediPagePool();
 //printf ("%d, =========\n", __LINE__);   
     // return 0;
+
+    printf("/ntarg idtr lim %02x base %lx \n", ei_shar_args->idtr_limit_u16, ei_shar_args->idtr_base);
     
-    //execState->MoniStartOfSE(0xffffffff810baa50);//addr of x64_sys_setpriority
-    //execState->MoniStartOfSE(0xffffffff810ba7d0);//addr of x64_sys_getpriority
+    exit(0);
+
+    //execState->MoniStartOfSE(0xffffffff810b9710); //ffffffff810baa50);//addr of x64_sys_setpriority
+    //execState->MoniStartOfSE(0xffffffff810b5fb0); //ffffffff810ba7d0);//addr of x64_sys_getpriority
     //execState->MoniStartOfSE(0xffffffff812e2800);//addr of x64_sys_lseek
     //execState->MoniStartOfSE(0xffffffff81910660);//addr of x64_sys_bind
-    //execState->MoniStartOfSE(0xffffffff8191e250);//addr of sys_socket
+    //execState->MoniStartOfSE(0xffffffff81910250); //ffffffff8191e250);//addr of sys_socket
     //execState->MoniStartOfSE(0xffffffff812ef550);//addr of x64_sys_pipe
     //execState->MoniStartOfSE(0xffffffff812e03b0);//addr of x64_sys_chmod
     //execState->MoniStartOfSE(0xffffffff812f38b0);//addr of x64_sys_symlink
-    //execState->MoniStartOfSE(0xffffffff812dff60);//addr of x64_sys_access
+    //execState->MoniStartOfSE(0xffffffff812db390); //ffffffff812dff60);//addr of x64_sys_access
     //execState->MoniStartOfSE(0xffffffff81308720);//addr of x64_sys_sysfs
     //execState->MoniStartOfSE(0xffffffff810b7250);//addr of x64_sys_umask
-    //execState->MoniStartOfSE(0xffffffff81301470);//addr of x64_sys_dup
+    //execState->MoniStartOfSE(0xffffffff81308110);//addr of x64_sys_dup
     //execState->MoniStartOfSE(0xffffffff813071e0);//addr of x64_sys_dup2
     //execState->MoniStartOfSE(0xffffffff81146770);//addr of x64_sys_alarm
     //execState->MoniStartOfSE(0xffffffff810d0b80);//addr of x64_sys_sched_get_priority_max
@@ -1973,26 +1981,26 @@ int main(int argc, char** argv) {
     //execState->MoniStartOfSE(0xffffffff8126c9e0);//addr of x64_sys_mlock
     //execState->MoniStartOfSE(0xffffffff8126cb50);//addr of x64_sys_munlock
     //execState->MoniStartOfSE(0xffffffff812f9ca0);//addr of x64_sys_fcntl
-    //execState->MoniStartOfSE(0xffffffff812e4fe0);//addr of x64_sys_write
+    execState->MoniStartOfSE(0xffffffff812e0410); //ffffffff812e4fe0);//addr of x64_sys_write
     //execState->MoniStartOfSE(0xffffffff812df790);//addr of x64_sys_truncate
     //execState->MoniStartOfSE(0xffffffff812db4a0);//addr of x64_sys_chdir
     //execState->MoniStartOfSE(0xffffffff812f2510);//addr of x64_sys_rename
-    //execState->MoniStartOfSE(0xffffffff812f7e30);//addr of x64_sys_mkdir
+    //execState->MoniStartOfSE(0xffffffff812f30b0); //ffffffff812f7e30);//addr of x64_sys_mkdir
     //execState->MoniStartOfSE(0xffffffff812f3300);//addr of x64_sys_rmdir
     //execState->MoniStartOfSE(0xffffffff812dc170);//addr of x64_sys_creat
     //execState->MoniStartOfSE(0xffffffff810badc0);//addr of x64_sys_getrlimit
     //execState->MoniStartOfSE(0xffffffff810bc0e0);//addr of x64_sys_setrlimit
-    execState->MoniStartOfSE(0xffffffff812f8460);//addr of x64_sys_unlink
+    //execState->MoniStartOfSE(0xffffffff812f8460);//addr of x64_sys_unlink
     //execState->MoniStartOfSE(0xffffffff812f8630);//addr of x64_sys_symlink
     //execState->MoniStartOfSE(0xffffffff812e03b0);//addr of x64_sys_chmod
     //execState->MoniStartOfSE(0xffffffff810a0cf0);//addr of x64_sys_personality
-    //execState->MoniStartOfSE(0xffffffff81038d80);//addr of x64_sys_mmap
-    //execState->MoniStartOfSE(0xffffffff812e4ec0);//addr of x64_sys_read
+    //execState->MoniStartOfSE(0xffffffff81037c90); //ffffffff81037c90);//addr of x64_sys_mmap
+    //execState->MoniStartOfSE(0xffffffff812e02f0); //ffffffff812e4ec0);//addr of x64_sys_read
     //execState->MoniStartOfSE(0xffffffff8126e470); //addr of x64_sys_mprotect
     //execState->MoniStartOfSE(0xffffffff812763e0); //); //addr of x64_sys_mprotect
     //execState->MoniStartOfSE(0xffffffff8126b630); //); //addr of x64_sys_mincore
     //execState->MoniStartOfSE(0xffffffff811463a0); //); //addr of x64_sys_getitimer
-    //execState->MoniStartOfSE(0xffffffff81146ab0); //); //addr of x64_sys_setitimer
+    //execState->MoniStartOfSE(0xffffffff81144450); //ffffffff81146ab0); //); //addr of x64_sys_setitimer
     //execState->MoniStartOfSE(0xffffffff8135f070); //); //addr of x64_sys_flock
     //execState->MoniStartOfSE(0xffffffff810bca90); //); //addr of x64_sys_getrusage
     //execState->MoniStartOfSE(0xffffffff810b8050); //); //addr of x64_sys_setpgid
@@ -2003,38 +2011,38 @@ int main(int argc, char** argv) {
     //execState->MoniStartOfSE(0xffffffff810baf20); //); //addr of x64_sys_setgid
     //execState->MoniStartOfSE(0xffffffff810d0640); //); //addr of x64_sys_getgroups
     //execState->MoniStartOfSE(0xffffffff810d08a0); //); //addr of x64_sys_setgroups
-    //execState->MoniStartOfSE(0xffffffff810bb490); //); //addr of x64_sys_setresuid
+    //execState->MoniStartOfSE(0xffffffff810ba150); //ffffffff810bb490); //); //addr of x64_sys_setresuid
     //execState->MoniStartOfSE(0xffffffff810bb660); //); //addr of x64_sys_setresgid
     //execState->MoniStartOfSE(0xffffffff810bb770); //); //addr of x64_sys_setfsuid
     //execState->MoniStartOfSE(0xffffffff810bb870); //); //addr of x64_sys_setfsgid
     //execState->MoniStartOfSE(0xffffffff810b9cb0); //); //addr of x64_sys_getsid
     //execState->MoniStartOfSE(0xffffffff810d3540); //); //addr of x64_sys_sched_getparam
-    //execState->MoniStartOfSE(0xffffffff810d6ec0); //); //addr of x64_sys_sched_setparam
-    //execState->MoniStartOfSE(0xffffffff812e0bf0); //); //addr of x64_sys_open
+    //execState->MoniStartOfSE(0xffffffff810d5850); //ffffffff810d6ec0); //); //addr of x64_sys_sched_setparam
+    //execState->MoniStartOfSE(0xffffffff812dc020); //ffffffff812e0bf0); //); //addr of x64_sys_open
     //execState->MoniStartOfSE(0xffffffff81035ee0); //addr of x64_sys_iopl
-    //execState->MoniStartOfSE(0xffffffff810361a0); //addr of x64_sys_ioperm
+    //execState->MoniStartOfSE(0xffffffff810350b0); //ffffffff810361a0); //addr of x64_sys_ioperm
     //execState->MoniStartOfSE(0xffffffff813212a0); //addr of x64_sys_utime
     //execState->MoniStartOfSE(0xffffffff810d3230); //addr of x64_sys_sched_getscheduler
     //execState->MoniStartOfSE(0xffffffff8126cf00); //addr of x64_sys_sched_mlockall
     //execState->MoniStartOfSE(0xffffffff810bd1e0); //addr of x64_sys_sched_prctl
     //execState->MoniStartOfSE(0xffffffff810315f0); //addr of x64_sys_sched_arch_prctl
-    //execState->MoniStartOfSE(0xffffffff81159680); //addr of x64_sys_sched_acct
+    //execState->MoniStartOfSE(0xffffffff81156fa0); //ffffffff81159680); //addr of x64_sys_sched_acct
     //execState->MoniStartOfSE(0xffffffff812763e0); //addr of x64_sys_msync
     //execState->MoniStartOfSE(0xffffffff810d6e60); //addr of x64_sys_sched_setscheduler
     //execState->MoniStartOfSE(0xffffffff810dc150); //addr of x64_sys_sched_getaffinity
-    //execState->MoniStartOfSE(0xffffffff810dbf10); //addr of x64_sys_sched_setaffinity
+    //execState->MoniStartOfSE(0xffffffff810da660); //ffffffff810dbf10); //addr of x64_sys_sched_setaffinity
     //execState->MoniStartOfSE(0xffffffff810d59a0); //addr of x64_sys_sched_rr_get_interval
     //execState->MoniStartOfSE(0xffffffff810a0b50); //addr of x64_sys_unshare
-    //execState->MoniStartOfSE(0xffffffff812ea6a0); //addr of x64_sys_statx
+    //execState->MoniStartOfSE(0xffffffff812e5a50); //ffffffff812ea6a0); //addr of x64_sys_statx
     //execState->MoniStartOfSE(0xffffffff8131f8c0); //addr of x64_sys_tee
     //execState->MoniStartOfSE(0xffffffff8114abe0); //addr of x64_sys_set_robust_list
     //execState->MoniStartOfSE(0xffffffff8114b580); //addr of x64_sys_get_robust_list
     //execState->MoniStartOfSE(0xffffffff8126ca20); //addr of x64_sys_mlock2
     //execState->MoniStartOfSE(0xffffffff81274470); //addr of x64_sys_mprotectcmpxch
     //execState->MoniStartOfSE(0xffffffff813407c0); //addr of x64_sys_userfaultfd
-    //execState->MoniStartOfSE(0xffffffff81131410); //addr of x64_sys_kcmp
+    //execState->MoniStartOfSE(0xffffffff8112ef90); //ffffffff81131410); //addr of x64_sys_kcmp
     //execState->MoniStartOfSE(0xffffffff812ef510);//addr of x64_sys_pipe2
-    //execState->MoniStartOfSE(0xffffffff813071a0);//addr of x64_sys_dup3
+    //execState->MoniStartOfSE(0xffffffff813023a0); //ffffffff813071a0);//addr of x64_sys_dup3
 
 
     //execState->MoniStartOfSE(0x555555554793); //addr in guest 

@@ -64,6 +64,9 @@ bool EFlagsManager::ConcreteFlag (entryID instrID, bool bExecute) {
         case e_jb_jnaej_j:
         case e_cmovnae:
         case e_setb:
+        //pp-s @hq
+        case e_sbb:
+        //pp-e 
             // B/NAE/Carry;		(CF=1)
             m_VM->setFlagBit(x86_64::cf, bExecute?fset:fclr) ;
             
@@ -768,12 +771,12 @@ bool EFlagsManager::EvalCondition(entryID insnID)
         constraints.insert(exprPtr);
         
         
-        /*std::cout << "constraints : \n";
+        std::cout << "constraints : \n";
         for(auto it : constraints)
         {
             it->print();
             std::cout << "\n";
-        }*/
+        }
         
         
 

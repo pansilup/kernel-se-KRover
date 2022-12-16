@@ -1,2 +1,2 @@
-/home/beverly/KRover/KRover/KRover-launcher/hello 0x0
+/home/neo/smu/oasis/launcher/hello 0x0
 

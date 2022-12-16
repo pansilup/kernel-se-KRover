@@ -1,9 +1,9 @@
 
-DYNINST_PATH	:= /home/beverly/KRover/dyninst/install
+DYNINST_PATH	:= /home/neo/smu/KRover/dyninst/install
 DYNINST_INC_PATH		:= ${DYNINST_PATH}/include
 DYNINST_LIB_PATH		:= ${DYNINST_PATH}/lib
 
-Z3_PATH	:= /home/beverly/KRover/Z3/z3-solver/z3
+Z3_PATH	:= /home/neo/smu/KRover/z3/z3-solver/z3
 Z3_INC_PATH		:= ${Z3_PATH}/include
 # Z3_LIB_PATH		:= ${Z3_PATH}/libz3.so
 Z3_LIB_PATH		:= ${Z3_PATH}
@@ -23,7 +23,7 @@ CPPFLAGS	:=-fPIC -c -std=c++11
 # LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}:/usr/lib/x86_64-linux-gnu:${STDLIB_PATH}:/lib/x86_64-linux-gnu' '-Wl,--dynamic-linker=/home/jqhong/Downloads/glibc-2.30/build-glibc/elf/ld.so'
 # LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader/build-glibc/elf/ld.so'
 # LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader-2.27/build-glibc/elf/ld.so'
-LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}' '-Wl,--dynamic-linker=/home/beverly/KRover/u-loader/build-glibc/elf/ld.so'
+LDFLAGS= '-Wl,--rpath=${DYNINST_LIB_PATH}:${Z3_PATH}' '-Wl,--dynamic-linker=/home/neo/smu/oasis/u-loader/build-glibc/elf/ld.so'
 
 # DEP = -ldyninstAPI -lz3
 DEP = -lz3 -lparseAPI -linstructionAPI -lsymtabAPI -ldynDwarf -lelf -ldynElf -lcommon -lsymLite 

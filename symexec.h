@@ -27,6 +27,10 @@ class SymExecutor {
     SymExecutor() : m_IOIs(){};
     ~SymExecutor(){};
 
+    //pp-s
+    VMState *m_VM ;
+    //pp-e
+
     // static SymExecutor *GetInstance(void);
 
     // bool pushInstr(DAPIInstr *I, std::vector<OprndInfo *> *vecOI);
@@ -93,6 +97,13 @@ class SymExecutor {
     bool process_cbw(VMState *vm, InstrInfoPtr &infoptr) ;
 
     bool process_set(VMState *vm, InstrInfoPtr &infoptr) ;
+
+    //pp-s
+    bool process_sbb(VMState *vm, InstrInfoPtr &infoptr);
+    //pp-e
+    //pp-s
+    bool process_sidt(VMState *vm, InstrInfoPtr &infoptr);
+    //pp-e
     
     bool Print_Inst(VMState *vm, InstrInfoPtr &infoptr, const char* cstr) ;
 

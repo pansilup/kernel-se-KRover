@@ -141,7 +141,7 @@ CFattCtrl::CFattCtrl(VMState *VM, EveMeta* meta) {
     /* Init Func call info database */
     //pp-s
     //std::string filename = "/home/neo/smu/kernel-se/k-test/ker_func.txt";
-    std::string filename = "/home/beverly/KRover/KRover/KRover/stc-files/ker_func.txt";
+    std::string filename = "/home/neo/smu/KRover/KRover/stc-files/ker_func.txt";
     //pp-e
     m_func_call = (struct CallInAllFuncs*)malloc(sizeof(struct CallInAllFuncs)*44020);
     InitFuncDB(filename.c_str());

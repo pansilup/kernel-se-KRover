@@ -120,7 +120,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x8;  //adr of rsi
             //declareSymbolicObject(tmp, 8, 1, 1, 0x5, "offset_rsi"); 
             tmp += 0x8;  //adr of rdi
-            std::cout << "fd : " << *((unsigned long*)tmp) << std::endl;
+            //std::cout << "fd : " << *((unsigned long*)tmp) << std::endl;
             //declareSymbolicObject(tmp, 8, 1, 0x0, "fd_rdi");    
         }   break;
         case SCALL_SOCKET:
@@ -260,7 +260,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x60;  //adr of rdx
             //printf ("nice value: %d. \n", *((unsigned long*)tmp));
-            declareSymbolicObject(tmp, 8, 1, 1, 10, "count_rdx");
+            declareSymbolicObject(tmp, 8, 1, 1, 2, "count_rdx");
             tmp += 0x8;  //adr of rsi
             //declareSymbolicObject(tmp, 8, 1, 0x0, "buf_rsi"); 
             tmp += 0x8;  //adr of rdi
@@ -413,12 +413,17 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             //declareSymbolicObject(tmp+0x40, 8, 1, 1, 0, "offset_r9");
 
             //---sym %r10
-            tmp += 0x48;
-            declareSymbolicObject(tmp, 8, 1, 1, -1, "fd_r8"); //symbol
+            //tmp += 0x48;
+            //declareSymbolicObject(tmp, 8, 1, 1, -1, "fd_r8"); //symbol
 
             //---sym %rdx
             //tmp += 0x60; //adr of rdx
             //declareSymbolicObject(tmp, 8, 0, 1, 0x3, "prot_rdx");
+
+            //---sym %rsi
+            tmp+= 0x68; //adr of rsi
+            //declareSymbolicObject(tmp, 8, 0, 1, 1024, "len_rsi");
+
         }   break;
         case SCALL_READ:
         {
@@ -566,9 +571,9 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x60; 
-            declareSymbolicObject(tmp, 8, 1, 1, 777, "mode_rdx");
+            declareSymbolicObject(tmp, 8, 1, 1, 256, "mode_rdx");
             tmp += 0x8;
-            //declareSymbolicObject(tmp, 8, 0, 1, 2000, "flags_rsi");
+            //declareSymbolicObject(tmp, 8, 0, 1, 0, "flags_rsi");
         }   break;
         case SCALL_IOPL:
         {
