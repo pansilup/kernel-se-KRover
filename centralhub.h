@@ -89,6 +89,11 @@
 #define SCALL_KCMP              312
 #define SCALL_PIPE2             293
 #define SCALL_DUP3              292
+#define SCALL_CLOSE             3
+#define SCALL_BRK               12
+#define SCALL_SHMGET            29
+#define SCALL_EXIT              60
+#define SCALL_SHMAT             30              
 //pp-e
 
 // #include "fatctrl.h"

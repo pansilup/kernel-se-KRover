@@ -1,0 +1,235 @@
+======================0x7f7fffffed2c, 0x7f7fffffed20
+================
+error open file!
+m_sts: 0x7f00014d8fe0, m_cr: 0x7f00014ccc30, decoder: 0x7f00014d9ec0 .
+low: 0. 
+high: fffffffffffff000. 
+main.cpp:	 1942
+nme_fsbase: 7f200000d640. 
+test: 0x555555755010. 0. 
+gdt base: 7f1000902000. 
+idx: 170, entry: 75d75067. 
+main.cpp:	 1949
+rax: 0
+rbx: 0 rcx: 0 rdx: 0 rdi: 0 rsi: 0 r8: 0 r9: 0 r10: 0 
+rip: 0 
+rsp: 0 
+ei_shar_args at: 0x7f88000907000 
+t_rsp0 stack: fffffe0000003000. 
+t_rsp1 stack: ffffffff82a04000. 
+onsite receive request. 
+ei_shar_args->rip: 555555554711, rsp: 7fffffffdfe0. 
+ei_shar_args at: 0x7f1000907000 
+target rip: 0x555555554714, target code: 4800000002c0c748. 
+syscall entry at: 0xffffffff81c00010, code: 2524894865f8010f. 
+redirected page start from :0x7f0001c4f000. ends : 0x7f0001c57000. 
+new_va: 7f0001c50000. ker_addr: ffffffff812da000. 
+about to issue hyper call to redirect page: ffffffff812da000 .
+install probe at: ffffffff812da030. 
+int3 invoked. saved rip: ffffffff812da030. saved rsp: ffffc90001ab3f30, saved_rflags: 206, ret address on stack: ffffffff81004207. 
+at processAt
+syscall idx : 3
+case: 3
+######### at start of processFuncyion, rip ffffffff812da035
+
+-------------------instruction 0: adr : ffffffff812da035
+idx :12da035 ,in :push %rbp
+implicit mem 0
+dispatch for CIE
+~~~~~~~~~~~~, rsp: ffffc90001ab3f30. rbp ffffc90001ab3f48 
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f28. rbp ffffc90001ab3f48 
+
+-------------------instruction 1: adr : ffffffff812da036
+idx :12da036 ,in :mov 0x70(%rdi),%rsi
+sym mem ...
+sym executed insn 
+
+
+-------------------instruction 2: adr : ffffffff812da03a
+idx :12da03a ,in :mov $0x1bbc0,%rax
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f28. rbp ffffc90001ab3f48 
+
+-------------------instruction 3: adr : ffffffff812da043
+idx :12da043 ,in :mov 0xac0(%rax),%rdi
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f28. rbp ffffc90001ab3f48 
+
+-------------------instruction 4: adr : ffffffff812da04a
+idx :12da04a ,in :mov %rsp,%rbp
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f28. rbp ffffc90001ab3f28 
+
+-------------------instruction 5: adr : ffffffff812da04d
+idx :12da04d ,in :call 0x27e13(%rip)
+
+-------------------instruction 6: adr : ffffffff81301e60
+idx :1301e60 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 7: adr : ffffffff81301e65
+idx :1301e65 ,in :push %rbp
+implicit mem 0
+dispatch for CIE
+~~~~~~~~~~~~, rsp: ffffc90001ab3f20. rbp ffffc90001ab3f28 
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f18. rbp ffffc90001ab3f28 
+
+-------------------instruction 8: adr : ffffffff81301e66
+idx :1301e66 ,in :mov %rsp,%rbp
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f18. rbp ffffc90001ab3f18 
+
+-------------------instruction 9: adr : ffffffff81301e69
+idx :1301e69 ,in :push %r13
+implicit mem 0
+dispatch for CIE
+~~~~~~~~~~~~, rsp: ffffc90001ab3f18. rbp ffffc90001ab3f18 
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f10. rbp ffffc90001ab3f18 
+
+-------------------instruction 10: adr : ffffffff81301e6b
+idx :1301e6b ,in :lea 0x80(%rdi),%r13
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f10. rbp ffffc90001ab3f18 
+
+-------------------instruction 11: adr : ffffffff81301e72
+idx :1301e72 ,in :push %r12
+implicit mem 0
+dispatch for CIE
+~~~~~~~~~~~~, rsp: ffffc90001ab3f10. rbp ffffc90001ab3f18 
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f08. rbp ffffc90001ab3f18 
+
+-------------------instruction 12: adr : ffffffff81301e74
+idx :1301e74 ,in :push %rbx
+implicit mem 0
+dispatch for CIE
+~~~~~~~~~~~~, rsp: ffffc90001ab3f08. rbp ffffc90001ab3f18 
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f00. rbp ffffc90001ab3f18 
+
+-------------------instruction 13: adr : ffffffff81301e75
+idx :1301e75 ,in :mov %rdi,%rbx
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f00. rbp ffffc90001ab3f18 
+
+-------------------instruction 14: adr : ffffffff81301e78
+idx :1301e78 ,in :mov %r13,%rdi
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f00. rbp ffffc90001ab3f18 
+
+-------------------instruction 15: adr : ffffffff81301e7b
+idx :1301e7b ,in :mov %esi,%r12d
+sym reg ...
+sym executed insn 
+
+
+-------------------instruction 16: adr : ffffffff81301e7e
+idx :1301e7e ,in :call 0x7e04c2(%rip)
+
+-------------------instruction 17: adr : ffffffff81ae2340
+idx :1ae2340 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 18: adr : ffffffff81ae2345
+idx :1ae2345 ,in :push %rbp
+implicit mem 0
+dispatch for CIE
+~~~~~~~~~~~~, rsp: ffffc90001ab3ef8. rbp ffffc90001ab3f18 
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3ef0. rbp ffffc90001ab3f18 
+
+-------------------instruction 19: adr : ffffffff81ae2346
+idx :1ae2346 ,in :mov %rsp,%rbp
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3ef0. rbp ffffc90001ab3ef0 
+
+-------------------instruction 20: adr : ffffffff81ae2349
+idx :1ae2349 ,in :xor %eax,%eax
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3ef0. rbp ffffc90001ab3ef0 
+
+-------------------instruction 21: adr : ffffffff81ae234b
+idx :1ae234b ,in :mov $0x1,%edx
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3ef0. rbp ffffc90001ab3ef0 
+
+-------------------instruction 22: adr : ffffffff81ae2350
+idx :1ae2350 ,in :cmpxch %eax,(%rdi)
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3ef0. rbp ffffc90001ab3ef0 
+
+-------------------instruction 23: adr : ffffffff81ae2354
+idx :1ae2354 ,in :jnz 0x4(%rip)
+
+-------------------instruction 24: adr : ffffffff81ae2356
+idx :1ae2356 ,in :pop %rbp
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3ef8. rbp ffffc90001ab3f18 
+
+-------------------instruction 25: adr : ffffffff81ae2357
+idx :1ae2357 ,in :ret near (%rsp)
+
+-------------------instruction 26: adr : ffffffff81301e83
+idx :1301e83 ,in :mov 0x20(%rbx),%rax
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f00. rbp ffffc90001ab3f18 
+
+-------------------instruction 27: adr : ffffffff81301e87
+idx :1301e87 ,in :cmp %r12d,(%rax)
+sym reg ...
+sym executed insn 
+
+
+-------------------instruction 28: adr : ffffffff81301e8a
+idx :1301e8a ,in :jbe 0x62(%rip)
+constraints : 
+Ule(0x100,Extract(fd_rdi, 0, 4))
+at Z3HandleConst: size : 4
+bExecute: 0
+
+-------------------instruction 29: adr : ffffffff81301e8c
+idx :1301e8c ,in :mov 0x8(%rax),%rax
+implicit mem 0
+dispatch for CIE
+after CIE ~~~~~~~~~~~~, rsp: ffffc90001ab3f00. rbp ffffc90001ab3f18 
+
+-------------------instruction 30: adr : ffffffff81301e90
+idx :1301e90 ,in :mov %r12d,%ecx
+sym reg ...
+sym executed insn 
+
+
+-------------------instruction 31: adr : ffffffff81301e93
+idx :1301e93 ,in :lea 0x0(%rax,%rcx,8),%rax
+sym reg ...
+sym executed insn 
+
+
+-------------------instruction 32: adr : ffffffff81301e97
+idx :1301e97 ,in :mov (%rax),%rdx
+RAX is sym!!!
+Add(0xffff888047725000,Mul(CombineMulti(Extract(fd_rdi, 0, 4), 0x0, 0x0, 0x0, 0x0, ),0x8))
+kvm: 3
+vmfd: 4, vcpufd: 5. 
+vcpu size: 3000
+before KVM_GET_SUPPORTED_CPUID, set nent as 100. 
+
+KVM_GET_SUPPORTED_CPUID: return 0
+KVM_GET_SUPPORTED_CPUID, nent = 45
+
+000, xcr: 0x00000000, reserved: 0x00000000,  value: 0x0000000000000001
+ready to run, hard_cr3: 0. 
+get guest context done !!!, sizeof arg_blk: 1a8
+child process id: 4449. 
+OASIS stop: 0, exit reason: 0. 
+
+the following has been manually copied
+testtest: thinctrl.cpp:976: bool CThinCtrl::OpdhasSymMemCell(opData*, Dyninst::InstructionAPI::Operand*, ulong): Assertion `rdaddr.defined' failed.

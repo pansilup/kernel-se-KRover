@@ -2033,16 +2033,16 @@ bool CThinCtrl::parseOperands(InstrInfo *info) {
         // std::cout << "Operand " << O.format(Arch_x86_64) << std::endl;
         // std::cout<<"is read: " << O.readsMemory() << ". is write: " << O.writesMemory() << ". operand size: " << oi->size << std::endl;
         if (!O.readsMemory() && !O.writesMemory()) {
-            //std::cout << "1\n";
+            std::cout << "1\n";
             res = _mayOperandUseSymbol_XX(oi);
         } else if (O.readsMemory() && !O.writesMemory()) {
-            //std::cout << "2\n";
+            std::cout << "2\n";
             res = _mayOperandUseSymbol_RX(I, oi);
         } else if (!O.readsMemory() && O.writesMemory()) {
-            //std::cout << "3\n";
+            std::cout << "3\n";
             res = _mayOperandUseSymbol_XW(I, oi);
         } else if (O.readsMemory() && O.writesMemory()) {
-            //std::cout << "4\n";
+            std::cout << "4\n";
             res = _mayOperandUseSymbol_RW(I, oi);
         }
 
@@ -2163,8 +2163,8 @@ bool CThinCtrl::calculateBinaryFunction (BinaryFunction* bf, KVExprPtr &exprPtr)
         int exp_sz0 = KVE[0]->getExprSize();
         int exp_sz1 = KVE[1]->getExprSize();
         int mx_sz = exp_sz0;
-        //std::cout << "sz0 " << exp_sz0 << std::endl;
-        //std::cout << "sz1 " << exp_sz1 << std::endl;
+        std::cout << "sz0 " << exp_sz0 << std::endl;
+        std::cout << "sz1 " << exp_sz1 << std::endl;
         if((KVE[0]->getKind() == EXPR::Expr::Const) && (exp_sz0 < exp_sz1))
         {
             mx_sz = exp_sz1;
@@ -2175,17 +2175,17 @@ bool CThinCtrl::calculateBinaryFunction (BinaryFunction* bf, KVExprPtr &exprPtr)
             mx_sz = exp_sz0;
             KVE[1]->setExprSize(exp_sz0);
         }
-        //std::cout << "sz0 " << KVE[0]->getExprSize() << std::endl;
-        //std::cout << "sz1 " << KVE[1]->getExprSize() << std::endl;
+        std::cout << "sz0 " << KVE[0]->getExprSize() << std::endl;
+        std::cout << "sz1 " << KVE[1]->getExprSize() << std::endl;
 
         if(bf->isAdd())
             exprPtr.reset(new AddExpr(KVE[0], KVE[1], mx_sz, 0)) ;
         if(bf->isMultiply())
             exprPtr.reset(new MulExpr(KVE[0], KVE[1], mx_sz, 0)) ;
         //std::cout << " expr sz " << exprPtr->getExprSize() << std::endl;
-        //std::cout << " expr ";
-        //exprPtr->print();
-        //std::cout << std::endl;
+        std::cout << " expr ";
+        exprPtr->print();
+        std::cout << std::endl;
     }
     /*
     if(bf->isAdd()) {
@@ -2635,7 +2635,7 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
                 return false;
             } else {
                 // Memory access without symbolic register
-                
+                std::cout << "Memory access without symbolic register\n";
                 // // std::set<Expression::Ptr> expr;
                 // // addEffectiveReadAddresses(expr);
                 // Expression::Ptr expr = O->getValue();
@@ -2713,6 +2713,7 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
                 assert(res);
                 if (MV.bsym) {
                     oi->opty = OPTY_MEMCELLSYM;
+                    std::cout << "reading symmem\n";
                     oi->symb = true;
                     oi->mem_symval = MV.expr;
                 } else {
