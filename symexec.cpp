@@ -316,7 +316,12 @@ bool SymExecutor::run(VMState *vm) {
                 break;
             }
             //pp-e
-  
+            //pp-s
+            case e_dec: {
+                process_dec (vm, IOI);
+                break;
+            }
+            //pp-e
             default: {
                 cout << "Unhandled SIE: instruction: " << I->format() << "\n";
                 assert(0);
@@ -465,6 +470,7 @@ bool SymExecutor::process_mov(VMState *vm, InstrInfoPtr &infoptr) {
 #ifdef _DEBUG_OUTPUT
         printCellList (cellList) ;
 #endif
+        printCellList (cellList) ;
         // Do writting
         res = oidst->setSymValue(vm, cellList, val);
         
@@ -680,9 +686,9 @@ bool SymExecutor::process_cmp(VMState *vm, InstrInfoPtr &infoptr) {
         assert(res);
 
         //std::cout << "at process_cmp: \n";
-        //std::cout << "sym expr ";
-        //e1->print();
-        //std::cout << "\nsymExpr sz: " << std::dec << e1->getExprSize() << std::endl;
+        std::cout << "sym expr ";
+        e1->print();
+        std::cout << "\nsymExpr sz: " << std::dec << e1->getExprSize() << std::endl;
 
         long v2;
         res = oisrc2->getConValue(v2);
@@ -696,10 +702,10 @@ bool SymExecutor::process_cmp(VMState *vm, InstrInfoPtr &infoptr) {
         //pp-s
         //ExprPtr c2(new ConstExpr(v2, oisrc2->size, 0));
         ExprPtr c2(new ConstExpr(v2, oisrc1->size, 0)); 
-        //std::cout << "const expr : ";
-        //c2->print();
-        //std::cout << "\nconstExpr sz: " << std::dec << c2->getExprSize() << std::endl;
-        //std::cout << "size : " << std::dec << oisrc1->size << "sz 2 : " << oisrc2->size << " v2 : " << std::hex << v2 << std::endl;
+        std::cout << "const expr : ";
+        c2->print();
+        std::cout << "\nconstExpr sz: " << std::dec << c2->getExprSize() << std::endl;
+        std::cout << "size : " << std::dec << oisrc1->size << "sz 2 : " << oisrc2->size << " v2 : " << std::hex << v2 << std::endl;
         
         //pp-e
         oe.reset(new SubExpr(e1, c2));
@@ -730,6 +736,38 @@ bool SymExecutor::process_cmp(VMState *vm, InstrInfoPtr &infoptr) {
     assert (res) ;
     return true;   
 }
+
+//pp-s
+
+bool SymExecutor::process_dec(VMState *vm, InstrInfoPtr &infoptr) {
+    // Process sub
+    auto &vecOI = infoptr->vecOI;
+    OprndInfoPtr &oisrc1 = vecOI[0];
+    OprndInfoPtr &oidst = oisrc1;
+    KVExprPtr oe = NULL;
+    bool res;
+
+    if (oisrc1->symb) {
+        KVExprPtr e1(nullptr);
+        res = oisrc1->getSymValue(e1);
+        assert(res);
+
+        long v2 = 1;
+        ExprPtr c2(new ConstExpr(v2, oisrc1->size, 0));
+        oe.reset(new SubExpr(e1, c2));
+        res = oidst->setSymValue(vm, oe);
+        assert(res);
+    }
+    else {
+        ERRR_ME("operand is not symbolic, why sent here ?");
+        assert(0);
+    }
+
+    res = vm->SaveFlagChangingInstructionExpr(e_dec, oe) ;
+    assert (res) ;
+    return true ;
+}
+//pp-e
 
 bool SymExecutor::process_sub(VMState *vm, InstrInfoPtr &infoptr) {
     // Process sub
@@ -1646,7 +1684,7 @@ bool SymExecutor::process_movzx(VMState *vm, InstrInfoPtr &infoptr) {
 //pp-s
 bool SymExecutor::process_cbw(VMState *vm, InstrInfoPtr &infoptr) {
     // eax sign extend to rax like
-    //std::cout << "at process_cbw" << std::endl;
+    std::cout << "at process_cbw" << std::endl;
     auto &vecOI = infoptr->vecOI;
     OprndInfoPtr &oisrc = vecOI[0];
     KVExprPtr e, oe ;

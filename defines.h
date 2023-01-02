@@ -36,6 +36,12 @@
 #endif
 //pp-e
 
+#if 1
+    #ifndef _SYM_BUF_LOCATION_TEST
+        #define _SYM_BUF_LOCATION_TEST
+    #endif
+#endif
+
 #include <linux/types.h>
 
 #include <list>

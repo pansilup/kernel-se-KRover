@@ -104,6 +104,9 @@ class SymExecutor {
     //pp-s
     bool process_sidt(VMState *vm, InstrInfoPtr &infoptr);
     //pp-e
+    //pp-s
+    bool process_dec(VMState *vm, InstrInfoPtr &infoptr);
+    //pp-e
     
     bool Print_Inst(VMState *vm, InstrInfoPtr &infoptr, const char* cstr) ;
 

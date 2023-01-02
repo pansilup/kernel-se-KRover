@@ -6188,7 +6188,29 @@ sym executed insn
 -------------------instruction 1117: adr : ffffffff8152aef2
 idx :152aef2 ,in :jnz 0x8(%rip)
 constraints : 
-Distinct(Sub(Add(0x0,Mul(Sub(0x2,SignEXT(CombineMulti(Xor(CombineMulti(buf[1]_rsi, 0x0, 0xff, 0xff, ),CombineMulti(buf[1]_rsi, 0x0, 0xff, 0xff, )), 0xff, 0x7f, 0x0, 0x0, ))),0x1)),0x2))
+Distinct(
+        Sub( 
+              Add( 
+                    0x0, 
+                    Mul(
+                          Sub(
+                                0x2,
+                                SignEXT(
+                                          CombineMulti( 
+                                                        Xor(
+                                                              CombineMulti(buf[1]_rsi, 0x0, 0xff, 0xff, ),
+                                                              CombineMulti(buf[1]_rsi, 0x0, 0xff, 0xff, )
+                                                        ), 
+                                                        0xff, 0x7f, 0x0, 0x0, 
+                                          )
+                                )
+                          ),
+                          0x1
+                    )
+              ),
+              0x2
+          )
+)
 at Z3HandleConst: size : 8
 at Z3HandleConst: size : 8
 ada

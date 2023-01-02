@@ -292,6 +292,9 @@ class ExprEvalVisitor : public Visitor {
         ~ExprEvalVisitor() {};
         virtual void visit(BinaryFunction* b) {};
         virtual void visit(Immediate* i) {};
+        //pp-s
+        bool symreg = false;
+        //pp-e
         virtual void visit(RegisterAST* r) {
             uint indx = r->getID();
             uint size = r->size();
@@ -301,6 +304,9 @@ class ExprEvalVisitor : public Visitor {
 
             if (RV.bsym) {
                 // Do nothing
+                //pp-s
+                symreg = true;
+                //pp-e
                 cout << r->format() << " is sym!!!" << "\n";
                 RV.expr->print() ;
                 std::cout << std::endl;
@@ -1021,10 +1027,11 @@ bool CThinCtrl::OpdhasSymMemCell(opData* OD, Operand* OP, ulong gs_base)
 #ifdef _SYM_DEBUG_OUTPUT
             std::cout << "write symbolic memory. it format " << it->format() << std::endl;
             std::cout << "write addr: " << hex << mem_addr << std::endl;
-#endif
+#endif      
             return true;
         }
-    }             
+    }   
+    //std::cout <<"returning false...\n";          
     return false;
 }
 
@@ -1881,7 +1888,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             /* Instruction CIE */  
                             std::cout << "dispatch for CIE\n"; 
                             if(in->getOperation().getID() == e_push)
-                            printf ("~~~~~~~~~~~~, rsp: %lx. rbp %lx \n", m_regs->rsp, m_regs->rbp);
+                                printf ("~~~~~~~~~~~~, rsp: %lx. rbp %lx \n", m_regs->rsp, m_regs->rbp);
 #ifndef _PROD_PERF
                             cie_count++; 
                             cie_t0 = rdtsc();     
@@ -2617,6 +2624,7 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
             // }
 
         } else {
+            std::cout <<"Access with one or more registers\n";
             // Access with one or more registers
             // eg1: mov 0xffffffe8(%rbp),%rax -> 0xffffffe8(%rbp)
             bool bSymbolic;

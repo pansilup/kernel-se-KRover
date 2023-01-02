@@ -410,7 +410,7 @@ z3::expr Z3Handler::Z3HandlingExprPtr(ExprPtr ptr){
         case Expr::Kind::SignEXT:{
             //printf("\033[47;31m Z3 Handlering ERROR : Unsupported type of EXPR? \033[0m\n");
             //throw ptr;
-            printf("ada\n");
+            //printf("ada\n");
             return Z3HandleSignExt(ptr);
         }
         case Expr::Kind::ZeroEXT:{
@@ -492,7 +492,7 @@ z3::expr Z3Handler::Z3HandleConst(ExprPtr const_expr_ptr){ // 3
     //std::cout << "value in ConstExpr : " << value << std::endl;
     //pp-s frm Hx
     int size = const_expr->getSize();
-    std::cout << "at Z3HandleConst: size : " << size << std::endl;
+    std::cout << "at Z3HandleConst: size : " << size << " value: "<< value << std::endl;
     expr x = context_.bv_val(value, size * 8);
     //expr x = context_.bv_val(value, 32);
     //pp-e
@@ -713,7 +713,7 @@ z3::expr Z3Handler::Z3HandleSignExt(ExprPtr ptr){ // not sure how to write z3 ex
     }
     expr x = Z3HandlingExprPtr(signext_expr->getExprPtr());
     int size = ptr->getExprSize();
-    //printf("size in SignEXT : %d\n", size);
+    printf("size in SignEXT : %d\n", size);
     //std::cout << x << std::endl;
     //pp-s @Hx
     //return z3::sext(x, 2*size * 8 );  //TODO just double the size, please make sure
