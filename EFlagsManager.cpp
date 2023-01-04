@@ -209,7 +209,7 @@ bool EFlagsManager::DoCreateConstraint(int exprID, bool bExecute) {
 
     if (!bExecute)
         cstnt.reset(new LNotExpr(cstnt, cstnt->size, cstnt->offset)) ;
-    
+
     m_Constraint.insert(cstnt) ;
 
 #ifdef _SYM_DEBUG_OUTPUT
@@ -771,12 +771,12 @@ bool EFlagsManager::EvalCondition(entryID insnID)
         constraints.insert(exprPtr);
         
         
-        std::cout << "constraints : \n";
+        /*std::cout << "constraints : \n";
         for(auto it : constraints)
         {
             it->print();
             std::cout << "\n";
-        }
+        }*/
         
         
 
@@ -799,7 +799,10 @@ bool EFlagsManager::EvalCondition(entryID insnID)
         exprPtr->print() ;
         std::cout << "\n" ;
 #endif
-        
+        std::cout << "path constraints : ";
+        exprPtr->print();
+        std::cout << std::endl;
+
         m_Constraint.insert(exprPtr) ;
 
 #ifdef _SYM_DEBUG_OUTPUT

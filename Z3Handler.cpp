@@ -492,7 +492,7 @@ z3::expr Z3Handler::Z3HandleConst(ExprPtr const_expr_ptr){ // 3
     //std::cout << "value in ConstExpr : " << value << std::endl;
     //pp-s frm Hx
     int size = const_expr->getSize();
-    std::cout << "at Z3HandleConst: size : " << size << " value: "<< value << std::endl;
+    //std::cout << "at Z3HandleConst: size : " << size << " value: "<< value << std::endl;
     expr x = context_.bv_val(value, size * 8);
     //expr x = context_.bv_val(value, 32);
     //pp-e

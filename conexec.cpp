@@ -402,7 +402,7 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
 //pp-e
     {
         memcpy (orig_insn, orig_insn_addr, 0x8);
-        std::cout << "instr size " << instr->size() << std::endl;
+        //std::cout << "instr size " << instr->size() << std::endl;
         if (instr->isRead(x86_gs))
         {
             //printf ("gs base rip rel insn. \n");
@@ -962,6 +962,9 @@ bool ConExecutor::InsnDispatch2(Instruction* instr, struct pt_regs* regs, uint m
     }
     else
     {
+        unsigned long conc_exe_end_t = rdtsc();
+        std::cout << "rdtsc() : " << std::dec << conc_exe_end_t << std::endl;
+        std::cout <<"possibly both rip and r15 are used, check ins ...\n";
         assert(0);
     }
     //std::cout <<"end fun InsnDispatch2\n";

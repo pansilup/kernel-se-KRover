@@ -322,6 +322,11 @@ bool SymExecutor::run(VMState *vm) {
                 break;
             }
             //pp-e
+            //pp-s
+            case e_xadd: {
+                process_xadd (vm, IOI);
+                break;
+            }
             default: {
                 cout << "Unhandled SIE: instruction: " << I->format() << "\n";
                 assert(0);
@@ -470,7 +475,7 @@ bool SymExecutor::process_mov(VMState *vm, InstrInfoPtr &infoptr) {
 #ifdef _DEBUG_OUTPUT
         printCellList (cellList) ;
 #endif
-        printCellList (cellList) ;
+        //printCellList (cellList) ;
         // Do writting
         res = oidst->setSymValue(vm, cellList, val);
         
@@ -551,6 +556,93 @@ bool SymExecutor::process_add(VMState *vm, InstrInfoPtr &infoptr) {
     return true ;
 }
 
+//pp-s
+bool SymExecutor::process_xadd(VMState *vm, InstrInfoPtr &infoptr) {
+    // operation
+    // SUM := SRC + DEST;
+    // SRC := DEST;
+    // DEST := SUM;
+
+    //std::cout << "at process_xadd\n";
+    auto &vecOI = infoptr->vecOI;
+    OprndInfoPtr &oisrc1 = vecOI[0];
+    OprndInfoPtr &oisrc2 = vecOI[1];
+    OprndInfoPtr &oidst = oisrc1;
+    OprndInfoPtr &oisrc = oisrc2;
+    bool res;
+
+    KVExprPtr oe ;
+
+    if (oisrc1->symb && oisrc2->symb) {
+        KVExprPtr e1(nullptr), e2(nullptr);
+        res = oisrc1->getSymValue(e1); //dst
+        assert(res);
+        res = oisrc2->getSymValue(e2); //src
+        assert(res);
+
+        // Generate new expression for SUM
+        oe.reset(new AddExpr(e1, e2));
+
+        //SRC=DEST
+        res = oisrc->setSymValue(vm,e1);
+        assert(res);
+        //DEST=SUM
+        res = oidst->setSymValue(vm, oe);
+        assert(res);
+    } else if (oisrc1->symb && !oisrc2->symb) {
+        KVExprPtr e1(nullptr);
+        res = oisrc1->getSymValue(e1); //dst
+        assert(res);
+
+        long v2;
+        res = oisrc2->getConValue(v2); //src
+        assert(res);
+        //pp-s
+        //ExprPtr c2(new ConstExpr(v2, oisrc2->size, 0));
+        ExprPtr c2(new ConstExpr(v2, oisrc1->size, 0));
+        //pp-e
+        // Generate new expression for SUM
+        oe.reset(new AddExpr(e1, c2));
+
+        //SRC=DEST
+        res = oisrc->setSymValue(vm,e1);
+        assert(res);
+        //DEST=SUM
+        res = oidst->setSymValue(vm, oe);
+        assert(res);
+    }
+
+    else if (!oisrc1->symb && oisrc2->symb) {
+        KVExprPtr e2(nullptr);
+        res = oisrc2->getSymValue(e2); //src
+        assert(res);
+
+        long v1;
+        res = oisrc1->getConValue(v1); //dst
+        assert(res);
+        //pp-s
+        //ExprPtr c1(new ConstExpr(v1, oisrc1->size, 0));
+        ExprPtr c1(new ConstExpr(v1, oisrc2->size, 0));
+        //pp-e
+        // Generate new expression for SUM
+        oe.reset(new AddExpr(c1, e2));
+
+        //SRC=DEST
+        res = oisrc->setConValue(vm, v1);
+        assert(res);
+        //DEST=SUM
+        res = oidst->setSymValue(vm, oe);
+        assert(res);
+    } else {
+        ERRR_ME("Unexpected operands");
+        assert(0);
+        // asm("int3");
+    }
+    vm->SaveFlagChangingInstructionExpr(e_add, oe) ;
+    return true ;
+}
+//pp-e
+
 bool SymExecutor::process_test(VMState *vm, InstrInfoPtr &infoptr) {
     
     auto &vecOI = infoptr->vecOI;
@@ -575,9 +667,9 @@ bool SymExecutor::process_test(VMState *vm, InstrInfoPtr &infoptr) {
         KVExprPtr e1(nullptr);
         res = oisrc1->getSymValue(e1);
         assert(res);
-        std::cout << "op1 sz : " << oisrc1->size << "op2 sz " << oisrc2->size << " \nsym expr ";
-        e1->print();
-        std::cout << "  sz " << e1->getExprSize() << std::endl;
+        //std::cout << "op1 sz : " << oisrc1->size << "op2 sz " << oisrc2->size << " \nsym expr ";
+        //e1->print();
+        //std::cout << "  sz " << e1->getExprSize() << std::endl;
 
         long v2;
         res = oisrc2->getConValue(v2);
@@ -588,7 +680,7 @@ bool SymExecutor::process_test(VMState *vm, InstrInfoPtr &infoptr) {
         //pp-e
         //std::cout << "sym expr ";
         //e1->print();
-        std::cout << "\ne1 sz: " << e1->getExprSize() << " c2 sz : " << c2->getExprSize() << std::endl;
+        //std::cout << "\ne1 sz: " << e1->getExprSize() << " c2 sz : " << c2->getExprSize() << std::endl;
 
         oe.reset(new AndExpr(e1, c2));
     }
@@ -686,9 +778,9 @@ bool SymExecutor::process_cmp(VMState *vm, InstrInfoPtr &infoptr) {
         assert(res);
 
         //std::cout << "at process_cmp: \n";
-        std::cout << "sym expr ";
-        e1->print();
-        std::cout << "\nsymExpr sz: " << std::dec << e1->getExprSize() << std::endl;
+        //std::cout << "sym expr ";
+        //e1->print();
+        //std::cout << "\nsymExpr sz: " << std::dec << e1->getExprSize() << std::endl;
 
         long v2;
         res = oisrc2->getConValue(v2);
@@ -702,10 +794,10 @@ bool SymExecutor::process_cmp(VMState *vm, InstrInfoPtr &infoptr) {
         //pp-s
         //ExprPtr c2(new ConstExpr(v2, oisrc2->size, 0));
         ExprPtr c2(new ConstExpr(v2, oisrc1->size, 0)); 
-        std::cout << "const expr : ";
-        c2->print();
-        std::cout << "\nconstExpr sz: " << std::dec << c2->getExprSize() << std::endl;
-        std::cout << "size : " << std::dec << oisrc1->size << "sz 2 : " << oisrc2->size << " v2 : " << std::hex << v2 << std::endl;
+        //std::cout << "const expr : ";
+        //c2->print();
+        //std::cout << "\nconstExpr sz: " << std::dec << c2->getExprSize() << std::endl;
+        //std::cout << "size : " << std::dec << oisrc1->size << "sz 2 : " << oisrc2->size << " v2 : " << std::hex << v2 << std::endl;
         
         //pp-e
         oe.reset(new SubExpr(e1, c2));
@@ -946,8 +1038,8 @@ bool SymExecutor::process_and(VMState *vm, InstrInfoPtr &infoptr) {
         res = oisrc1->getSymValue(e1);
         assert(res);
         
-        e1->print();
-        std::cout << "  sym expr sz " << e1->getExprSize() << std::endl;
+        //e1->print();
+        //std::cout << "  sym expr sz " << e1->getExprSize() << std::endl;
         
         long v2;
         res = oisrc2->getConValue(v2);
@@ -957,15 +1049,15 @@ bool SymExecutor::process_and(VMState *vm, InstrInfoPtr &infoptr) {
         ExprPtr c2(new ConstExpr(v2, oisrc1->size, 0));
         //pp-e
         
-        std::cout << "concrete expr: ";
-        c2->print();
-        std::cout << "  conc expr sz " << c2->getExprSize() << std::endl;
+        //std::cout << "concrete expr: ";
+        //c2->print();
+        //std::cout << "  conc expr sz " << c2->getExprSize() << std::endl;
         
         oe.reset(new AndExpr(e1, c2));
         
-        std::cout << "and expr ";
-        oe->print();
-        std::cout << std::endl;
+        //std::cout << "and expr ";
+        //oe->print();
+        //std::cout << std::endl;
         
         res = oidst->setSymValue(vm, oe);
         assert(res);
@@ -976,8 +1068,8 @@ bool SymExecutor::process_and(VMState *vm, InstrInfoPtr &infoptr) {
         res = oisrc2->getSymValue(e2);
         assert(res);
 
-        e2->print();
-        std::cout << "  sym expr sz " << e2->getExprSize() << std::endl;
+        //e2->print();
+        //std::cout << "  sym expr sz " << e2->getExprSize() << std::endl;
 
         long v1;
         res = oisrc1->getConValue(v1);
@@ -987,15 +1079,15 @@ bool SymExecutor::process_and(VMState *vm, InstrInfoPtr &infoptr) {
         ExprPtr c1(new ConstExpr(v1, oisrc2->size, 0));
         //pp-e
 
-        std::cout << "concrete expr: ";
-        c1->print();
-        std::cout << "  conc expr sz " << c1->getExprSize() << std::endl;
+        //std::cout << "concrete expr: ";
+        //c1->print();
+        //std::cout << "  conc expr sz " << c1->getExprSize() << std::endl;
 
         oe.reset(new AndExpr(c1, e2));
         
-        std::cout << "and expr ";
-        oe->print();
-        std::cout << std::endl;
+        //std::cout << "and expr ";
+        //oe->print();
+        //std::cout << std::endl;
 
         res = oidst->setSymValue(vm, oe);
         assert(res);
@@ -1452,7 +1544,7 @@ bool SymExecutor::process_pop(VMState *vm, InstrInfoPtr &infoptr) {
 
 // debug log 20220512
 //#ifdef _DEBUG_OUTPUT
-    std::cout << "pop :" << std::hex << V.u64 << " " ;
+    //std::cout << "pop :" << std::hex << V.u64 << " " ;
 //#endif
 // debug log 20220512
 
@@ -1463,11 +1555,11 @@ bool SymExecutor::process_pop(VMState *vm, InstrInfoPtr &infoptr) {
     res = vm->readMemory(MV) ;
     assert(res) ;
     
-    if(MV.bsym) {
+    /*if(MV.bsym) {
         std::cout << "<<celllist : " ;
         printCellList(MV.symcellPtr) ;
         std::cout << "celllist>>" << std::endl ;
-    }
+    }*/
 
     if(MV.bsym) {
         res = oisrc1->setSymValue(vm, MV.symcellPtr, MV.i64) ;
@@ -1491,7 +1583,7 @@ bool SymExecutor::process_pop(VMState *vm, InstrInfoPtr &infoptr) {
 }
 
 bool SymExecutor::process_push(VMState *vm, InstrInfoPtr &infoptr) {
-    std::cout << "at process_push\n";
+    //std::cout << "at process_push\n";
     Instruction *in = new Instruction(*infoptr->PI);
     InstrInfo *ioi = new InstrInfo(in);
 
@@ -1520,7 +1612,7 @@ bool SymExecutor::process_push(VMState *vm, InstrInfoPtr &infoptr) {
 
 // debug log 20220512
 //#ifdef _DEBUG_OUTPUT
-    std::cout << "push :" << std::hex << V.u64 << " " ;
+    //std::cout << "push :" << std::hex << V.u64 << " " ;
 //#endif
 // debug log 20220512
 
@@ -1548,11 +1640,11 @@ bool SymExecutor::process_push(VMState *vm, InstrInfoPtr &infoptr) {
         MV.isSymList = false ;
     }
 
-    if(MV.bsym) {
+    /*if(MV.bsym) {
         std::cout << "<<celllst::" ;
         printCellList(MV.symcellPtr) ;
         std::cout << "celllst::>>" ;
-    }
+    }*/
 
     res = vm->writeMemory(MV) ;
     assert(res) ;
@@ -1684,7 +1776,7 @@ bool SymExecutor::process_movzx(VMState *vm, InstrInfoPtr &infoptr) {
 //pp-s
 bool SymExecutor::process_cbw(VMState *vm, InstrInfoPtr &infoptr) {
     // eax sign extend to rax like
-    std::cout << "at process_cbw" << std::endl;
+    //std::cout << "at process_cbw" << std::endl;
     auto &vecOI = infoptr->vecOI;
     OprndInfoPtr &oisrc = vecOI[0];
     KVExprPtr e, oe ;

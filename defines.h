@@ -36,7 +36,7 @@
 #endif
 //pp-e
 
-#if 1
+#if 0
     #ifndef _SYM_BUF_LOCATION_TEST
         #define _SYM_BUF_LOCATION_TEST
     #endif

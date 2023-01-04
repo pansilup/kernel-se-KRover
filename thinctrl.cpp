@@ -588,7 +588,7 @@ bool CThinCtrl::checkImplicitMemAccess(Instruction *I)
                 struct pt_regs* m_regs2 = m_VM->getPTRegs();
                 if ((wraddr.convert<ulong>()) != (m_regs2->rsp - 8)) {
 
-                    std::cout << "(ulong)it->size() " << (ulong)it->size() << std::endl;
+                    //std::cout << "(ulong)it->size() " << (ulong)it->size() << std::endl;
                     std::vector<Expression::Ptr> children;
                     it->getChildren(children);
 
@@ -604,14 +604,14 @@ bool CThinCtrl::checkImplicitMemAccess(Instruction *I)
                             bool res = m_VM->readRegister(RV);
                             assert(res);
                             assert(!RV.bsym);
-                            std::cout << "reg : " << std::hex << RV.u64 << std::endl; 
+                            //std::cout << "reg : " << std::hex << RV.u64 << std::endl; 
                         }
                         else if(IMM != nullptr)
                         {
                             Result imm = IMM->eval();
                             assert(imm.defined);
                             long cval = imm.convert<long>();
-                            std::cout << "imm : " << cval << std::endl;
+                            //std::cout << "imm : " << cval << std::endl;
                         }
                         else
                         {
@@ -626,7 +626,7 @@ bool CThinCtrl::checkImplicitMemAccess(Instruction *I)
         if(I->getOperation().getID() == e_push)
         {
             if (m_VM->isSYMemoryCell(m_regs2->rsp - 8, 8)) {
-                std::cout << "symbolic : " << std::hex << m_regs2->rsp - 8 << std::endl;
+                //std::cout << "symbolic : " << std::hex << m_regs2->rsp - 8 << std::endl;
                 return true;
             }
         }
@@ -766,7 +766,7 @@ bool CThinCtrl::updateJCCDecision(Instruction* in, struct pt_regs* m_regs, ulong
         z3_api_calls++;
         // printf ("tt0: %lx, tt1: %lx, tt: %lx. \n", tt0, tt1, tt);
                         
-        std::cout << "bExecute: " << bExecute << std::endl; 
+        //std::cout << "bExecute: " << bExecute << std::endl; 
         
         //!-n concretize eflags based on the decision we took
         m_EFlagsMgr->ConcreteFlag(in->getOperation().getID(), bExecute) ;
@@ -979,6 +979,11 @@ bool CThinCtrl::OpdhasSymMemCell(opData* OD, Operand* OP, ulong gs_base)
             
         it->apply(&visitor);
         auto rdaddr = it->eval();
+
+        if(!rdaddr.defined){
+            printf("cpu clock : %lu \n", rdtsc());
+        }
+
         assert(rdaddr.defined);
 
         if (gs_base == 0)
@@ -1012,7 +1017,22 @@ bool CThinCtrl::OpdhasSymMemCell(opData* OD, Operand* OP, ulong gs_base)
             
         it->apply(&visitor);
         auto wraddr = it->eval();
+
+        //pp-s
+        //assert(wraddr.defined); //commenting this to handle special scenarios of symbolic buffer location
+#ifdef _SYM_BUF_LOCATION_TEST
+        if(!wraddr.defined && visitor.symreg){ //the write memory address(stored in the register) is symbolic
+            std::cout << "SYM_BUF_LOCATION, expect to be sent to CIE as the buffer is allocated in memory...\n";
+        }
+        else //if the register storing the write mem address is not symbolic, follow the original behavior 
+            assert(wraddr.defined);
+#else
+        if(!wraddr.defined){
+            printf("cpu clock : %lu \n", rdtsc());
+        }
         assert(wraddr.defined);
+#endif
+        //pp-e
 
         if (gs_base == 0)
             mem_addr = wraddr.convert<ulong>();
@@ -1129,7 +1149,7 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
             tr += (rdtsc() - tr_0);
 #endif
             if (ret){
-                std::cout << "sym reg ...\n";
+                //std::cout << "sym reg ...\n";
                 return true; 
                 //if(wt == false)
                 //    wt = true;
@@ -1158,7 +1178,7 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
             tmm += (rdtsc() - tm_0);
 #endif
             if (ret){
-                std::cout << "sym mem ...\n";
+                //std::cout << "sym mem ...\n";
                 return true; 
                 //if(wt == false)
                 //    wt = true;
@@ -1173,7 +1193,7 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
 #ifndef _PROD_PERF
     ti += (rdtsc() - ti_0);
 #endif
-    std::cout << "implicit mem " << ret << std::endl;
+    //std::cout << "implicit mem " << ret << std::endl;
     //if(wt == false && ret)
     //    wt = true;
     return ret;  
@@ -1294,8 +1314,7 @@ bool CThinCtrl::PreParseOperand(Instruction* in)
 bool CThinCtrl::ReadNextIPFromFile()
 {
     ifstream theFile;
-    //string fname = "/home/neo/smu/kernel-se/KRover/nextIPofTransInsn.txt";
-    string fname = "/home/beverly/KRover/KRover/KRover/nextIPofTransInsn.txt";
+    string fname = "/home/neo/smu/KRover/KRover/stc-files/nextIPofTransInsn.txt";
     string line;
     ulong endRIP;
     ulong crtRIP, nextRIP;
@@ -1506,15 +1525,15 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #endif
 
     t0 = rdtsc();
+    printf("cout clk at start : %lu\n", t0);
+
     while (true) {
         crtAddr = m_regs->rip;
 #ifdef DEBUG_LOG       
     printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
 #endif
         printf("\n-------------------instruction %lu: adr : %lx\n", insn_count, crtAddr);
-        if(insn_count == 420){
-            printf("%r10 : %lx %r11 : %lx\n", m_regs->r10, m_regs->r11);
-        }
+
         /* get the Insn from the InsnCache or decoding on the site */
 #ifndef _PROD_PERF
         dis_as0 = rdtsc();
@@ -1601,8 +1620,6 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             //std::cout << "trans ins "<< pi << std::endl;
             //pi++;
         }
-
-
 #endif
 
 #ifndef _PROD_PERF
@@ -1783,6 +1800,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifndef _PROD_PERF
                                 sie_t1 = rdtsc();
                                 sie_t += (sie_t1 - sie_t0);
+
     #endif
                             }
                             else
@@ -1887,8 +1905,8 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                         } else {
                             /* Instruction CIE */  
                             std::cout << "dispatch for CIE\n"; 
-                            if(in->getOperation().getID() == e_push)
-                                printf ("~~~~~~~~~~~~, rsp: %lx. rbp %lx \n", m_regs->rsp, m_regs->rbp);
+                            //if(in->getOperation().getID() == e_push)
+                                //printf ("~~~~~~~~~~~~, rsp: %lx. rbp %lx \n", m_regs->rsp, m_regs->rbp);
 #ifndef _PROD_PERF
                             cie_count++; 
                             cie_t0 = rdtsc();     
@@ -1901,7 +1919,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             {
                                 m_VM->clearAllSymFlag();
                             }
-                            printf ("after CIE ~~~~~~~~~~~~, rsp: %lx. rbp %lx \n", m_regs->rsp, m_regs->rbp);
+                            //printf ("after CIE ~~~~~~~~~~~~, rsp: %lx. rbp %lx \n", m_regs->rsp, m_regs->rbp);
 #ifndef _PROD_PERF
                             cie_t1 = rdtsc();
                             //std::cout << "insn : " << insn_count << " , cie cost : " << std::dec << t1_cie - t0_cie << std::endl;
@@ -2040,16 +2058,16 @@ bool CThinCtrl::parseOperands(InstrInfo *info) {
         // std::cout << "Operand " << O.format(Arch_x86_64) << std::endl;
         // std::cout<<"is read: " << O.readsMemory() << ". is write: " << O.writesMemory() << ". operand size: " << oi->size << std::endl;
         if (!O.readsMemory() && !O.writesMemory()) {
-            std::cout << "1\n";
+            //std::cout << "_XX\n";
             res = _mayOperandUseSymbol_XX(oi);
         } else if (O.readsMemory() && !O.writesMemory()) {
-            std::cout << "2\n";
+            //std::cout << "_RX\n";
             res = _mayOperandUseSymbol_RX(I, oi);
         } else if (!O.readsMemory() && O.writesMemory()) {
-            std::cout << "3\n";
+            //std::cout << "_XW\n";
             res = _mayOperandUseSymbol_XW(I, oi);
         } else if (O.readsMemory() && O.writesMemory()) {
-            std::cout << "4\n";
+            //std::cout << "_RW\n";
             res = _mayOperandUseSymbol_RW(I, oi);
         }
 
@@ -2170,8 +2188,8 @@ bool CThinCtrl::calculateBinaryFunction (BinaryFunction* bf, KVExprPtr &exprPtr)
         int exp_sz0 = KVE[0]->getExprSize();
         int exp_sz1 = KVE[1]->getExprSize();
         int mx_sz = exp_sz0;
-        std::cout << "sz0 " << exp_sz0 << std::endl;
-        std::cout << "sz1 " << exp_sz1 << std::endl;
+        //std::cout << "sz0 " << exp_sz0 << std::endl;
+        //std::cout << "sz1 " << exp_sz1 << std::endl;
         if((KVE[0]->getKind() == EXPR::Expr::Const) && (exp_sz0 < exp_sz1))
         {
             mx_sz = exp_sz1;
@@ -2182,17 +2200,17 @@ bool CThinCtrl::calculateBinaryFunction (BinaryFunction* bf, KVExprPtr &exprPtr)
             mx_sz = exp_sz0;
             KVE[1]->setExprSize(exp_sz0);
         }
-        std::cout << "sz0 " << KVE[0]->getExprSize() << std::endl;
-        std::cout << "sz1 " << KVE[1]->getExprSize() << std::endl;
+        //std::cout << "sz0 " << KVE[0]->getExprSize() << std::endl;
+        //std::cout << "sz1 " << KVE[1]->getExprSize() << std::endl;
 
         if(bf->isAdd())
             exprPtr.reset(new AddExpr(KVE[0], KVE[1], mx_sz, 0)) ;
         if(bf->isMultiply())
             exprPtr.reset(new MulExpr(KVE[0], KVE[1], mx_sz, 0)) ;
         //std::cout << " expr sz " << exprPtr->getExprSize() << std::endl;
-        std::cout << " expr ";
-        exprPtr->print();
-        std::cout << std::endl;
+        //std::cout << " expr ";
+        //exprPtr->print();
+        //std::cout << std::endl;
     }
     /*
     if(bf->isAdd()) {
@@ -2624,7 +2642,7 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
             // }
 
         } else {
-            std::cout <<"Access with one or more registers\n";
+            //std::cout <<"Access with one or more registers\n";
             // Access with one or more registers
             // eg1: mov 0xffffffe8(%rbp),%rax -> 0xffffffe8(%rbp)
             bool bSymbolic;
@@ -2634,6 +2652,8 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
 
             if (hasSymReg) {
                 // asm("int3");
+                unsigned long RX_end_1_t = rdtsc();
+                std::cout << "cpu clock at end : " << std::dec << RX_end_1_t << std::endl;
                 std::cout << "symbolic mem address involved in Insn " << I.get()->format() << std::endl;
                 assert(0);
                 // At least, operand has one symbolic register;
@@ -2643,7 +2663,7 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
                 return false;
             } else {
                 // Memory access without symbolic register
-                std::cout << "Memory access without symbolic register\n";
+                //std::cout << "Memory access without symbolic register\n";
                 // // std::set<Expression::Ptr> expr;
                 // // addEffectiveReadAddresses(expr);
                 // Expression::Ptr expr = O->getValue();
@@ -2721,7 +2741,7 @@ bool CThinCtrl::_mayOperandUseSymbol_RX(DAPIInstrPtr& I, OprndInfoPtr &oi) {
                 assert(res);
                 if (MV.bsym) {
                     oi->opty = OPTY_MEMCELLSYM;
-                    std::cout << "reading symmem\n";
+                    //std::cout << "reading symmem\n";
                     oi->symb = true;
                     oi->mem_symval = MV.expr;
                 } else {

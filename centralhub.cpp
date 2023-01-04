@@ -137,13 +137,17 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         case SCALL_PIPE:
         {
             printf("case: %d\n", (int)scall_idx);
-            tmp += 0x68; //adr of rsi
-            tmp += 0x8;  //adr of rdi
-            unsigned long fd0_adr = *(unsigned long*)tmp;
-            unsigned long fd1_adr = fd0_adr + 4;
-            printf("tmp : %lx fd2 %d, fd2 %d\n", *(unsigned long*)tmp, *(int *)fd0_adr, *(int *)fd1_adr);
-            declareSymbolicObject( fd0_adr, 4, 1, 1, 0x2, "fd1");
-            declareSymbolicObject( fd1_adr, 4, 1, 1, 0x1, "fd2");
+            tmp += 0x70;  //adr of rdi
+            
+            //symbolizing buffer
+            declareSymbolicObject(tmp, 8, 0, 1, 0x7fffffffdfe4, "bufadr_rdi"); 
+
+            //symbolizing the buffer content
+            //unsigned long fd0_adr = *(unsigned long*)tmp;
+            //unsigned long fd1_adr = fd0_adr + 4;
+            //printf("tmp : %lx fd2 %d, fd2 %d\n", *(unsigned long*)tmp, *(int *)fd0_adr, *(int *)fd1_adr);
+            //declareSymbolicObject( fd0_adr, 4, 1, 1, 0x2, "fd1");
+            //declareSymbolicObject( fd1_adr, 4, 1, 1, 0x1, "fd2");
         }   break;
         case SCALL_ACCESS:
         {
@@ -216,7 +220,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x68; //adr of rsi
             //declareSymbolicObject(tmp, 8, 1, 1, 128, "len_rsi");
             tmp += 0x8;  //adr of rdi
-            declareSymbolicObject(tmp, 8, 1, 1, 0x7fffffffdf60, "buf_rdi");
+            declareSymbolicObject(tmp, 8, 1, 1, 0x7fffffffdf80, "buf_rdi");
         }   break;
         case SCALL_LINK:
         {
@@ -265,12 +269,12 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             //printf("adr %lx buf content %c%c ", adr, *(char *)adr, *((char *)(adr+1)));
             
             //##symbolize buf arg which is an address
-            //declareSymbolicObject(tmp, 8, 1,1,  0x7fffffffdfb0, "buf_rsi"); 
+            declareSymbolicObject(tmp, 8, 1,1,  0x7fffffffdfb0, "buf_rsi"); 
             
             //##symbolize buf content chars
-            unsigned long adr = *((unsigned long *)tmp);
-            declareSymbolicObject(adr, 1, 1,1, 0x61, "buf[0]_rsi"); 
-            declareSymbolicObject(adr + 1, 1, 1,1, 0x62, "buf[1]_rsi"); 
+            //unsigned long adr = *((unsigned long *)tmp);
+            //declareSymbolicObject(adr, 1, 1,1, 0x61, "buf[0]_rsi"); 
+            //declareSymbolicObject(adr + 1, 1, 1,1, 0x62, "buf[1]_rsi"); 
             tmp += 0x8;  //adr of rdi
             //declareSymbolicObject(tmp, 8, 1, 1, 4, "fd_rdi");    
         }   break;
@@ -417,10 +421,10 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             //declareSymbolicObject(tmp, 8, 1, 1, (0x2 | 0x20), "flags_r10");
 
             //---sym %r9
-            //tmp += 0x38;
-            //declareSymbolicObject(tmp+0x40, 8, 1, 1, 0, "offset_r9");
+            //tmp += 0x40;
+            //declareSymbolicObject(tmp, 8, 1, 1, 0, "offset_r9");
 
-            //---sym %r10
+            //---sym %r8
             //tmp += 0x48;
             //declareSymbolicObject(tmp, 8, 1, 1, -1, "fd_r8"); //symbol
 
@@ -429,8 +433,12 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             //declareSymbolicObject(tmp, 8, 0, 1, 0x3, "prot_rdx");
 
             //---sym %rsi
-            tmp+= 0x68; //adr of rsi
+            //tmp+= 0x68; //adr of rsi
             //declareSymbolicObject(tmp, 8, 0, 1, 1024, "len_rsi");
+
+            //---sym %rdi
+            //tmp+= 0x70; //adr of rdi
+            //declareSymbolicObject(tmp, 8, 0, 1, 0x0, "adr_rdi");
 
         }   break;
         case SCALL_READ:
@@ -577,9 +585,9 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x60; 
-            //declareSymbolicObject(tmp, 8, 1, 1, 256, "mode_rdx");
+            declareSymbolicObject(tmp, 8, 1, 1, 256, "mode_rdx");
             tmp += 0x8;
-            declareSymbolicObject(tmp, 8, 0, 1, (0 | 64), "flags_rsi"); //O_RDONLY 0   O_CREAT 64
+            //declareSymbolicObject(tmp, 8, 0, 1, (0 | 64), "flags_rsi"); //O_RDONLY 0   O_CREAT 64
             tmp += 0x8;
             //unsigned long old_filename_adr = *(unsigned long*)tmp;
             //printf("file nm :%c%c%c%c\n", *(char*)old_filename_adr, *(char*)(old_filename_adr+1), *(char*)(old_filename_adr+2), *(char*)(old_filename_adr+3) );
@@ -735,11 +743,16 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x68; //adr of rsi
             //declareSymbolicObject(tmp, 8, 1, 1, 2048, "flags_rsi"); //symbol 
             tmp += 0x8;  //adr of rdi
-            unsigned long fd0_adr = *(unsigned long*)tmp;
-            unsigned long fd1_adr = fd0_adr + 4;
-            printf("tmp : %lx fd2 %d, fd2 %d\n", *(unsigned long*)tmp, *(int *)fd0_adr, *(int *)fd1_adr);
-            declareSymbolicObject( fd0_adr, 4, 1, 1, 0x2, "fd1");
-            declareSymbolicObject( fd1_adr, 4, 1, 1, 0x1, "fd2");
+
+            //symbolize buffer address
+            declareSymbolicObject(tmp, 8, 1, 1, 0x7fffffffdfe0, "bufadr_rdi"); 
+
+            //symbolize the buffer content
+            //unsigned long fd0_adr = *(unsigned long*)tmp;
+            //unsigned long fd1_adr = fd0_adr + 4;
+            //printf("tmp : %lx fd2 %d, fd2 %d\n", *(unsigned long*)tmp, *(int *)fd0_adr, *(int *)fd1_adr);
+            //declareSymbolicObject( fd0_adr, 4, 1, 1, 0x2, "fd1");
+            //declareSymbolicObject( fd1_adr, 4, 1, 1, 0x1, "fd2");
         }   break;
         case SCALL_DUP3:
         {
@@ -757,7 +770,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x70; //adr of rdi
-            declareSymbolicObject(tmp, 8, 1, 1, 0x555555757000, "adr_rdi"); 
+            declareSymbolicObject(tmp, 8, 1, 1, 0, "adr_rdi"); 
         }   break;
         case SCALL_SHMGET:
         {
@@ -781,9 +794,9 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x60;  //adr of rdx
             //declareSymbolicObject(tmp, 8, 1, 1, 0x0, "shmid_rdx");
             tmp += 0x8;  //adr of rsi
-            //declareSymbolicObject(tmp, 8, 1, 1, 0x0, "shmadr_rsi"); 
+            declareSymbolicObject(tmp, 8, 1, 1, 0x0, "shmadr_rsi"); 
             tmp += 0x8;  //adr of rdi
-            declareSymbolicObject(tmp, 8, 1, 1, 0x1000, "flag_rdi");    
+            //declareSymbolicObject(tmp, 8, 1, 1, 0x1000, "flag_rdi");    
         }   break;
         default:
         {

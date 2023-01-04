@@ -1962,10 +1962,10 @@ int main(int argc, char** argv) {
 
     //execState->MoniStartOfSE(0xffffffff810b9710); //ffffffff810baa50);//addr of x64_sys_setpriority
     //execState->MoniStartOfSE(0xffffffff810b5fb0); //ffffffff810ba7d0);//addr of x64_sys_getpriority
-    //execState->MoniStartOfSE(0xffffffff812e2800);//addr of x64_sys_lseek
+    //execState->MoniStartOfSE(0xffffffff812ddc30);//addr of x64_sys_lseek
     //execState->MoniStartOfSE(0xffffffff81910660);//addr of x64_sys_bind
     //execState->MoniStartOfSE(0xffffffff81910250); //ffffffff8191e250);//addr of sys_socket
-    //execState->MoniStartOfSE(0xffffffff812ef550);//addr of x64_sys_pipe
+    //execState->MoniStartOfSE(0xffffffff812ea7f0);//addr of x64_sys_pipe
     //execState->MoniStartOfSE(0xffffffff812e03b0);//addr of x64_sys_chmod
     //execState->MoniStartOfSE(0xffffffff812f38b0);//addr of x64_sys_symlink
     //execState->MoniStartOfSE(0xffffffff812db390); //ffffffff812dff60);//addr of x64_sys_access
@@ -1995,7 +1995,7 @@ int main(int argc, char** argv) {
     //execState->MoniStartOfSE(0xffffffff812e03b0);//addr of x64_sys_chmod
     //execState->MoniStartOfSE(0xffffffff810a0cf0);//addr of x64_sys_personality
     //execState->MoniStartOfSE(0xffffffff81037c90); //ffffffff81037c90);//addr of x64_sys_mmap
-    execState->MoniStartOfSE(0xffffffff812e02f0); //ffffffff812e4ec0);//addr of x64_sys_read
+    //execState->MoniStartOfSE(0xffffffff812e02f0); //ffffffff812e4ec0);//addr of x64_sys_read
     //execState->MoniStartOfSE(0xffffffff8126fda0); //addr of x64_sys_mprotect
     //execState->MoniStartOfSE(0xffffffff8126b630); //); //addr of x64_sys_mincore
     //execState->MoniStartOfSE(0xffffffff811463a0); //); //addr of x64_sys_getitimer
@@ -2037,16 +2037,16 @@ int main(int argc, char** argv) {
     //execState->MoniStartOfSE(0xffffffff8114abe0); //addr of x64_sys_set_robust_list
     //execState->MoniStartOfSE(0xffffffff8114b580); //addr of x64_sys_get_robust_list
     //execState->MoniStartOfSE(0xffffffff8126ca20); //addr of x64_sys_mlock2
-    //execState->MoniStartOfSE(0xffffffff81274470); //addr of x64_sys_mprotectcmpxch
+    //execState->MoniStartOfSE(0xffffffff8126fda0); //addr of x64_sys_mprotect
     //execState->MoniStartOfSE(0xffffffff813407c0); //addr of x64_sys_userfaultfd
     //execState->MoniStartOfSE(0xffffffff8112ef90); //ffffffff81131410); //addr of x64_sys_kcmp
-    //execState->MoniStartOfSE(0xffffffff812ef510);//addr of x64_sys_pipe2
+    execState->MoniStartOfSE(0xffffffff812ea7b0);//addr of x64_sys_pipe2
     //execState->MoniStartOfSE(0xffffffff813023a0); //ffffffff813071a0);//addr of x64_sys_dup3
     //execState->MoniStartOfSE(0xffffffff812da030); //addr of x64_sys_close
     //execState->MoniStartOfSE(0xffffffff8126c8d0); //addr of x64_sys_brk
     //execState->MoniStartOfSE(0xffffffff81440280); //addr of x64_sys_shmget
     //execState->MoniStartOfSE(0xffffffff810a5860); //addr of x64_sys_exit
-    execState->MoniStartOfSE(0xffffffff81442400); //addr of x64_sys_shmat
+    //execState->MoniStartOfSE(0xffffffff81442400); //addr of x64_sys_shmat
 
 
     //execState->MoniStartOfSE(0x555555554793); //addr in guest 
