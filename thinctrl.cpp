@@ -971,7 +971,7 @@ bool CThinCtrl::OpdhasSymMemCell(opData* OD, Operand* OP, ulong gs_base)
     //if (OP->readsMemory())
     if (OD->rdmem)
     //pp-e
-    {
+    {   
         std::set<Expression::Ptr> memrd;
         OP->addEffectiveReadAddresses(memrd);
         assert(memrd.size() == 1);
@@ -980,11 +980,11 @@ bool CThinCtrl::OpdhasSymMemCell(opData* OD, Operand* OP, ulong gs_base)
         it->apply(&visitor);
         auto rdaddr = it->eval();
 
-        if(!rdaddr.defined){
+        if(visitor.symreg){
             printf("cpu clock : %lu \n", rdtsc());
+            assert(0);
         }
-
-        assert(rdaddr.defined);
+        assert(rdaddr.defined); //sometime this does not assert even if the operand is symbolic, open issue to investigate 
 
         if (gs_base == 0)
             mem_addr = rdaddr.convert<ulong>();
@@ -1174,6 +1174,7 @@ bool CThinCtrl::hasSymOperand(wrapInstruction* win)
             //ret = OpdhasSymMemCell(&O, gs_base);
             ret = OpdhasSymMemCell(od_ptrs[i], &O, gs_base);
             //pp-e
+
 #ifndef _PROD_PERF
             tmm += (rdtsc() - tm_0);
 #endif
@@ -1466,8 +1467,10 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         int idx = crtAddr & 0xFFFFFFF;
         if (m_InsnCache[idx] == nullptr)
         {
+            //printf("new decode \n");
             I = decoder->decode((unsigned char *)m_cr->getPtrToInstruction(crtAddr));
             in = new Instruction(I);
+
             //pp-s
             win = new wrapInstruction(in);
             win->cie_mode = m_ConExecutor->preCIE(in);
@@ -1484,6 +1487,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         }
         else
         {        
+            //printf("not new decode \n");
             //pp-s
             //in = m_InsnCache[idx];
             win = m_InsnCache[idx];
@@ -1492,6 +1496,8 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         }
         
          count ++;
+         if(count == 1184)
+                break;
          //printf ("end of round : %d. \n", count);
         InsnCategory cate = in->getCategory();
         uint64_t key;
@@ -1505,16 +1511,20 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         }
         else
         {
+            //printf ("not trans");
             crtAddr += in->size();
         }
 
-        if (crtAddr == m_endRIP)
+        /*if (crtAddr == m_endRIP)
         {
             //printf ("at end rip\n");
             break;
-        }
+        }*/
+
+    
     }
     pre_dis_as1 = rdtsc();
+
     /* / */
 #endif
     //printf("\nnext `process insn one by one` stage..................\n");
@@ -1586,7 +1596,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                 }
 
             }*/
-
+            //printf ("----insn not found in cache :%lx. \n", crtAddr);
 #ifdef DEBUG_LOG       
             printf ("----insn not found in cache :%lx. \n", crtAddr);
 #endif
@@ -1625,6 +1635,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifndef _PROD_PERF
         insn_count ++;
 #endif
+
         if (in->getOperation().getID() == e_nop)
         {
             m_regs->rip += in->size();
@@ -1881,7 +1892,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             std::cout << "insn count: " << insn_count << ". sym executed insn: " << symExe_count << std::endl;
                             
 #endif         
-                            std::cout << "sym executed insn \n" << std::endl;
+                            //std::cout << "sym executed insn \n" << std::endl;
 #ifndef _PROD_PERF
                             symExe_count ++;
                             sie_t0 = rdtsc();
@@ -1904,7 +1915,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #endif
                         } else {
                             /* Instruction CIE */  
-                            std::cout << "dispatch for CIE\n"; 
+                            //std::cout << "dispatch for CIE\n"; 
                             //if(in->getOperation().getID() == e_push)
                                 //printf ("~~~~~~~~~~~~, rsp: %lx. rbp %lx \n", m_regs->rsp, m_regs->rbp);
 #ifndef _PROD_PERF

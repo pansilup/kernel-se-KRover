@@ -418,7 +418,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             printf("case: %d\n", (int)scall_idx);
             //---sym %r10
             //tmp += 0x38;
-            //declareSymbolicObject(tmp, 8, 1, 1, (0x2 | 0x20), "flags_r10");
+            //declareSymbolicObject(tmp, 8, 1, 1, 0x1, "flags_r10");
 
             //---sym %r9
             //tmp += 0x40;

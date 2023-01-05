@@ -799,9 +799,9 @@ bool EFlagsManager::EvalCondition(entryID insnID)
         exprPtr->print() ;
         std::cout << "\n" ;
 #endif
-        std::cout << "path constraints : ";
+        /*std::cout << "path constraints : ";
         exprPtr->print();
-        std::cout << std::endl;
+        std::cout << std::endl;*/
 
         m_Constraint.insert(exprPtr) ;
 
