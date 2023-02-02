@@ -15,6 +15,15 @@ class SYMemState;
 class EFlagsManager ;
 class CPU_EFlags ;
 
+//pp-s
+static __attribute__ ((noinline)) unsigned long long rdtsc3(void)
+{
+    unsigned hi, lo;
+    asm volatile ("rdtsc" : "=a"(lo), "=d"(hi));
+    // asm volatile ("int $3;\n\t");
+    return ((unsigned long long) lo | ((unsigned long long) hi << 32));
+}
+//pp-e
 
 class VMState {
     public: 

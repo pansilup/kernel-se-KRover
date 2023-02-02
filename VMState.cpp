@@ -334,6 +334,10 @@ bool VMState::SaveFlagChangingInstruction (FSInstrPtr &ptr) {
     return m_EFlagsMgr->SaveFlagChangingInstruction (ptr) ;
 }
 bool VMState::SaveFlagChangingInstructionExpr (entryID instrID, KVExprPtr exprPtr) {
-
+    /*unsigned long t0 = rdtsc3();
+    bool ret = m_EFlagsMgr->SaveFlagChangingInstructionExpr(instrID, exprPtr);
+    std::cout << std::dec << (unsigned long)(rdtsc3()-t0) << ", ";
+    return ret;*/
+    
     return m_EFlagsMgr->SaveFlagChangingInstructionExpr(instrID, exprPtr);
 }

@@ -704,6 +704,7 @@ bool SymExecutor::process_test(VMState *vm, InstrInfoPtr &infoptr) {
         assert(0);
         // asm("int3");
     }
+    //std::cout << "bfr flg chg expr upd\n";
     vm->SaveFlagChangingInstructionExpr(e_test, oe) ;
     return true;   
 }

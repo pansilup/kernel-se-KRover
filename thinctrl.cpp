@@ -1430,11 +1430,19 @@ bool CThinCtrl::processFunction(unsigned long addr) {
     bool is_prev_ctrl_trans = false;
     unsigned long shouldsym_t0, shouldsym_t;
     shouldsym_t0 = shouldsym_t = 0;
+    unsigned long nop_t0, nop_t1;
+    nop_t0 = nop_t1 = 0;
+    unsigned long flg_upd, flg_t0, flg_t1;
+    flg_upd = flg_t0 = flg_t1 = 0;
+    unsigned long psop_t0, psop_t;
+    psop_t0 = psop_t = 0;
 
     uint64_t prev_insn_count;
     uint64_t insn_count_t = 0;
     uint64_t ins_cache_hit_count = 0;
     ulong pi = 1;
+
+    bool is_prev_ins_call = false;
     //pp-e
 
     int uni_insn = 0;
@@ -1496,8 +1504,6 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         }
         
          count ++;
-         if(count == 1184)
-                break;
          //printf ("end of round : %d. \n", count);
         InsnCategory cate = in->getCategory();
         uint64_t key;
@@ -1515,11 +1521,11 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             crtAddr += in->size();
         }
 
-        /*if (crtAddr == m_endRIP)
+        if (crtAddr == m_endRIP)
         {
             //printf ("at end rip\n");
             break;
-        }*/
+        }
 
     
     }
@@ -1535,16 +1541,17 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #endif
 
     t0 = rdtsc();
-    printf("cout clk at start : %lu\n", t0);
+    //printf("cout clk at start : %lu\n", t0);
 
     while (true) {
         crtAddr = m_regs->rip;
 #ifdef DEBUG_LOG       
     printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
 #endif
-        printf("\n-------------------instruction %lu: adr : %lx\n", insn_count, crtAddr);
+        //printf("\n-------------------instruction %lu: adr : %lx\n", insn_count, crtAddr);
 
         /* get the Insn from the InsnCache or decoding on the site */
+
 #ifndef _PROD_PERF
         dis_as0 = rdtsc();
 #endif
@@ -1602,7 +1609,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #endif
 
         }
-        std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
+        //std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
         /*int i = 0;
         while( i < 10)
         {
@@ -1632,14 +1639,35 @@ bool CThinCtrl::processFunction(unsigned long addr) {
         }
 #endif
 
+#ifndef _PROD_PERF 
+//Trace call instructions
+#if 1
+    InsnCategory cate_t = in->getCategory();
+    if(is_prev_ins_call)
+    {
+        is_prev_ins_call = false;
+        std::cout << hex << crtAddr << "\n";
+    }
+    if(cate_t == c_CallInsn)
+    {
+        is_prev_ins_call = true;
+    }
+#endif
+
+#endif
+
 #ifndef _PROD_PERF
         insn_count ++;
 #endif
 
         if (in->getOperation().getID() == e_nop)
         {
+#ifndef _PROD_PERF
+            nop_t0 = rdtsc();
+#endif
             m_regs->rip += in->size();
 #ifndef _PROD_PERF
+            nop_t1 += rdtsc() - nop_t0;
             nop_count++;
 #endif
             continue;
@@ -1893,6 +1921,8 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             
 #endif         
                             //std::cout << "sym executed insn \n" << std::endl;
+                            //std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
+
 #ifndef _PROD_PERF
                             symExe_count ++;
                             sie_t0 = rdtsc();
@@ -1901,10 +1931,9 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             //InstrInfo *ioi = new InstrInfo(in);
                             InstrInfo *ioi = new InstrInfo(new Instruction (*in));
                             //pp-e
-                            // tt0 = rdtsc();
+                            //psop_t0 = rdtsc();
                             parseOperands(ioi);
-                            // tt1 = rdtsc();
-                            // tt = tt1 - tt0;
+                            //psop_t += rdtsc() - psop_t0;
                             // printf ("parse Operand in cpu cyles: %ld. \n", tt);
                             InstrInfoPtr ptr(ioi);
                             m_SymExecutor->pushInstr(ptr);
@@ -1926,10 +1955,13 @@ bool CThinCtrl::processFunction(unsigned long addr) {
                             //m_ConExecutor->InsnDispatch(in, m_regs);
                             m_ConExecutor->InsnDispatch2(in, m_regs, win->cie_mode);
                             //pp-e
+                            //flg_t0 = rdtsc();
                             if (m_EFlagsMgr->isFlagChangingInstr(in->getOperation().getID()))
                             {
+                                //flg_upd++;
                                 m_VM->clearAllSymFlag();
                             }
+                            //flg_t1 += (rdtsc() - flg_t0);
                             //printf ("after CIE ~~~~~~~~~~~~, rsp: %lx. rbp %lx \n", m_regs->rsp, m_regs->rbp);
 #ifndef _PROD_PERF
                             cie_t1 = rdtsc();
@@ -1990,6 +2022,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             std::cout << "######### at end of processFuncyion, rip " << std::hex << m_regs->rip << std::endl;
             printf ("\ntot for everytng except pre-disas\t: %lu\n\n", (unsigned long)(t1-t0));
             printf ("\ninsns not found in cache\t\t: %d \n", uni_insn);
+            printf ("\nflg upd cie : %lu flg upd cycles %lu\n", flg_upd, flg_t1);
 #ifndef _PROD_PERF
             printf ("\nSE ends~~~~~~~~~~~~, \ntotal insn\t\t: %lu \nsym flag depend insn\t: %lu \nsymbolic executed insn  : %lu \n", insn_count, symFlag_count, symExe_count);
             printf ("nop count \t: %lu\ncie count \t: %lu\nsie count \t: %lu\nret count \t: %lu\ncall count \t: %lu\nbranch count \t: %lu\n", nop_count, cie_count, symExe_count, ret_count, call_count, branch_count);
@@ -2011,10 +2044,10 @@ bool CThinCtrl::processFunction(unsigned long addr) {
             //printf ("total-z3_api\t\t: %lu\n", t-tt);
             printf ("total-z3_api-ins decode : %lu\n", (unsigned long)(t - tt- dis_as));
             printf("\n\nbreakdown\ncyc for call \t: %lu\ncyc for branch \t: %lu\ncyc for sie \t: %lu\ncyc for cie \t: %lu\n", call_t, branch_t, sie_t, cie_t);
-            printf("ret: %lu\n", ret_t);
+            printf("nop: %lu\nret: %lu\n", nop_t1, ret_t);
             //printf("inscat: %lu\n", inscat_t);
             //printf("find_dec: %lu\n", find_dec_t);
-            //printf("dep: %lu\n", dep_t);
+            printf("parseoperands: %lu\n", psop_t);
             printf("\nshouldsym: %lu\n", shouldsym_t);
             printf("st1: %lu \nst2: %lu \nst3: %lu \n", st1, st2, st3);
             printf("tr : %lu \ntm : %lu \nti : %lu \n", tr, tmm, ti);

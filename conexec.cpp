@@ -398,7 +398,7 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
 
  //pp-s 
     //if (opcode == e_mov || opcode == e_cmp || opcode == e_lea || opcode == e_add || opcode == e_sub)
-    if (opcode == e_mov || opcode == e_cmp || opcode == e_lea || opcode == e_add || opcode == e_sub || opcode == e_inc)
+    if (opcode == e_mov || opcode == e_cmp || opcode == e_lea || opcode == e_add || opcode == e_sub || opcode == e_inc || opcode == e_dec)
 //pp-e
     {
         memcpy (orig_insn, orig_insn_addr, 0x8);
@@ -408,15 +408,17 @@ int ConExecutor::RewRIPInsn(void* T_insn, void* orig_insn_addr, Instruction* ins
             //printf ("gs base rip rel insn. \n");
             //pp-s
             //if (opcode == e_mov || opcode == e_add)
-            if (opcode == e_mov || opcode == e_add || opcode == e_inc)
+            if (opcode == e_mov || opcode == e_add || opcode == e_inc || opcode == e_dec)
             //pp-e
             {
-                if (instr->size() == 7) //incl comes here
+                //here (opcode == e_add && instr->size() == 11) refers to an ins in the form : addl $0x200,%gs:0x7deac321(%rip) 
+                if (instr->size() == 7 || (opcode == e_add && instr->size() == 11)) //incl comes here
                 {
                     memcpy (orig_insn+2, (void *)((unsigned long)orig_insn_addr+0x1), 6);
                     orig_insn[1] = 0x41;
                 }
-                else if(instr->size() == 8) //incq comes here
+                //here (opcode == e_add && instr->size() == 12) refers to an ins in the form : addq $0x200,%gs:0x7deac321(%rip) 
+                else if(instr->size() == 8 || (opcode == e_add && instr->size() == 12)) //incq comes here
                 {
                     orig_insn[1] |= 0x1;
                 }
@@ -947,18 +949,26 @@ bool ConExecutor::InsnDispatch2(Instruction* instr, struct pt_regs* regs, uint m
     if(mode == 2) //rip is not used, no instruction rewriting is required
     {
         //std::cout <<"non rip relative instruction\n";
+        //unsigned long n_t0 = rdtsc();
         void* T_insn = (void*)((char*)InsnExecNonRIP + 0x68);
         memcpy(T_insn, (void*)crtAddr, InsnSize);
+        //std::cout << std::dec << (unsigned long)(rdtsc()-n_t0) << ",";
+        //unsigned long n_t = rdtsc();
         InsnExecNonRIP(regs);
         ClearTinsn(T_insn, InsnSize);
+        //std::cout << std::dec << (unsigned long)(rdtsc()-n_t) << ",";
     }
     else if(mode == 1) //rip is used, can replace rip with r15
     {
         //std::cout <<"rip reative instruction\n";
         void* T_insn_no_r15 = (void*)((char*)InsnExecRIP + 0x6c);
+        //unsigned long rip_t0 = rdtsc();
         RewRIPInsn(T_insn_no_r15, (void*)crtAddr, instr);
+        //std::cout << std::dec << (unsigned long)(rdtsc()-rip_t0) << "," << std::endl;
+        //unsigned long rip_t = rdtsc();
         InsnExecRIP(regs);
         ClearTinsn(T_insn_no_r15, 12);
+        //std::cout << std::dec << (unsigned long)(rdtsc()-rip_t) <<  ",";
     }
     else
     {

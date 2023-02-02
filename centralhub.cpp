@@ -344,14 +344,14 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             //declareSymbolicObject(file_name_adr + 2, 1, 0, 1, 0x64, "fname_rdi_3"); //d
             //declareSymbolicObject(directory_name_adr + 2, 1, 0, 1, 0x00, "dirname_rdi_4"); //\0
         }   break;*/
-        /*case SCALL_GETRLIMIT:
+        case SCALL_GETRLIMIT:
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rsi
             //declareSymbolicObject(tmp, 8, 1, 1, 0x0, "mode_rsi");
             tmp += 0x8;  //adr of rdi
             declareSymbolicObject(tmp, 8, 1, 1, 0x7, "resource_rdi"); //seed val 7 : RLIMIT_NOFILE
-        }   break;*/
+        }   break;
         case SCALL_SETRLIMIT:
         {
             printf("case: %d\n", (int)scall_idx);
@@ -649,9 +649,9 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x68; //adr of rsi
-            //declareSymbolicObject(tmp, 8, 1, 1, 0x3, "policy_rsi");
+            declareSymbolicObject(tmp, 8, 1, 1, 0x3, "policy_rsi");
             tmp += 0x8;  //adr of rdi
-            declareSymbolicObject(tmp, 8, 1, 1, 0, "pid_rdi"); //symbol
+            //declareSymbolicObject(tmp, 8, 1, 1, 0, "pid_rdi"); //symbol
         }   break;
         case SCALL_SCHED_GETAFFINITY:
         {
