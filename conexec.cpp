@@ -941,6 +941,67 @@ uint ConExecutor::preCIE(Instruction* in)
     return cie_mode;
 }
 
+//pp-s from @hq
+void ConExecutor::ModifyR15ToR14(unsigned char* newInst, unsigned char* oldInst, int size) {
+
+	int i = 0;
+    bool REX_R = false ;
+	memcpy(newInst, oldInst, size) ;
+
+/*	prefix : 
+		 0xf0, 									lock
+		 0xf2, 0xf3, 							rep/rep
+		 0x2e, 0x36, 0x3e, 0x26, 0x64, 0x65		Segment
+		 0x66									Operand-size override
+		 0x67									Address-size override prefix
+		 0x4X									REX
+*/		 
+    // skip the prefix if any;
+	while(newInst[i] == 0xf0 ||
+		  newInst[i] == 0xf2 || newInst[i] == 0xf3 ||
+		  newInst[i] == 0x2e || newInst[i] == 0x36 || newInst[i] == 0x3e || newInst[i] == 0x26 || newInst[i] == 0x64 || newInst[i] == 0x65 ||
+		  newInst[i] == 0x66 ||
+		  newInst[i] == 0x67 
+		  ) i++ ;
+
+    // skip the REX if any;
+	if ((newInst[i] & 0x40) == 0x40) {
+        REX_R = ((newInst[i]&0x4) == 0x4);
+        i++ ;
+    } 
+	assert (REX_R) ;
+    // first byte of opcode:
+	if (newInst[i] == 0x0f) {	// not 1 byte opcode
+		i++ ;
+        // second byte of opcode
+		if (newInst[i] == 0x38 || newInst[i] == 0x3a) // not 2 bytes opcode
+			i++ ;
+	}
+	// now i is last byte(3rd) of op code, skip it.
+	i ++ ;
+    
+    // ModR/M byte, REX.R (bit 2) combined with ModR/M.rrr (bit3,4,5) is the register number;
+    // here REX.R = 1, and ModR/M=0x3d , rrr=111;
+    std::cout << "R15/RIP related: " ;
+    int j ;
+    for(j=0; j< size; j++)
+        std::cout << std::hex << (unsigned int)newInst[j] << " ";
+    std::cout << std::endl ;
+
+	assert((newInst[i]&0x38) == 0x38) ; // REX.R=1 rrr=111 0x3d(bit 3,4,5) means %r15
+	newInst[i] &= ~8 ;			        // REX.R=1 rrr=110 0x35(bit 3,4,5) means %r14
+
+    std::cout << "modified: " ;
+    for(j=0; j< size; j++)
+        std::cout << std::hex << (unsigned int)newInst[j] << " ";
+
+    std::cout << std::endl ;
+
+
+	return ;
+}
+//pp-e
+
 bool ConExecutor::InsnDispatch2(Instruction* instr, struct pt_regs* regs, uint mode)
 {
     int InsnSize = instr->size();
@@ -975,7 +1036,33 @@ bool ConExecutor::InsnDispatch2(Instruction* instr, struct pt_regs* regs, uint m
         unsigned long conc_exe_end_t = rdtsc();
         std::cout << "rdtsc() : " << std::dec << conc_exe_end_t << std::endl;
         std::cout <<"possibly both rip and r15 are used, check ins ...\n";
-        assert(0);
+        //assert(0);
+        //pp-s from @hq
+        unsigned long r14Saved ;
+		char newInst[32] ;
+		assert(InsnSize<32) ;
+		
+		// save %r14
+		r14Saved = regs->r14 ;
+		
+		// copy %r15 to %r14
+		regs->r14 = regs->r15 ;
+		
+        // modify instruction from %r15 to %r14
+		ModifyR15ToR14((unsigned char*)newInst, (unsigned char*)crtAddr, InsnSize) ;
+        
+		// execute it as the old way
+		void* T_insn_no_r15 = (void*)((char*)InsnExecRIP + 0x6c) ;
+        RewRIPInsn(T_insn_no_r15, (void*)newInst, instr) ;
+        InsnExecRIP(regs) ;
+        ClearTinsn(T_insn_no_r15, 12) ;
+
+		// copy %r14 to %r15
+		regs->r15 = regs->r14 ;
+		
+		// restore %r14
+		regs->r14 = r14Saved ;
+        //pp-e
     }
     //std::cout <<"end fun InsnDispatch2\n";
 

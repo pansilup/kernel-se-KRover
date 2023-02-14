@@ -1,0 +1,1810 @@
+======================0x7f7fffffed2c, 0x7f7fffffed20
+================
+error open file!
+m_sts: 0x7f0000fb3fe0, m_cr: 0x7f0000fa7c30, decoder: 0x7f0000fb4ec0 .
+low: 0. 
+high: fffffffffffff000. 
+main.cpp:	 1945
+nme_fsbase: 7f200000d640. 
+gdt base: 7f1000902000. 
+idx: 170, entry: 7920c067. 
+main.cpp:	 1952
+rax: 0
+rbx: 0 rcx: 0 rdx: 0 rdi: 0 rsi: 0 r8: 0 r9: 0 r10: 0 
+rip: 0 
+rsp: 0 
+ei_shar_args at: 0x7f88000907000 
+t_rsp0 stack: fffffe0000003000. 
+t_rsp1 stack: ffffffff82a04000. 
+onsite receive request. 
+ei_shar_args->rip: 555555554b5d, rsp: 7fffffffdf50. 
+ei_shar_args at: 0x7f1000907000 
+target rip: 0x555555554b60, target code: 7885894880458d48. 
+syscall entry at: 0xffffffff81c00010, code: 2524894865f8010f. 
+redirected page start from :0x7f000172a000. ends : 0x7f0001732000. 
+new_va: 7f000172b000. ker_addr: ffffffff81a52000. 
+about to issue hyper call to redirect page: ffffffff81a52000 .
+install probe at: ffffffff81a52bc0. 
+int3 invoked. saved rip: ffffffff81a52bc0. saved rsp: ffffc90000db7b70, saved_rflags: 246, ret address on stack: ffffffff81a52fa9. 
+at processAt
+syscall idx : 0
+case: 0
+######### at start of processFuncyion, rip ffffffff81a52bc5
+
+-------------------instruction 0: adr : ffffffff81a52bc5
+idx :1a52bc5 ,in :push %rbp
+
+-------------------instruction 1: adr : ffffffff81a52bc6
+idx :1a52bc6 ,in :mov %rsp,%rbp
+
+-------------------instruction 2: adr : ffffffff81a52bc9
+idx :1a52bc9 ,in :push %r15
+
+-------------------instruction 3: adr : ffffffff81a52bcb
+idx :1a52bcb ,in :push %r14
+
+-------------------instruction 4: adr : ffffffff81a52bcd
+idx :1a52bcd ,in :push %r13
+
+-------------------instruction 5: adr : ffffffff81a52bcf
+idx :1a52bcf ,in :push %r12
+
+-------------------instruction 6: adr : ffffffff81a52bd1
+idx :1a52bd1 ,in :mov %edx,%r14d
+
+-------------------instruction 7: adr : ffffffff81a52bd4
+idx :1a52bd4 ,in :push %rbx
+
+-------------------instruction 8: adr : ffffffff81a52bd5
+idx :1a52bd5 ,in :mov %r9d,%ebx
+
+-------------------instruction 9: adr : ffffffff81a52bd8
+idx :1a52bd8 ,in :mov %r9d,%r13d
+
+-------------------instruction 10: adr : ffffffff81a52bdb
+idx :1a52bdb ,in :and $0x41,%ebx
+
+-------------------instruction 11: adr : ffffffff81a52bde
+idx :1a52bde ,in :and $0x80,%r13d
+
+-------------------instruction 12: adr : ffffffff81a52be5
+idx :1a52be5 ,in :mov %rdi,%r15
+
+-------------------instruction 13: adr : ffffffff81a52be8
+idx :1a52be8 ,in :sub $0x38,%rsp
+
+-------------------instruction 14: adr : ffffffff81a52bec
+idx :1a52bec ,in :mov 0x6c8(%rdi),%rdx
+
+-------------------instruction 15: adr : ffffffff81a52bf3
+idx :1a52bf3 ,in :mov %r8,0xffffffa0(%rbp)
+
+-------------------instruction 16: adr : ffffffff81a52bf7
+idx :1a52bf7 ,in :mov $0x0,0xffffffb0(%rbp)
+
+-------------------instruction 17: adr : ffffffff81a52bff
+idx :1a52bff ,in :mov $0x0,0xffffffb8(%rbp)
+
+-------------------instruction 18: adr : ffffffff81a52c07
+idx :1a52c07 ,in :mov %rcx,%r12
+
+-------------------instruction 19: adr : ffffffff81a52c0a
+idx :1a52c0a ,in :mov $0x0,0xffffffc0(%rbp)
+
+-------------------instruction 20: adr : ffffffff81a52c12
+idx :1a52c12 ,in :mov $0x0,0xffffffc8(%rbp)
+
+-------------------instruction 21: adr : ffffffff81a52c1a
+idx :1a52c1a ,in :mov $0x0,0xffffffa8(%rbp)
+
+-------------------instruction 22: adr : ffffffff81a52c22
+idx :1a52c22 ,in :mov (%rdx),%r8d
+
+-------------------instruction 23: adr : ffffffff81a52c25
+idx :1a52c25 ,in :mov $0x28,%rax
+
+-------------------instruction 24: adr : ffffffff81a52c2e
+idx :1a52c2e ,in :mov %rax,0xffffffd0(%rbp)
+
+-------------------instruction 25: adr : ffffffff81a52c32
+idx :1a52c32 ,in :xor %eax,%eax
+
+-------------------instruction 26: adr : ffffffff81a52c34
+idx :1a52c34 ,in :mov %ebx,%eax
+
+-------------------instruction 27: adr : ffffffff81a52c36
+idx :1a52c36 ,in :or $0x2,%eax
+
+-------------------instruction 28: adr : ffffffff81a52c39
+idx :1a52c39 ,in :test %r8d,%r8d
+
+-------------------instruction 29: adr : ffffffff81a52c3c
+idx :1a52c3c ,in :cmove %eax,%ebx
+
+-------------------instruction 30: adr : ffffffff81a52c3f
+idx :1a52c3f ,in :lea 0xffffffb0(%rbp),%rax
+
+-------------------instruction 31: adr : ffffffff81a52c43
+idx :1a52c43 ,in :mov %ebx,%r9d
+
+-------------------instruction 32: adr : ffffffff81a52c46
+idx :1a52c46 ,in :mov %r14d,%edx
+
+-------------------instruction 33: adr : ffffffff81a52c49
+idx :1a52c49 ,in :mov %rax,%r8
+
+-------------------instruction 34: adr : ffffffff81a52c4c
+idx :1a52c4c ,in :call 0xfffff284(%rip)
+
+-------------------instruction 35: adr : ffffffff81a51ed0
+idx :1a51ed0 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 36: adr : ffffffff81a51ed5
+idx :1a51ed5 ,in :push %rbp
+
+-------------------instruction 37: adr : ffffffff81a51ed6
+idx :1a51ed6 ,in :mov %rsi,%rax
+
+-------------------instruction 38: adr : ffffffff81a51ed9
+idx :1a51ed9 ,in :mov %rsp,%rbp
+
+-------------------instruction 39: adr : ffffffff81a51edc
+idx :1a51edc ,in :push %r15
+
+-------------------instruction 40: adr : ffffffff81a51ede
+idx :1a51ede ,in :push %r14
+
+-------------------instruction 41: adr : ffffffff81a51ee0
+idx :1a51ee0 ,in :push %r13
+
+-------------------instruction 42: adr : ffffffff81a51ee2
+idx :1a51ee2 ,in :push %r12
+
+-------------------instruction 43: adr : ffffffff81a51ee4
+idx :1a51ee4 ,in :lea 0x38(%rcx),%r12
+
+-------------------instruction 44: adr : ffffffff81a51ee8
+idx :1a51ee8 ,in :push %rbx
+
+-------------------instruction 45: adr : ffffffff81a51ee9
+idx :1a51ee9 ,in :mov %rdi,%rbx
+
+-------------------instruction 46: adr : ffffffff81a51eec
+idx :1a51eec ,in :mov %rcx,%r15
+
+-------------------instruction 47: adr : ffffffff81a51eef
+idx :1a51eef ,in :mov %r8,%r14
+
+-------------------instruction 48: adr : ffffffff81a51ef2
+idx :1a51ef2 ,in :mov %r9d,%r13d
+
+-------------------instruction 49: adr : ffffffff81a51ef5
+idx :1a51ef5 ,in :sub $0x50,%rsp
+
+-------------------instruction 50: adr : ffffffff81a51ef9
+idx :1a51ef9 ,in :mov %rsi,0xffffff90(%rbp)
+
+-------------------instruction 51: adr : ffffffff81a51efd
+idx :1a51efd ,in :lea 0x28(%rcx),%rsi
+
+-------------------instruction 52: adr : ffffffff81a51f01
+idx :1a51f01 ,in :mov $0x28,%rdi
+
+-------------------instruction 53: adr : ffffffff81a51f0a
+idx :1a51f0a ,in :mov %rdi,0xffffffd0(%rbp)
+
+-------------------instruction 54: adr : ffffffff81a51f0e
+idx :1a51f0e ,in :xor %edi,%edi
+
+-------------------instruction 55: adr : ffffffff81a51f10
+idx :1a51f10 ,in :lea 0x18(%rax),%rdi
+
+-------------------instruction 56: adr : ffffffff81a51f14
+idx :1a51f14 ,in :mov %edx,0xffffffbc(%rbp)
+
+-------------------instruction 57: adr : ffffffff81a51f17
+idx :1a51f17 ,in :mov %r12,%rdx
+
+-------------------instruction 58: adr : ffffffff81a51f1a
+idx :1a51f1a ,in :mov %rcx,0xffffff88(%rbp)
+
+-------------------instruction 59: adr : ffffffff81a51f1e
+idx :1a51f1e ,in :call 0x7632(%rip)
+
+-------------------instruction 60: adr : ffffffff81a59550
+idx :1a59550 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 61: adr : ffffffff81a59555
+idx :1a59555 ,in :lea 0x8(%rsp),%r10
+
+-------------------instruction 62: adr : ffffffff81a5955a
+idx :1a5955a ,in :and $0xfffffff0,%rsp
+
+-------------------instruction 63: adr : ffffffff81a5955e
+idx :1a5955e ,in :push 0xfffffff8(%r10)
+
+-------------------instruction 64: adr : ffffffff81a59562
+idx :1a59562 ,in :push %rbp
+
+-------------------instruction 65: adr : ffffffff81a59563
+idx :1a59563 ,in :mov %rsp,%rbp
+
+-------------------instruction 66: adr : ffffffff81a59566
+idx :1a59566 ,in :push %r10
+
+-------------------instruction 67: adr : ffffffff81a59568
+idx :1a59568 ,in :push %rbx
+
+-------------------instruction 68: adr : ffffffff81a59569
+idx :1a59569 ,in :lea 0xffffffb4(%rbp),%rcx
+
+-------------------instruction 69: adr : ffffffff81a5956d
+idx :1a5956d ,in :mov %rdi,%rbx
+
+-------------------instruction 70: adr : ffffffff81a59570
+idx :1a59570 ,in :sub $0x40,%rsp
+
+-------------------instruction 71: adr : ffffffff81a59574
+idx :1a59574 ,in :mov $0x0,0xffffffb4(%rbp)
+
+-------------------instruction 72: adr : ffffffff81a5957c
+idx :1a5957c ,in :mov $0x0,0xffffffd8(%rbp)
+
+-------------------instruction 73: adr : ffffffff81a59584
+idx :1a59584 ,in :lea 0x8(%rcx),%rdi
+
+-------------------instruction 74: adr : ffffffff81a59588
+idx :1a59588 ,in :mov $0x28,%rax
+
+-------------------instruction 75: adr : ffffffff81a59591
+idx :1a59591 ,in :mov %rax,0xffffffe8(%rbp)
+
+-------------------instruction 76: adr : ffffffff81a59595
+idx :1a59595 ,in :xor %eax,%eax
+
+-------------------instruction 77: adr : ffffffff81a59597
+idx :1a59597 ,in :and $0xfffffff8,%rdi
+
+-------------------instruction 78: adr : ffffffff81a5959b
+idx :1a5959b ,in :sub %rdi,%rcx
+
+-------------------instruction 79: adr : ffffffff81a5959e
+idx :1a5959e ,in :add $0x2c,%ecx
+
+-------------------instruction 80: adr : ffffffff81a595a1
+idx :1a595a1 ,in :shr $0x3,%ecx
+
+-------------------instruction 81: adr : ffffffff81a595a4
+idx :1a595a4 ,in :REP stosd %rax,rdi(%es,10)
+
+-------------------instruction 82: adr : ffffffff81a595a7
+idx :1a595a7 ,in :lea 0xffffffb0(%rbp),%rax
+
+-------------------instruction 83: adr : ffffffff81a595ab
+idx :1a595ab ,in :mov %rdx,0xffffffc8(%rbp)
+
+-------------------instruction 84: adr : ffffffff81a595af
+idx :1a595af ,in :mov %rsi,0xffffffb8(%rbp)
+
+-------------------instruction 85: adr : ffffffff81a595b3
+idx :1a595b3 ,in :mov %rbx,%rdi
+
+-------------------instruction 86: adr : ffffffff81a595b6
+idx :1a595b6 ,in :mov $0x40,0xffffffb0(%rbp)
+
+-------------------instruction 87: adr : ffffffff81a595bd
+idx :1a595bd ,in :mov $0x58,0xffffffc0(%rbp)
+
+-------------------instruction 88: adr : ffffffff81a595c4
+idx :1a595c4 ,in :mov %rax,%rdx
+
+-------------------instruction 89: adr : ffffffff81a595c7
+idx :1a595c7 ,in :add $0x10,%rax
+
+-------------------instruction 90: adr : ffffffff81a595cb
+idx :1a595cb ,in :test %rsi,%rsi
+
+-------------------instruction 91: adr : ffffffff81a595ce
+idx :1a595ce ,in :cmovne %rdx,%rax
+
+-------------------instruction 92: adr : ffffffff81a595d2
+idx :1a595d2 ,in :mov %rax,%rsi
+
+-------------------instruction 93: adr : ffffffff81a595d5
+idx :1a595d5 ,in :call 0xffffe12b(%rip)
+
+-------------------instruction 94: adr : ffffffff81a57700
+idx :1a57700 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 95: adr : ffffffff81a57705
+idx :1a57705 ,in :mov (%rsi),%eax
+
+-------------------instruction 96: adr : ffffffff81a57707
+idx :1a57707 ,in :test %eax,%eax
+
+-------------------instruction 97: adr : ffffffff81a57709
+idx :1a57709 ,in :jz 0x126(%rip)
+
+-------------------instruction 98: adr : ffffffff81a5770f
+idx :1a5770f ,in :push %rbp
+
+-------------------instruction 99: adr : ffffffff81a57710
+idx :1a57710 ,in :mov %rsp,%rbp
+
+-------------------instruction 100: adr : ffffffff81a57713
+idx :1a57713 ,in :push %r13
+
+-------------------instruction 101: adr : ffffffff81a57715
+idx :1a57715 ,in :push %r12
+
+-------------------instruction 102: adr : ffffffff81a57717
+idx :1a57717 ,in :mov %rsi,%r12
+
+-------------------instruction 103: adr : ffffffff81a5771a
+idx :1a5771a ,in :push %rbx
+
+-------------------instruction 104: adr : ffffffff81a5771b
+idx :1a5771b ,in :mov %rdi,%rbx
+
+-------------------instruction 105: adr : ffffffff81a5771e
+idx :1a5771e ,in :mov 0x8(%rsi),%rdi
+
+-------------------instruction 106: adr : ffffffff81a57722
+idx :1a57722 ,in :mov $0x1,%esi
+
+-------------------instruction 107: adr : ffffffff81a57727
+idx :1a57727 ,in :movzx 0x28(%rbx),%ecx
+
+-------------------instruction 108: adr : ffffffff81a5772b
+idx :1a5772b ,in :mov %esi,%edx
+
+-------------------instruction 109: adr : ffffffff81a5772d
+idx :1a5772d ,in :mov %ecx,%eax
+
+-------------------instruction 110: adr : ffffffff81a5772f
+idx :1a5772f ,in :xor $0xe7,%ecx
+
+-------------------instruction 111: adr : ffffffff81a57732
+idx :1a57732 ,in :sar $0x5,%eax
+
+-------------------instruction 112: adr : ffffffff81a57735
+idx :1a57735 ,in :shl/sal %cl,%edx
+
+-------------------instruction 113: adr : ffffffff81a57737
+idx :1a57737 ,in :cwde 
+
+-------------------instruction 114: adr : ffffffff81a57739
+idx :1a57739 ,in :test %edx,0x0(%rdi,%rax,4)
+
+-------------------instruction 115: adr : ffffffff81a5773c
+idx :1a5773c ,in :jz 0x10(%rip)
+
+-------------------instruction 116: adr : ffffffff81a5774c
+idx :1a5774c ,in :mov 0x8(%rbx),%rax
+
+-------------------instruction 117: adr : ffffffff81a57750
+idx :1a57750 ,in :test %rax,%rax
+
+-------------------instruction 118: adr : ffffffff81a57753
+idx :1a57753 ,in :jnz 0xfffffff4(%rip)
+
+-------------------instruction 119: adr : ffffffff81a57747
+idx :1a57747 ,in :mov %rax,%rbx
+
+-------------------instruction 120: adr : ffffffff81a5774a
+idx :1a5774a ,in :jmp 0xffffffdd(%rip)
+
+-------------------instruction 121: adr : ffffffff81a57727
+idx :1a57727 ,in :movzx 0x28(%rbx),%ecx
+
+-------------------instruction 122: adr : ffffffff81a5772b
+idx :1a5772b ,in :mov %esi,%edx
+
+-------------------instruction 123: adr : ffffffff81a5772d
+idx :1a5772d ,in :mov %ecx,%eax
+
+-------------------instruction 124: adr : ffffffff81a5772f
+idx :1a5772f ,in :xor $0xe7,%ecx
+
+-------------------instruction 125: adr : ffffffff81a57732
+idx :1a57732 ,in :sar $0x5,%eax
+
+-------------------instruction 126: adr : ffffffff81a57735
+idx :1a57735 ,in :shl/sal %cl,%edx
+
+-------------------instruction 127: adr : ffffffff81a57737
+idx :1a57737 ,in :cwde 
+
+-------------------instruction 128: adr : ffffffff81a57739
+idx :1a57739 ,in :test %edx,0x0(%rdi,%rax,4)
+
+-------------------instruction 129: adr : ffffffff81a5773c
+idx :1a5773c ,in :jz 0x10(%rip)
+
+-------------------instruction 130: adr : ffffffff81a5774c
+idx :1a5774c ,in :mov 0x8(%rbx),%rax
+
+-------------------instruction 131: adr : ffffffff81a57750
+idx :1a57750 ,in :test %rax,%rax
+
+-------------------instruction 132: adr : ffffffff81a57753
+idx :1a57753 ,in :jnz 0xfffffff4(%rip)
+
+-------------------instruction 133: adr : ffffffff81a57755
+idx :1a57755 ,in :test %rbx,%rbx
+
+-------------------instruction 134: adr : ffffffff81a57758
+idx :1a57758 ,in :jz 0x55(%rip)
+
+-------------------instruction 135: adr : ffffffff81a5775a
+idx :1a5775a ,in :mov $0xffffffff,%r13
+
+-------------------instruction 136: adr : ffffffff81a57761
+idx :1a57761 ,in :jmp 0x37(%rip)
+
+-------------------instruction 137: adr : ffffffff81a57798
+idx :1a57798 ,in :mov 0x18(%rbx),%rdi
+
+-------------------instruction 138: adr : ffffffff81a5779c
+idx :1a5779c ,in :test %rdi,%rdi
+
+-------------------instruction 139: adr : ffffffff81a5779f
+idx :1a5779f ,in :jnz 0xffffffc4(%rip)
+
+-------------------instruction 140: adr : ffffffff81a577a1
+idx :1a577a1 ,in :movzx 0x2a(%rbx),%eax
+
+-------------------instruction 141: adr : ffffffff81a577a5
+idx :1a577a5 ,in :test $0x4,%al
+
+-------------------instruction 142: adr : ffffffff81a577a7
+idx :1a577a7 ,in :jnz 0xffffffbc(%rip)
+
+-------------------instruction 143: adr : ffffffff81a57763
+idx :1a57763 ,in :mov 0x20(%rbx),%rax
+
+-------------------instruction 144: adr : ffffffff81a57767
+idx :1a57767 ,in :test %rax,%rax
+
+-------------------instruction 145: adr : ffffffff81a5776a
+idx :1a5776a ,in :jz 0x1e(%rip)
+
+-------------------instruction 146: adr : ffffffff81a5776c
+idx :1a5776c ,in :movsxd (%r12),%rdx
+
+-------------------instruction 147: adr : ffffffff81a57770
+idx :1a57770 ,in :mov 0x8(%r12),%rsi
+
+-------------------instruction 148: adr : ffffffff81a57775
+idx :1a57775 ,in :add %rdx,%rax
+
+-------------------instruction 149: adr : ffffffff81a57778
+idx :1a57778 ,in :mov 0x10(%rax),%edx
+
+-------------------instruction 150: adr : ffffffff81a5777b
+idx :1a5777b ,in :cmp $0x3f,%edx
+
+-------------------instruction 151: adr : ffffffff81a5777e
+idx :1a5777e ,in :jbe 0x38(%rip)
+
+-------------------instruction 152: adr : ffffffff81a57780
+idx :1a57780 ,in :mov (%rsi),%rcx
+
+-------------------instruction 153: adr : ffffffff81a57783
+idx :1a57783 ,in :cmp %rcx,(%rax)
+
+-------------------instruction 154: adr : ffffffff81a57786
+idx :1a57786 ,in :jz 0x66(%rip)
+
+-------------------instruction 155: adr : ffffffff81a577ec
+idx :1a577ec ,in :sub $0x40,%edx
+
+-------------------instruction 156: adr : ffffffff81a577ef
+idx :1a577ef ,in :jz 0xffffffe6(%rip)
+
+-------------------instruction 157: adr : ffffffff81a577f1
+idx :1a577f1 ,in :mov $0x40,%ecx
+
+-------------------instruction 158: adr : ffffffff81a577f6
+idx :1a577f6 ,in :mov 0x8(%rax),%rax
+
+-------------------instruction 159: adr : ffffffff81a577fa
+idx :1a577fa ,in :xor 0x8(%rsi),%rax
+
+-------------------instruction 160: adr : ffffffff81a577fe
+idx :1a577fe ,in :sub %edx,%ecx
+
+-------------------instruction 161: adr : ffffffff81a57800
+idx :1a57800 ,in :mov %r13,%rdx
+
+-------------------instruction 162: adr : ffffffff81a57803
+idx :1a57803 ,in :shl/sal %cl,%rdx
+
+-------------------instruction 163: adr : ffffffff81a57806
+idx :1a57806 ,in :bswap %rdx
+
+-------------------instruction 164: adr : ffffffff81a57809
+idx :1a57809 ,in :test %rdx,%rax
+
+-------------------instruction 165: adr : ffffffff81a5780c
+idx :1a5780c ,in :jnz 0xffffff7c(%rip)
+
+-------------------instruction 166: adr : ffffffff81a57812
+idx :1a57812 ,in :test %rdi,%rdi
+
+-------------------instruction 167: adr : ffffffff81a57815
+idx :1a57815 ,in :jz 0xffffffc5(%rip)
+
+-------------------instruction 168: adr : ffffffff81a577da
+idx :1a577da ,in :movzx 0x2a(%rbx),%eax
+
+-------------------instruction 169: adr : ffffffff81a577de
+idx :1a577de ,in :test $0x4,%al
+
+-------------------instruction 170: adr : ffffffff81a577e0
+idx :1a577e0 ,in :jz 0xffffffac(%rip)
+
+-------------------instruction 171: adr : ffffffff81a577e2
+idx :1a577e2 ,in :mov %rbx,%rax
+
+-------------------instruction 172: adr : ffffffff81a577e5
+idx :1a577e5 ,in :pop %rbx
+
+-------------------instruction 173: adr : ffffffff81a577e6
+idx :1a577e6 ,in :pop %r12
+
+-------------------instruction 174: adr : ffffffff81a577e8
+idx :1a577e8 ,in :pop %r13
+
+-------------------instruction 175: adr : ffffffff81a577ea
+idx :1a577ea ,in :pop %rbp
+
+-------------------instruction 176: adr : ffffffff81a577eb
+idx :1a577eb ,in :ret near (%rsp)
+
+-------------------instruction 177: adr : ffffffff81a595da
+idx :1a595da ,in :test %rax,%rax
+
+-------------------instruction 178: adr : ffffffff81a595dd
+idx :1a595dd ,in :jz 0xa(%rip)
+
+-------------------instruction 179: adr : ffffffff81a595df
+idx :1a595df ,in :test $0x1,0x2a(%rax)
+
+-------------------instruction 180: adr : ffffffff81a595e3
+idx :1a595e3 ,in :cmove %rax,%rbx
+
+-------------------instruction 181: adr : ffffffff81a595e7
+idx :1a595e7 ,in :mov %rbx,%rax
+
+-------------------instruction 182: adr : ffffffff81a595ea
+idx :1a595ea ,in :mov 0xffffffe8(%rbp),%rbx
+
+-------------------instruction 183: adr : ffffffff81a595ee
+idx :1a595ee ,in :xor $0x28,%rbx
+
+-------------------instruction 184: adr : ffffffff81a595f7
+idx :1a595f7 ,in :jnz 0xf(%rip)
+
+-------------------instruction 185: adr : ffffffff81a595f9
+idx :1a595f9 ,in :add $0x40,%rsp
+
+-------------------instruction 186: adr : ffffffff81a595fd
+idx :1a595fd ,in :pop %rbx
+
+-------------------instruction 187: adr : ffffffff81a595fe
+idx :1a595fe ,in :pop %r10
+
+-------------------instruction 188: adr : ffffffff81a59600
+idx :1a59600 ,in :pop %rbp
+
+-------------------instruction 189: adr : ffffffff81a59601
+idx :1a59601 ,in :lea 0xfffffff8(%r10),%rsp
+
+-------------------instruction 190: adr : ffffffff81a59605
+idx :1a59605 ,in :ret near (%rsp)
+
+-------------------instruction 191: adr : ffffffff81a51f23
+idx :1a51f23 ,in :test $0x4,0xf(%r15)
+
+-------------------instruction 192: adr : ffffffff81a51f28
+idx :1a51f28 ,in :mov %rax,%rsi
+
+-------------------instruction 193: adr : ffffffff81a51f2b
+idx :1a51f2b ,in :mov %rax,0xffffffb0(%rbp)
+
+-------------------instruction 194: adr : ffffffff81a51f2f
+idx :1a51f2f ,in :mov $0x0,%eax
+
+-------------------instruction 195: adr : ffffffff81a51f34
+idx :1a51f34 ,in :mov %eax,%edi
+
+-------------------instruction 196: adr : ffffffff81a51f36
+idx :1a51f36 ,in :cmove 0xffffffbc(%rbp),%edi
+
+-------------------instruction 197: adr : ffffffff81a51f3a
+idx :1a51f3a ,in :mov %rsi,%rax
+
+-------------------instruction 198: adr : ffffffff81a51f3d
+idx :1a51f3d ,in :mov %edi,0xffffffbc(%rbp)
+
+-------------------instruction 199: adr : ffffffff81a51f40
+idx :1a51f40 ,in :mov 0x20(%rax),%r15
+
+-------------------instruction 200: adr : ffffffff81a51f44
+idx :1a51f44 ,in :mov $0x0,0xffffffc3(%rbp)
+
+-------------------instruction 201: adr : ffffffff81a51f48
+idx :1a51f48 ,in :mov $0x0,0x8(%r14)
+
+-------------------instruction 202: adr : ffffffff81a51f50
+idx :1a51f50 ,in :mov 0x710(%rbx),%rdx
+
+-------------------instruction 203: adr : ffffffff81a51f57
+idx :1a51f57 ,in :test %r15,%r15
+
+-------------------instruction 204: adr : ffffffff81a51f5a
+idx :1a51f5a ,in :jz 0x25(%rip)
+
+-------------------instruction 205: adr : ffffffff81a51f5c
+idx :1a51f5c ,in :cmp %rdx,%r15
+
+-------------------instruction 206: adr : ffffffff81a51f5f
+idx :1a51f5f ,in :jz 0x20(%rip)
+
+-------------------instruction 207: adr : ffffffff81a51f61
+idx :1a51f61 ,in :mov 0x30(%rax),%r10
+
+-------------------instruction 208: adr : ffffffff81a51f65
+idx :1a51f65 ,in :movzx 0x28(%rax),%esi
+
+-------------------instruction 209: adr : ffffffff81a51f69
+idx :1a51f69 ,in :test %r10,%r10
+
+-------------------instruction 210: adr : ffffffff81a51f6c
+idx :1a51f6c ,in :cmove %r15,%r10
+
+-------------------instruction 211: adr : ffffffff81a51f70
+idx :1a51f70 ,in :mov 0x68(%r10),%ecx
+
+-------------------instruction 212: adr : ffffffff81a51f74
+idx :1a51f74 ,in :test %ecx,%ecx
+
+-------------------instruction 213: adr : ffffffff81a51f76
+idx :1a51f76 ,in :cmove 0x50(%r10),%ecx
+
+-------------------instruction 214: adr : ffffffff81a51f7b
+idx :1a51f7b ,in :cmp %ecx,%esi
+
+-------------------instruction 215: adr : ffffffff81a51f7d
+idx :1a51f7d ,in :jz 0x59(%rip)
+
+-------------------instruction 216: adr : ffffffff81a51fd6
+idx :1a51fd6 ,in :lea 0xffffffc4(%rbp),%rdi
+
+-------------------instruction 217: adr : ffffffff81a51fda
+idx :1a51fda ,in :mov %rax,0xffffff98(%rbp)
+
+-------------------instruction 218: adr : ffffffff81a51fde
+idx :1a51fde ,in :mov 0x80(%r10),%eax
+
+-------------------instruction 219: adr : ffffffff81a51fe5
+idx :1a51fe5 ,in :mov 0xffffffbc(%rbp),%r9d
+
+-------------------instruction 220: adr : ffffffff81a51fe9
+idx :1a51fe9 ,in :lea 0xffffffc8(%rbp),%r8
+
+-------------------instruction 221: adr : ffffffff81a51fed
+idx :1a51fed ,in :xor %esi,%esi
+
+-------------------instruction 222: adr : ffffffff81a51fef
+idx :1a51fef ,in :push %rdi
+
+-------------------instruction 223: adr : ffffffff81a51ff0
+idx :1a51ff0 ,in :lea 0xffffffc3(%rbp),%rdi
+
+-------------------instruction 224: adr : ffffffff81a51ff4
+idx :1a51ff4 ,in :mov %r14,%rcx
+
+-------------------instruction 225: adr : ffffffff81a51ff7
+idx :1a51ff7 ,in :mov %eax,%edx
+
+-------------------instruction 226: adr : ffffffff81a51ff9
+idx :1a51ff9 ,in :mov %eax,0xffffffa8(%rbp)
+
+-------------------instruction 227: adr : ffffffff81a51ffc
+idx :1a51ffc ,in :mov %r10,0xffffffa0(%rbp)
+
+-------------------instruction 228: adr : ffffffff81a52000
+idx :1a52000 ,in :push %rdi
+
+-------------------instruction 229: adr : ffffffff81a52001
+idx :1a52001 ,in :push %r13
+
+-------------------instruction 230: adr : ffffffff81a52003
+idx :1a52003 ,in :mov %r10,%rdi
+
+-------------------instruction 231: adr : ffffffff81a52006
+idx :1a52006 ,in :mov $0x0,0xffffffc8(%rbp)
+
+-------------------instruction 232: adr : ffffffff81a5200e
+idx :1a5200e ,in :mov $0xffffffff,0xffffffc4(%rbp)
+
+-------------------instruction 233: adr : ffffffff81a52015
+idx :1a52015 ,in :call 0xffffd05b(%rip)
+
+-------------------instruction 234: adr : ffffffff81a4f070
+idx :1a4f070 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 235: adr : ffffffff81a4f075
+idx :1a4f075 ,in :push %rbp
+
+-------------------instruction 236: adr : ffffffff81a4f076
+idx :1a4f076 ,in :mov %rsp,%rbp
+
+-------------------instruction 237: adr : ffffffff81a4f079
+idx :1a4f079 ,in :push %r15
+
+-------------------instruction 238: adr : ffffffff81a4f07b
+idx :1a4f07b ,in :push %r14
+
+-------------------instruction 239: adr : ffffffff81a4f07d
+idx :1a4f07d ,in :push %r13
+
+-------------------instruction 240: adr : ffffffff81a4f07f
+idx :1a4f07f ,in :push %r12
+
+-------------------instruction 241: adr : ffffffff81a4f081
+idx :1a4f081 ,in :push %rbx
+
+-------------------instruction 242: adr : ffffffff81a4f082
+idx :1a4f082 ,in :sub $0x48,%rsp
+
+-------------------instruction 243: adr : ffffffff81a4f086
+idx :1a4f086 ,in :mov 0x18(%rbp),%rax
+
+-------------------instruction 244: adr : ffffffff81a4f08a
+idx :1a4f08a ,in :mov %edx,0xffffffa0(%rbp)
+
+-------------------instruction 245: adr : ffffffff81a4f08d
+idx :1a4f08d ,in :mov %r9d,0xffffffa4(%rbp)
+
+-------------------instruction 246: adr : ffffffff81a4f091
+idx :1a4f091 ,in :mov %rax,0xffffff98(%rbp)
+
+-------------------instruction 247: adr : ffffffff81a4f095
+idx :1a4f095 ,in :mov 0x20(%rbp),%rax
+
+-------------------instruction 248: adr : ffffffff81a4f099
+idx :1a4f099 ,in :mov %rax,0xffffff90(%rbp)
+
+-------------------instruction 249: adr : ffffffff81a4f09d
+idx :1a4f09d ,in :mov $0x28,%rax
+
+-------------------instruction 250: adr : ffffffff81a4f0a6
+idx :1a4f0a6 ,in :mov %rax,0xffffffd0(%rbp)
+
+-------------------instruction 251: adr : ffffffff81a4f0aa
+idx :1a4f0aa ,in :xor %eax,%eax
+
+-------------------instruction 252: adr : ffffffff81a4f0ac
+idx :1a4f0ac ,in :cmp %rsi,%rdi
+
+-------------------instruction 253: adr : ffffffff81a4f0af
+idx :1a4f0af ,in :jz 0x177(%rip)
+
+-------------------instruction 254: adr : ffffffff81a4f0b5
+idx :1a4f0b5 ,in :test %rdi,%rdi
+
+-------------------instruction 255: adr : ffffffff81a4f0b8
+idx :1a4f0b8 ,in :mov %rdi,%rbx
+
+-------------------instruction 256: adr : ffffffff81a4f0bb
+idx :1a4f0bb ,in :jz 0x16b(%rip)
+
+-------------------instruction 257: adr : ffffffff81a4f0c1
+idx :1a4f0c1 ,in :mov %rsi,%r12
+
+-------------------instruction 258: adr : ffffffff81a4f0c4
+idx :1a4f0c4 ,in :mov %r8,%r13
+
+-------------------instruction 259: adr : ffffffff81a4f0c7
+idx :1a4f0c7 ,in :mov %rcx,%r15
+
+-------------------instruction 260: adr : ffffffff81a4f0ca
+idx :1a4f0ca ,in :jmp 0x64(%rip)
+
+-------------------instruction 261: adr : ffffffff81a4f12e
+idx :1a4f12e ,in :test %r13,%r13
+
+-------------------instruction 262: adr : ffffffff81a4f131
+idx :1a4f131 ,in :jz 0x11(%rip)
+
+-------------------instruction 263: adr : ffffffff81a4f133
+idx :1a4f133 ,in :mov 0xffffffa0(%rbp),%eax
+
+-------------------instruction 264: adr : ffffffff81a4f136
+idx :1a4f136 ,in :cmp %eax,0x80(%rbx)
+
+-------------------instruction 265: adr : ffffffff81a4f13c
+idx :1a4f13c ,in :jnz 0x120(%rip)
+
+-------------------instruction 266: adr : ffffffff81a4f142
+idx :1a4f142 ,in :mov 0x54(%rbx),%esi
+
+-------------------instruction 267: adr : ffffffff81a4f145
+idx :1a4f145 ,in :test $0x400000,%esi
+
+-------------------instruction 268: adr : ffffffff81a4f14b
+idx :1a4f14b ,in :jz 0xffffff81(%rip)
+
+-------------------instruction 269: adr : ffffffff81a4f0cc
+idx :1a4f0cc ,in :mov 0x98(%rbx),%rdi
+
+-------------------instruction 270: adr : ffffffff81a4f0d3
+idx :1a4f0d3 ,in :test %rdi,%rdi
+
+-------------------instruction 271: adr : ffffffff81a4f0d6
+idx :1a4f0d6 ,in :jnz 0x98(%rip)
+
+-------------------instruction 272: adr : ffffffff81a4f0dc
+idx :1a4f0dc ,in :lea 0xa0(%rbx),%r14
+
+-------------------instruction 273: adr : ffffffff81a4f0e3
+idx :1a4f0e3 ,in :mov 0xffffff98(%rbp),%r9
+
+-------------------instruction 274: adr : ffffffff81a4f0e7
+idx :1a4f0e7 ,in :mov 0xffffff90(%rbp),%r8
+
+-------------------instruction 275: adr : ffffffff81a4f0eb
+idx :1a4f0eb ,in :mov 0x10(%rbp),%ecx
+
+-------------------instruction 276: adr : ffffffff81a4f0ee
+idx :1a4f0ee ,in :mov 0xffffffa4(%rbp),%edx
+
+-------------------instruction 277: adr : ffffffff81a4f0f1
+idx :1a4f0f1 ,in :mov %r14,%rdi
+
+-------------------instruction 278: adr : ffffffff81a4f0f4
+idx :1a4f0f4 ,in :call 0xfffffc5c(%rip)
+
+-------------------instruction 279: adr : ffffffff81a4ed50
+idx :1a4ed50 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 280: adr : ffffffff81a4ed55
+idx :1a4ed55 ,in :movzx 0xf(%rdi),%eax
+
+-------------------instruction 281: adr : ffffffff81a4ed59
+idx :1a4ed59 ,in :test $0x1,%al
+
+-------------------instruction 282: adr : ffffffff81a4ed5b
+idx :1a4ed5b ,in :jnz 0x87(%rip)
+
+-------------------instruction 283: adr : ffffffff81a4ed61
+idx :1a4ed61 ,in :push %rbp
+
+-------------------instruction 284: adr : ffffffff81a4ed62
+idx :1a4ed62 ,in :mov %rsp,%rbp
+
+-------------------instruction 285: adr : ffffffff81a4ed65
+idx :1a4ed65 ,in :push %r15
+
+-------------------instruction 286: adr : ffffffff81a4ed67
+idx :1a4ed67 ,in :push %r14
+
+-------------------instruction 287: adr : ffffffff81a4ed69
+idx :1a4ed69 ,in :push %r13
+
+-------------------instruction 288: adr : ffffffff81a4ed6b
+idx :1a4ed6b ,in :push %r12
+
+-------------------instruction 289: adr : ffffffff81a4ed6d
+idx :1a4ed6d ,in :push %r10
+
+-------------------instruction 290: adr : ffffffff81a4ed6f
+idx :1a4ed6f ,in :push %rbx
+
+-------------------instruction 291: adr : ffffffff81a4ed70
+idx :1a4ed70 ,in :sub $0x20,%rsp
+
+-------------------instruction 292: adr : ffffffff81a4ed74
+idx :1a4ed74 ,in :mov (%rdi),%r10
+
+-------------------instruction 293: adr : ffffffff81a4ed77
+idx :1a4ed77 ,in :mov 0x310(%r10),%r10
+
+-------------------instruction 294: adr : ffffffff81a4ed7e
+idx :1a4ed7e ,in :mov 0x174(%r10),%r10d
+
+-------------------instruction 295: adr : ffffffff81a4ed85
+idx :1a4ed85 ,in :test %r10d,%r10d
+
+-------------------instruction 296: adr : ffffffff81a4ed88
+idx :1a4ed88 ,in :jz 0x6(%rip)
+
+-------------------instruction 297: adr : ffffffff81a4ed8e
+idx :1a4ed8e ,in :mov %r9,%r13
+
+-------------------instruction 298: adr : ffffffff81a4ed91
+idx :1a4ed91 ,in :mov %r8,%r12
+
+-------------------instruction 299: adr : ffffffff81a4ed94
+idx :1a4ed94 ,in :mov %ecx,%r15d
+
+-------------------instruction 300: adr : ffffffff81a4ed97
+idx :1a4ed97 ,in :mov %rdi,%rbx
+
+-------------------instruction 301: adr : ffffffff81a4ed9a
+idx :1a4ed9a ,in :call 0xfffffe26(%rip)
+
+-------------------instruction 302: adr : ffffffff81a4ebc0
+idx :1a4ebc0 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 303: adr : ffffffff81a4ebc5
+idx :1a4ebc5 ,in :test %edx,%edx
+
+-------------------instruction 304: adr : ffffffff81a4ebc7
+idx :1a4ebc7 ,in :jz 0x1a(%rip)
+
+-------------------instruction 305: adr : ffffffff81a4ebe1
+idx :1a4ebe1 ,in :mov $0x2,%edx
+
+-------------------instruction 306: adr : ffffffff81a4ebe6
+idx :1a4ebe6 ,in :mov %esi,%eax
+
+-------------------instruction 307: adr : ffffffff81a4ebe8
+idx :1a4ebe8 ,in :shr $0x19,%eax
+
+-------------------instruction 308: adr : ffffffff81a4ebeb
+idx :1a4ebeb ,in :and $0xc,%eax
+
+-------------------instruction 309: adr : ffffffff81a4ebee
+idx :1a4ebee ,in :xor $0x8,%eax
+
+-------------------instruction 310: adr : ffffffff81a4ebf1
+idx :1a4ebf1 ,in :or %edx,%eax
+
+-------------------instruction 311: adr : ffffffff81a4ebf3
+idx :1a4ebf3 ,in :and $0x2,%ecx
+
+-------------------instruction 312: adr : ffffffff81a4ebf6
+idx :1a4ebf6 ,in :jz 0x10(%rip)
+
+-------------------instruction 313: adr : ffffffff81a4ebf8
+idx :1a4ebf8 ,in :and $0x200000,%esi
+
+-------------------instruction 314: adr : ffffffff81a4ebfe
+idx :1a4ebfe ,in :jnz 0x8(%rip)
+
+-------------------instruction 315: adr : ffffffff81a4ec06
+idx :1a4ec06 ,in :REP ret near (%rsp)
+
+-------------------instruction 316: adr : ffffffff81a4ed9f
+idx :1a4ed9f ,in :cmp $0xff,%eax
+
+-------------------instruction 317: adr : ffffffff81a4eda2
+idx :1a4eda2 ,in :mov %eax,%r14d
+
+-------------------instruction 318: adr : ffffffff81a4eda5
+idx :1a4eda5 ,in :jz 0x40(%rip)
+
+-------------------instruction 319: adr : ffffffff81a4eda7
+idx :1a4eda7 ,in :xor %r8d,%r8d
+
+-------------------instruction 320: adr : ffffffff81a4edaa
+idx :1a4edaa ,in :cmp $0xfd,%eax
+
+-------------------instruction 321: adr : ffffffff81a4edad
+idx :1a4edad ,in :jz 0x22(%rip)
+
+-------------------instruction 322: adr : ffffffff81a4edaf
+idx :1a4edaf ,in :and $0x2,%r15d
+
+-------------------instruction 323: adr : ffffffff81a4edb3
+idx :1a4edb3 ,in :jnz 0x41(%rip)
+
+-------------------instruction 324: adr : ffffffff81a4edf4
+idx :1a4edf4 ,in :cmp $0x0,0xe(%rbx)
+
+-------------------instruction 325: adr : ffffffff81a4edf8
+idx :1a4edf8 ,in :jz 0xffffffbd(%rip)
+
+-------------------instruction 326: adr : ffffffff81a4edb5
+idx :1a4edb5 ,in :cmp %r14d,(%r12)
+
+-------------------instruction 327: adr : ffffffff81a4edb9
+idx :1a4edb9 ,in :jnl 0x16(%rip)
+
+-------------------instruction 328: adr : ffffffff81a4edbb
+idx :1a4edbb ,in :mov %r8b,0x0(%r13)
+
+-------------------instruction 329: adr : ffffffff81a4edbf
+idx :1a4edbf ,in :mov $0x1,%eax
+
+-------------------instruction 330: adr : ffffffff81a4edc4
+idx :1a4edc4 ,in :mov %r14d,(%r12)
+
+-------------------instruction 331: adr : ffffffff81a4edc8
+idx :1a4edc8 ,in :jmp 0x9(%rip)
+
+-------------------instruction 332: adr : ffffffff81a4edd1
+idx :1a4edd1 ,in :add $0x20,%rsp
+
+-------------------instruction 333: adr : ffffffff81a4edd5
+idx :1a4edd5 ,in :pop %rbx
+
+-------------------instruction 334: adr : ffffffff81a4edd6
+idx :1a4edd6 ,in :pop %r10
+
+-------------------instruction 335: adr : ffffffff81a4edd8
+idx :1a4edd8 ,in :pop %r12
+
+-------------------instruction 336: adr : ffffffff81a4edda
+idx :1a4edda ,in :pop %r13
+
+-------------------instruction 337: adr : ffffffff81a4eddc
+idx :1a4eddc ,in :pop %r14
+
+-------------------instruction 338: adr : ffffffff81a4edde
+idx :1a4edde ,in :pop %r15
+
+-------------------instruction 339: adr : ffffffff81a4ede0
+idx :1a4ede0 ,in :pop %rbp
+
+-------------------instruction 340: adr : ffffffff81a4ede1
+idx :1a4ede1 ,in :ret near (%rsp)
+
+-------------------instruction 341: adr : ffffffff81a4f0f9
+idx :1a4f0f9 ,in :test %al,%al
+
+-------------------instruction 342: adr : ffffffff81a4f0fb
+idx :1a4f0fb ,in :jz 0x1b(%rip)
+
+-------------------instruction 343: adr : ffffffff81a4f0fd
+idx :1a4f0fd ,in :mov %rbx,0x8(%r15)
+
+-------------------instruction 344: adr : ffffffff81a4f101
+idx :1a4f101 ,in :mov %r14,(%r15)
+
+-------------------instruction 345: adr : ffffffff81a4f104
+idx :1a4f104 ,in :mov 0x54(%rbx),%eax
+
+-------------------instruction 346: adr : ffffffff81a4f107
+idx :1a4f107 ,in :mov %eax,0x10(%r15)
+
+-------------------instruction 347: adr : ffffffff81a4f10b
+idx :1a4f10b ,in :movzx 0x85(%rbx),%eax
+
+-------------------instruction 348: adr : ffffffff81a4f112
+idx :1a4f112 ,in :mov %al,0x14(%r15)
+
+-------------------instruction 349: adr : ffffffff81a4f116
+idx :1a4f116 ,in :mov 0x8(%rbx),%rbx
+
+-------------------instruction 350: adr : ffffffff81a4f11a
+idx :1a4f11a ,in :test %rbx,%rbx
+
+-------------------instruction 351: adr : ffffffff81a4f11d
+idx :1a4f11d ,in :setnz %dl
+
+-------------------instruction 352: adr : ffffffff81a4f120
+idx :1a4f120 ,in :cmp %rbx,%r12
+
+-------------------instruction 353: adr : ffffffff81a4f123
+idx :1a4f123 ,in :setnz %al
+
+-------------------instruction 354: adr : ffffffff81a4f126
+idx :1a4f126 ,in :test %al,%dl
+
+-------------------instruction 355: adr : ffffffff81a4f128
+idx :1a4f128 ,in :jz 0xfe(%rip)
+
+-------------------instruction 356: adr : ffffffff81a4f226
+idx :1a4f226 ,in :mov 0xffffffd0(%rbp),%rax
+
+-------------------instruction 357: adr : ffffffff81a4f22a
+idx :1a4f22a ,in :xor $0x28,%rax
+
+-------------------instruction 358: adr : ffffffff81a4f233
+idx :1a4f233 ,in :jnz 0x2f(%rip)
+
+-------------------instruction 359: adr : ffffffff81a4f235
+idx :1a4f235 ,in :add $0x48,%rsp
+
+-------------------instruction 360: adr : ffffffff81a4f239
+idx :1a4f239 ,in :pop %rbx
+
+-------------------instruction 361: adr : ffffffff81a4f23a
+idx :1a4f23a ,in :pop %r12
+
+-------------------instruction 362: adr : ffffffff81a4f23c
+idx :1a4f23c ,in :pop %r13
+
+-------------------instruction 363: adr : ffffffff81a4f23e
+idx :1a4f23e ,in :pop %r14
+
+-------------------instruction 364: adr : ffffffff81a4f240
+idx :1a4f240 ,in :pop %r15
+
+-------------------instruction 365: adr : ffffffff81a4f242
+idx :1a4f242 ,in :pop %rbp
+
+-------------------instruction 366: adr : ffffffff81a4f243
+idx :1a4f243 ,in :ret near (%rsp)
+
+-------------------instruction 367: adr : ffffffff81a5201a
+idx :1a5201a ,in :mov 0xffffffa0(%rbp),%r10
+
+-------------------instruction 368: adr : ffffffff81a5201e
+idx :1a5201e ,in :lea 0xffffffc4(%rbp),%rdi
+
+-------------------instruction 369: adr : ffffffff81a52022
+idx :1a52022 ,in :lea 0xffffffc3(%rbp),%rsi
+
+-------------------instruction 370: adr : ffffffff81a52026
+idx :1a52026 ,in :mov 0xffffffbc(%rbp),%r9d
+
+-------------------instruction 371: adr : ffffffff81a5202a
+idx :1a5202a ,in :mov 0xffffffa8(%rbp),%edx
+
+-------------------instruction 372: adr : ffffffff81a5202d
+idx :1a5202d ,in :lea 0xffffffc8(%rbp),%r8
+
+-------------------instruction 373: adr : ffffffff81a52031
+idx :1a52031 ,in :push %rdi
+
+-------------------instruction 374: adr : ffffffff81a52032
+idx :1a52032 ,in :push %rsi
+
+-------------------instruction 375: adr : ffffffff81a52033
+idx :1a52033 ,in :mov %r14,%rcx
+
+-------------------instruction 376: adr : ffffffff81a52036
+idx :1a52036 ,in :push %r13
+
+-------------------instruction 377: adr : ffffffff81a52038
+idx :1a52038 ,in :mov %r10,%rsi
+
+-------------------instruction 378: adr : ffffffff81a5203b
+idx :1a5203b ,in :mov %r15,%rdi
+
+-------------------instruction 379: adr : ffffffff81a5203e
+idx :1a5203e ,in :call 0xffffd032(%rip)
+
+-------------------instruction 380: adr : ffffffff81a4f070
+idx :1a4f070 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 381: adr : ffffffff81a4f075
+idx :1a4f075 ,in :push %rbp
+
+-------------------instruction 382: adr : ffffffff81a4f076
+idx :1a4f076 ,in :mov %rsp,%rbp
+
+-------------------instruction 383: adr : ffffffff81a4f079
+idx :1a4f079 ,in :push %r15
+
+-------------------instruction 384: adr : ffffffff81a4f07b
+idx :1a4f07b ,in :push %r14
+
+-------------------instruction 385: adr : ffffffff81a4f07d
+idx :1a4f07d ,in :push %r13
+
+-------------------instruction 386: adr : ffffffff81a4f07f
+idx :1a4f07f ,in :push %r12
+
+-------------------instruction 387: adr : ffffffff81a4f081
+idx :1a4f081 ,in :push %rbx
+
+-------------------instruction 388: adr : ffffffff81a4f082
+idx :1a4f082 ,in :sub $0x48,%rsp
+
+-------------------instruction 389: adr : ffffffff81a4f086
+idx :1a4f086 ,in :mov 0x18(%rbp),%rax
+
+-------------------instruction 390: adr : ffffffff81a4f08a
+idx :1a4f08a ,in :mov %edx,0xffffffa0(%rbp)
+
+-------------------instruction 391: adr : ffffffff81a4f08d
+idx :1a4f08d ,in :mov %r9d,0xffffffa4(%rbp)
+
+-------------------instruction 392: adr : ffffffff81a4f091
+idx :1a4f091 ,in :mov %rax,0xffffff98(%rbp)
+
+-------------------instruction 393: adr : ffffffff81a4f095
+idx :1a4f095 ,in :mov 0x20(%rbp),%rax
+
+-------------------instruction 394: adr : ffffffff81a4f099
+idx :1a4f099 ,in :mov %rax,0xffffff90(%rbp)
+
+-------------------instruction 395: adr : ffffffff81a4f09d
+idx :1a4f09d ,in :mov $0x28,%rax
+
+-------------------instruction 396: adr : ffffffff81a4f0a6
+idx :1a4f0a6 ,in :mov %rax,0xffffffd0(%rbp)
+
+-------------------instruction 397: adr : ffffffff81a4f0aa
+idx :1a4f0aa ,in :xor %eax,%eax
+
+-------------------instruction 398: adr : ffffffff81a4f0ac
+idx :1a4f0ac ,in :cmp %rsi,%rdi
+
+-------------------instruction 399: adr : ffffffff81a4f0af
+idx :1a4f0af ,in :jz 0x177(%rip)
+
+-------------------instruction 400: adr : ffffffff81a4f226
+idx :1a4f226 ,in :mov 0xffffffd0(%rbp),%rax
+
+-------------------instruction 401: adr : ffffffff81a4f22a
+idx :1a4f22a ,in :xor $0x28,%rax
+
+-------------------instruction 402: adr : ffffffff81a4f233
+idx :1a4f233 ,in :jnz 0x2f(%rip)
+
+-------------------instruction 403: adr : ffffffff81a4f235
+idx :1a4f235 ,in :add $0x48,%rsp
+
+-------------------instruction 404: adr : ffffffff81a4f239
+idx :1a4f239 ,in :pop %rbx
+
+-------------------instruction 405: adr : ffffffff81a4f23a
+idx :1a4f23a ,in :pop %r12
+
+-------------------instruction 406: adr : ffffffff81a4f23c
+idx :1a4f23c ,in :pop %r13
+
+-------------------instruction 407: adr : ffffffff81a4f23e
+idx :1a4f23e ,in :pop %r14
+
+-------------------instruction 408: adr : ffffffff81a4f240
+idx :1a4f240 ,in :pop %r15
+
+-------------------instruction 409: adr : ffffffff81a4f242
+idx :1a4f242 ,in :pop %rbp
+
+-------------------instruction 410: adr : ffffffff81a4f243
+idx :1a4f243 ,in :ret near (%rsp)
+
+-------------------instruction 411: adr : ffffffff81a52043
+idx :1a52043 ,in :add $0x30,%rsp
+
+-------------------instruction 412: adr : ffffffff81a52047
+idx :1a52047 ,in :cmp $0x0,0x8(%r14)
+
+-------------------instruction 413: adr : ffffffff81a5204c
+idx :1a5204c ,in :mov 0xffffffa0(%rbp),%r10
+
+-------------------instruction 414: adr : ffffffff81a52050
+idx :1a52050 ,in :mov 0xffffff98(%rbp),%rax
+
+-------------------instruction 415: adr : ffffffff81a52054
+idx :1a52054 ,in :jz 0x101(%rip)
+
+-------------------instruction 416: adr : ffffffff81a5205a
+idx :1a5205a ,in :cmp $0x0,0xffffffc3(%rbp)
+
+-------------------instruction 417: adr : ffffffff81a5205e
+idx :1a5205e ,in :jz 0x62(%rip)
+
+-------------------instruction 418: adr : ffffffff81a520c0
+idx :1a520c0 ,in :mov 0x8(%r14),%rdx
+
+-------------------instruction 419: adr : ffffffff81a520c4
+idx :1a520c4 ,in :mov 0x710(%rbx),%rcx
+
+-------------------instruction 420: adr : ffffffff81a520cb
+idx :1a520cb ,in :test %rdx,%rdx
+
+-------------------instruction 421: adr : ffffffff81a520ce
+idx :1a520ce ,in :jnz 0xfffffed8(%rip)
+
+-------------------instruction 422: adr : ffffffff81a51fa6
+idx :1a51fa6 ,in :cmp %rdx,%rcx
+
+-------------------instruction 423: adr : ffffffff81a51fa9
+idx :1a51fa9 ,in :jnz 0x133(%rip)
+
+-------------------instruction 424: adr : ffffffff81a520dc
+idx :1a520dc ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 425: adr : ffffffff81a520e1
+idx :1a520e1 ,in :xor %eax,%eax
+
+-------------------instruction 426: adr : ffffffff81a520e3
+idx :1a520e3 ,in :mov 0xffffffd0(%rbp),%rbx
+
+-------------------instruction 427: adr : ffffffff81a520e7
+idx :1a520e7 ,in :xor $0x28,%rbx
+
+-------------------instruction 428: adr : ffffffff81a520f0
+idx :1a520f0 ,in :jnz 0xa3(%rip)
+
+-------------------instruction 429: adr : ffffffff81a520f6
+idx :1a520f6 ,in :lea 0xffffffd8(%rbp),%rsp
+
+-------------------instruction 430: adr : ffffffff81a520fa
+idx :1a520fa ,in :pop %rbx
+
+-------------------instruction 431: adr : ffffffff81a520fb
+idx :1a520fb ,in :pop %r12
+
+-------------------instruction 432: adr : ffffffff81a520fd
+idx :1a520fd ,in :pop %r13
+
+-------------------instruction 433: adr : ffffffff81a520ff
+idx :1a520ff ,in :pop %r14
+
+-------------------instruction 434: adr : ffffffff81a52101
+idx :1a52101 ,in :pop %r15
+
+-------------------instruction 435: adr : ffffffff81a52103
+idx :1a52103 ,in :pop %rbp
+
+-------------------instruction 436: adr : ffffffff81a52104
+idx :1a52104 ,in :ret near (%rsp)
+
+-------------------instruction 437: adr : ffffffff81a52c51
+idx :1a52c51 ,in :mov 0x710(%r15),%rax
+
+-------------------instruction 438: adr : ffffffff81a52c58
+idx :1a52c58 ,in :cmp %rax,0xffffffb8(%rbp)
+
+-------------------instruction 439: adr : ffffffff81a52c5c
+idx :1a52c5c ,in :jz 0xd2(%rip)
+
+-------------------instruction 440: adr : ffffffff81a52c62
+idx :1a52c62 ,in :mov 0xffffffa0(%rbp),%r9
+
+-------------------instruction 441: adr : ffffffff81a52c66
+idx :1a52c66 ,in :push %rbx
+
+-------------------instruction 442: adr : ffffffff81a52c67
+idx :1a52c67 ,in :lea 0xffffffb0(%rbp),%rsi
+
+-------------------instruction 443: adr : ffffffff81a52c6b
+idx :1a52c6b ,in :xor %r8d,%r8d
+
+-------------------instruction 444: adr : ffffffff81a52c6e
+idx :1a52c6e ,in :mov %r14d,%ecx
+
+-------------------instruction 445: adr : ffffffff81a52c71
+idx :1a52c71 ,in :mov %r12,%rdx
+
+-------------------instruction 446: adr : ffffffff81a52c74
+idx :1a52c74 ,in :mov %r15,%rdi
+
+-------------------instruction 447: adr : ffffffff81a52c77
+idx :1a52c77 ,in :lea 0x28(%r12),%rbx
+
+-------------------instruction 448: adr : ffffffff81a52c7c
+idx :1a52c7c ,in :call 0xfffff874(%rip)
+
+-------------------instruction 449: adr : ffffffff81a524f0
+idx :1a524f0 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 450: adr : ffffffff81a524f5
+idx :1a524f5 ,in :push %rbp
+
+-------------------instruction 451: adr : ffffffff81a524f6
+idx :1a524f6 ,in :mov %rsp,%rbp
+
+-------------------instruction 452: adr : ffffffff81a524f9
+idx :1a524f9 ,in :push %r14
+
+-------------------instruction 453: adr : ffffffff81a524fb
+idx :1a524fb ,in :push %r13
+
+-------------------instruction 454: adr : ffffffff81a524fd
+idx :1a524fd ,in :push %r12
+
+-------------------instruction 455: adr : ffffffff81a524ff
+idx :1a524ff ,in :push %rbx
+
+-------------------instruction 456: adr : ffffffff81a52500
+idx :1a52500 ,in :mov %ecx,%r14d
+
+-------------------instruction 457: adr : ffffffff81a52503
+idx :1a52503 ,in :mov 0x8(%rsi),%rbx
+
+-------------------instruction 458: adr : ffffffff81a52507
+idx :1a52507 ,in :mov %rsi,%r12
+
+-------------------instruction 459: adr : ffffffff81a5250a
+idx :1a5250a ,in :mov %rdx,%r13
+
+-------------------instruction 460: adr : ffffffff81a5250d
+idx :1a5250d ,in :mov 0x98(%rbx),%rcx
+
+-------------------instruction 461: adr : ffffffff81a52514
+idx :1a52514 ,in :test %rcx,%rcx
+
+-------------------instruction 462: adr : ffffffff81a52517
+idx :1a52517 ,in :jz 0x66(%rip)
+
+-------------------instruction 463: adr : ffffffff81a5257d
+idx :1a5257d ,in :mov 0x28(%rbx),%eax
+
+-------------------instruction 464: adr : ffffffff81a52580
+idx :1a52580 ,in :test %eax,%eax
+
+-------------------instruction 465: adr : ffffffff81a52582
+idx :1a52582 ,in :jz 0x5d(%rip)
+
+-------------------instruction 466: adr : ffffffff81a525df
+idx :1a525df ,in :lea 0xa0(%rbx),%rdi
+
+-------------------instruction 467: adr : ffffffff81a525e6
+idx :1a525e6 ,in :mov %rbx,0x8(%r12)
+
+-------------------instruction 468: adr : ffffffff81a525eb
+idx :1a525eb ,in :mov %rdi,(%r12)
+
+-------------------instruction 469: adr : ffffffff81a525ef
+idx :1a525ef ,in :pop %rbx
+
+-------------------instruction 470: adr : ffffffff81a525f0
+idx :1a525f0 ,in :pop %r12
+
+-------------------instruction 471: adr : ffffffff81a525f2
+idx :1a525f2 ,in :pop %r13
+
+-------------------instruction 472: adr : ffffffff81a525f4
+idx :1a525f4 ,in :pop %r14
+
+-------------------instruction 473: adr : ffffffff81a525f6
+idx :1a525f6 ,in :pop %rbp
+
+-------------------instruction 474: adr : ffffffff81a525f7
+idx :1a525f7 ,in :ret near (%rsp)
+
+-------------------instruction 475: adr : ffffffff81a52c81
+idx :1a52c81 ,in :lea 0xffffffb0(%rbp),%rax
+
+-------------------instruction 476: adr : ffffffff81a52c85
+idx :1a52c85 ,in :lea 0x38(%r12),%rcx
+
+-------------------instruction 477: adr : ffffffff81a52c8a
+idx :1a52c8a ,in :mov %rbx,%rdx
+
+-------------------instruction 478: adr : ffffffff81a52c8d
+idx :1a52c8d ,in :lea 0x8(%rax),%rsi
+
+-------------------instruction 479: adr : ffffffff81a52c91
+idx :1a52c91 ,in :mov %rax,%rdi
+
+-------------------instruction 480: adr : ffffffff81a52c94
+idx :1a52c94 ,in :call 0xffff9edc(%rip)
+
+-------------------instruction 481: adr : ffffffff81a4cb70
+idx :1a4cb70 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 482: adr : ffffffff81a4cb75
+idx :1a4cb75 ,in :push %rbp
+
+-------------------instruction 483: adr : ffffffff81a4cb76
+idx :1a4cb76 ,in :mov %rsp,%rbp
+
+-------------------instruction 484: adr : ffffffff81a4cb79
+idx :1a4cb79 ,in :push %r15
+
+-------------------instruction 485: adr : ffffffff81a4cb7b
+idx :1a4cb7b ,in :push %r14
+
+-------------------instruction 486: adr : ffffffff81a4cb7d
+idx :1a4cb7d ,in :push %r13
+
+-------------------instruction 487: adr : ffffffff81a4cb7f
+idx :1a4cb7f ,in :push %r12
+
+-------------------instruction 488: adr : ffffffff81a4cb81
+idx :1a4cb81 ,in :mov %rcx,%r15
+
+-------------------instruction 489: adr : ffffffff81a4cb84
+idx :1a4cb84 ,in :push %rbx
+
+-------------------instruction 490: adr : ffffffff81a4cb85
+idx :1a4cb85 ,in :mov %rdi,%r14
+
+-------------------instruction 491: adr : ffffffff81a4cb88
+idx :1a4cb88 ,in :mov %rsi,%rbx
+
+-------------------instruction 492: adr : ffffffff81a4cb8b
+idx :1a4cb8b ,in :mov %rdx,%r13
+
+-------------------instruction 493: adr : ffffffff81a4cb8e
+idx :1a4cb8e ,in :sub $0x10,%rsp
+
+-------------------instruction 494: adr : ffffffff81a4cb92
+idx :1a4cb92 ,in :mov $0x28,%rax
+
+-------------------instruction 495: adr : ffffffff81a4cb9b
+idx :1a4cb9b ,in :mov %rax,0xffffffd0(%rbp)
+
+-------------------instruction 496: adr : ffffffff81a4cb9f
+idx :1a4cb9f ,in :xor %eax,%eax
+
+-------------------instruction 497: adr : ffffffff81a4cba1
+idx :1a4cba1 ,in :mov (%rsi),%rax
+
+-------------------instruction 498: adr : ffffffff81a4cba4
+idx :1a4cba4 ,in :mov 0x68(%rax),%eax
+
+-------------------instruction 499: adr : ffffffff81a4cba7
+idx :1a4cba7 ,in :test %eax,%eax
+
+-------------------instruction 500: adr : ffffffff81a4cba9
+idx :1a4cba9 ,in :mov $0x0,%eax
+
+-------------------instruction 501: adr : ffffffff81a4cbae
+idx :1a4cbae ,in :cmove %rax,%r15
+
+-------------------instruction 502: adr : ffffffff81a4cbb2
+idx :1a4cbb2 ,in :jmp 0x32(%rip)
+
+-------------------instruction 503: adr : ffffffff81a4cbe4
+idx :1a4cbe4 ,in :mov (%r14),%rax
+
+-------------------instruction 504: adr : ffffffff81a4cbe7
+idx :1a4cbe7 ,in :mov $0x0,%ecx
+
+-------------------instruction 505: adr : ffffffff81a4cbec
+idx :1a4cbec ,in :lea 0xffffffc8(%rbp),%rdi
+
+-------------------instruction 506: adr : ffffffff81a4cbf0
+idx :1a4cbf0 ,in :mov %r13,%rsi
+
+-------------------instruction 507: adr : ffffffff81a4cbf3
+idx :1a4cbf3 ,in :mov 0x58(%rax),%rdx
+
+-------------------instruction 508: adr : ffffffff81a4cbf7
+idx :1a4cbf7 ,in :mov %rdx,%rax
+
+-------------------instruction 509: adr : ffffffff81a4cbfa
+idx :1a4cbfa ,in :and $0xfffffffe,%rax
+
+-------------------instruction 510: adr : ffffffff81a4cbfe
+idx :1a4cbfe ,in :test %rdx,%rdx
+
+-------------------instruction 511: adr : ffffffff81a4cc01
+idx :1a4cc01 ,in :mov %r15,%rdx
+
+-------------------instruction 512: adr : ffffffff81a4cc04
+idx :1a4cc04 ,in :cmove %rcx,%rax
+
+-------------------instruction 513: adr : ffffffff81a4cc08
+idx :1a4cc08 ,in :mov %rax,0xffffffc8(%rbp)
+
+-------------------instruction 514: adr : ffffffff81a4cc0c
+idx :1a4cc0c ,in :call 0xffffefe4(%rip)
+
+-------------------instruction 515: adr : ffffffff81a4bbf0
+idx :1a4bbf0 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 516: adr : ffffffff81a4bbf5
+idx :1a4bbf5 ,in :cmp $0x0,(%rdi)
+
+-------------------instruction 517: adr : ffffffff81a4bbf9
+idx :1a4bbf9 ,in :jz 0xb0(%rip)
+
+-------------------instruction 518: adr : ffffffff81a4bca9
+idx :1a4bca9 ,in :xor %eax,%eax
+
+-------------------instruction 519: adr : ffffffff81a4bcab
+idx :1a4bcab ,in :ret near (%rsp)
+
+-------------------instruction 520: adr : ffffffff81a4cc11
+idx :1a4cc11 ,in :test %rax,%rax
+
+-------------------instruction 521: adr : ffffffff81a4cc14
+idx :1a4cc14 ,in :mov %rax,%r12
+
+-------------------instruction 522: adr : ffffffff81a4cc17
+idx :1a4cc17 ,in :jnz 0xffffff9d(%rip)
+
+-------------------instruction 523: adr : ffffffff81a4cc19
+idx :1a4cc19 ,in :xor %eax,%eax
+
+-------------------instruction 524: adr : ffffffff81a4cc1b
+idx :1a4cc1b ,in :test %r15,%r15
+
+-------------------instruction 525: adr : ffffffff81a4cc1e
+idx :1a4cc1e ,in :mov $0x1,%edx
+
+-------------------instruction 526: adr : ffffffff81a4cc23
+idx :1a4cc23 ,in :jnz 0xffffffae(%rip)
+
+-------------------instruction 527: adr : ffffffff81a4cc25
+idx :1a4cc25 ,in :mov 0xffffffd0(%rbp),%rsi
+
+-------------------instruction 528: adr : ffffffff81a4cc29
+idx :1a4cc29 ,in :xor $0x28,%rsi
+
+-------------------instruction 529: adr : ffffffff81a4cc32
+idx :1a4cc32 ,in :jnz 0x15(%rip)
+
+-------------------instruction 530: adr : ffffffff81a4cc34
+idx :1a4cc34 ,in :add $0x10,%rsp
+
+-------------------instruction 531: adr : ffffffff81a4cc38
+idx :1a4cc38 ,in :pop %rbx
+
+-------------------instruction 532: adr : ffffffff81a4cc39
+idx :1a4cc39 ,in :pop %r12
+
+-------------------instruction 533: adr : ffffffff81a4cc3b
+idx :1a4cc3b ,in :pop %r13
+
+-------------------instruction 534: adr : ffffffff81a4cc3d
+idx :1a4cc3d ,in :pop %r14
+
+-------------------instruction 535: adr : ffffffff81a4cc3f
+idx :1a4cc3f ,in :pop %r15
+
+-------------------instruction 536: adr : ffffffff81a4cc41
+idx :1a4cc41 ,in :pop %rbp
+
+-------------------instruction 537: adr : ffffffff81a4cc42
+idx :1a4cc42 ,in :ret near (%rsp)
+
+-------------------instruction 538: adr : ffffffff81a52c99
+idx :1a52c99 ,in :test %rax,%rax
+
+-------------------instruction 539: adr : ffffffff81a52c9c
+idx :1a52c9c ,in :mov %rax,0xffffffa8(%rbp)
+
+-------------------instruction 540: adr : ffffffff81a52ca0
+idx :1a52ca0 ,in :pop %rdx
+
+-------------------instruction 541: adr : ffffffff81a52ca1
+idx :1a52ca1 ,in :jz 0x31(%rip)
+
+-------------------instruction 542: adr : ffffffff81a52cd2
+idx :1a52cd2 ,in :test $0x2,0xf(%r12)
+
+-------------------instruction 543: adr : ffffffff81a52cd8
+idx :1a52cd8 ,in :jnz 0x1da(%rip)
+
+-------------------instruction 544: adr : ffffffff81a52cde
+idx :1a52cde ,in :add $0x200,0x7e5c8e9f(%rip)
+
+-------------------instruction 545: adr : ffffffff81a52ce9
+idx :1a52ce9 ,in :mov 0xffffffb0(%rbp),%rax
+
+-------------------instruction 546: adr : ffffffff81a52ced
+idx :1a52ced ,in :mov 0x50(%rax),%rax
+
+-------------------instruction 547: adr : ffffffff81a52cf1
+idx :1a52cf1 ,in :mov (%rax),%rdx
+
+-------------------instruction 548: adr : ffffffff81a52cf5
+idx :1a52cf5 ,in :test %rdx,%rdx
+
+-------------------instruction 549: adr : ffffffff81a52cf8
+idx :1a52cf8 ,in :jz 0x88(%rip)
+
+-------------------instruction 550: adr : ffffffff81a52cfe
+idx :1a52cfe ,in :mov 0x78(%rdx),%ecx
+
+-------------------instruction 551: adr : ffffffff81a52d01
+idx :1a52d01 ,in :test %ecx,%ecx
+
+-------------------instruction 552: adr : ffffffff81a52d03
+idx :1a52d03 ,in :jz 0x16(%rip)
+
+-------------------instruction 553: adr : ffffffff81a52d19
+idx :1a52d19 ,in :mov %rdx,0xffffffa8(%rbp)
+
+-------------------instruction 554: adr : ffffffff81a52d1d
+idx :1a52d1d ,in :mov $0x200,%esi
+
+-------------------instruction 555: adr : ffffffff81a52d22
+idx :1a52d22 ,in :mov $0x81a52d1d,%rdi
+
+-------------------instruction 556: adr : ffffffff81a52d29
+idx :1a52d29 ,in :call 0xff653927(%rip)
+
+-------------------instruction 557: adr : ffffffff810a6650
+idx :10a6650 ,in :nop 0x0(%rax,%rax,1)
+
+-------------------instruction 558: adr : ffffffff810a6655
+idx :10a6655 ,in :push %rbp
+
+-------------------instruction 559: adr : ffffffff810a6656
+idx :10a6656 ,in :mov 0x7ef7552b(%rip),%eax
+
+-------------------instruction 560: adr : ffffffff810a665d
+idx :10a665d ,in :test $0xf0000,%eax
+
+-------------------instruction 561: adr : ffffffff810a6662
+idx :10a6662 ,in :mov %rsp,%rbp
+
+-------------------instruction 562: adr : ffffffff810a6665
+idx :10a6665 ,in :jnz 0x25(%rip)
+
+-------------------instruction 563: adr : ffffffff810a6667
+idx :10a6667 ,in :sub $0x1,%esi
+
+-------------------instruction 564: adr : ffffffff810a666a
+idx :10a666a ,in :neg %esi
+
+-------------------instruction 565: adr : ffffffff810a666c
+idx :10a666c ,in :add %esi,0x7ef75515(%rip)
+
+-------------------instruction 566: adr : ffffffff810a6673
+idx :10a6673 ,in :mov 0x7ef7550e(%rip),%eax
+
+-------------------instruction 567: adr : ffffffff810a667a
+idx :10a667a ,in :test $0x1fff00,%eax
+
+-------------------instruction 568: adr : ffffffff810a667f
+idx :10a667f ,in :jz 0xf(%rip)
+
+-------------------instruction 569: adr : ffffffff810a6681
+idx :10a6681 ,in :dec 0x7ef75500(%rip)
+
+-------------------instruction 570: adr : ffffffff810a6688
+idx :10a6688 ,in :pop %rbp
+
+-------------------instruction 571: adr : ffffffff810a6689
+idx :10a6689 ,in :ret near (%rsp)
+
+-------------------instruction 572: adr : ffffffff81a52d2e
+idx :1a52d2e ,in :cmp $0x0,0xffffffa8(%rbp)
+
+-------------------instruction 573: adr : ffffffff81a52d33
+idx :1a52d33 ,in :jnz 0xffffff70(%rip)
+
+-------------------instruction 574: adr : ffffffff81a52ca3
+idx :1a52ca3 ,in :test %r13d,%r13d
+
+-------------------instruction 575: adr : ffffffff81a52ca6
+idx :1a52ca6 ,in :jz 0xa7(%rip)
+
+-------------------instruction 576: adr : ffffffff81a52cac
+idx :1a52cac ,in :mov 0xffffffa8(%rbp),%rax
+
+-------------------instruction 577: adr : ffffffff81a52cb0
+idx :1a52cb0 ,in :mov 0xffffffd0(%rbp),%rcx
+
+-------------------instruction 578: adr : ffffffff81a52cb4
+idx :1a52cb4 ,in :xor $0x28,%rcx
+
+-------------------instruction 579: adr : ffffffff81a52cbd
+idx :1a52cbd ,in :jnz 0x2a4(%rip)
+
+-------------------instruction 580: adr : ffffffff81a52cc3
+idx :1a52cc3 ,in :lea 0xffffffd8(%rbp),%rsp
+
+-------------------instruction 581: adr : ffffffff81a52cc7
+idx :1a52cc7 ,in :pop %rbx
+
+-------------------instruction 582: adr : ffffffff81a52cc8
+idx :1a52cc8 ,in :pop %r12
+
+-------------------instruction 583: adr : ffffffff81a52cca
+idx :1a52cca ,in :pop %r13
+
+-------------------instruction 584: adr : ffffffff81a52ccc
+idx :1a52ccc ,in :pop %r14
+
+-------------------instruction 585: adr : ffffffff81a52cce
+idx :1a52cce ,in :pop %r15
+
+-------------------instruction 586: adr : ffffffff81a52cd0
+idx :1a52cd0 ,in :pop %rbp
+
+-------------------instruction 587: adr : ffffffff81a52cd1
+idx :1a52cd1 ,in :ret near (%rsp)
+######### at end of processFuncyion, rip ffffffff81a52fa9
+kvm: 3
+vmfd: 4, vcpufd: 5. 
+vcpu size: 3000
+before KVM_GET_SUPPORTED_CPUID, set nent as 100. 
+
+KVM_GET_SUPPORTED_CPUID: return 0
+KVM_GET_SUPPORTED_CPUID, nent = 45
+
+000, xcr: 0x00000000, reserved: 0x00000000,  value: 0x0000000000000001
+ready to run, hard_cr3: 0. 
+get guest context done !!!, sizeof arg_blk: 1a8
+child process id: 6817. 
+OASIS stop: 0, exit reason: 0. 

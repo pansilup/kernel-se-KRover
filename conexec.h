@@ -86,6 +86,9 @@ class ConExecutor {
     uint preCIE(Instruction* in);
     bool InsnDispatch2(Instruction* instr, struct pt_regs* regs, uint mode);
     //pp-e
+    //pp-s from @hq
+    void ModifyR15ToR14(unsigned char* newInst, unsigned char* oldInst, int size);
+    //pp-e
     bool InsnDispatch(Instruction* instr, struct pt_regs* regs);
     // bool BlockDispatch(Address S_Addr, Address E_Addr);
     bool BlockDispatch(Address S_Addr, struct pt_regs* regs);

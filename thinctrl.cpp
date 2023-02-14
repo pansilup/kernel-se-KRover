@@ -1548,7 +1548,15 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifdef DEBUG_LOG       
     printf("\n-------------------instruction %lu adr : %lx\n", insn_count, crtAddr);
 #endif
-        //printf("\n-------------------instruction %lu: adr : %lx\n", insn_count, crtAddr);
+        printf("\n-------------------instruction %lu: adr : %lx\n", insn_count, crtAddr);
+
+        //pp-s
+        //if(crtAddr == 0xffffffff81034e90) //ksys_ioperm // __kmalloc 0xffffffff812aa250)
+        //{
+        //    printf("__kmalloc\n\n");  
+        //}
+
+        //pp-e
 
         /* get the Insn from the InsnCache or decoding on the site */
 
@@ -1609,7 +1617,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #endif
 
         }
-        //std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
+        std::cout << "idx :" << std::hex << idx << " ,in :" << in->format() << std::endl;
         /*int i = 0;
         while( i < 10)
         {
@@ -1621,6 +1629,11 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 #ifndef _PROD_PERF
         dis_as1 = rdtsc();
         dis_as += (dis_as1-dis_as0);  
+#endif
+
+#if 0 //this is to read kernel instructions in sequence, no execution or evaluation
+    m_regs->rip += in->size();
+    continue;
 #endif
 
 #if 0 //to generate nextPofTransInsn.txt
@@ -1641,7 +1654,7 @@ bool CThinCtrl::processFunction(unsigned long addr) {
 
 #ifndef _PROD_PERF 
 //Trace call instructions
-#if 1
+#if 0
     InsnCategory cate_t = in->getCategory();
     if(is_prev_ins_call)
     {

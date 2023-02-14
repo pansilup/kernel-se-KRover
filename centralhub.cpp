@@ -128,7 +128,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x60;  //adr of rdx
             //printf ("nice value: %d. \n", *((unsigned long*)tmp));
-            declareSymbolicObject(tmp, 8, 1, 1, 17, "protocol_rdx");
+            //declareSymbolicObject(tmp, 8, 1, 1, 17, "protocol_rdx");  //working symbol
             tmp += 0x8;  //adr of rsi
             //declareSymbolicObject(tmp, 8, 1, 1, 2, "type_rsi"); 
             tmp += 0x8;  //adr of rdi
@@ -140,7 +140,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
             tmp += 0x70;  //adr of rdi
             
             //symbolizing buffer
-            declareSymbolicObject(tmp, 8, 0, 1, 0x7fffffffdfe4, "bufadr_rdi"); 
+            //declareSymbolicObject(tmp, 8, 0, 1, 0x7fffffffdfe4, "bufadr_rdi"); 
 
             //symbolizing the buffer content
             //unsigned long fd0_adr = *(unsigned long*)tmp;
@@ -687,7 +687,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x38; //adr of r10
-            declareSymbolicObject(tmp, 8, 1, 1, (0x00000001U | 0x00000002U), "mask_r10"); 
+            //declareSymbolicObject(tmp, 8, 1, 1, (0x00000001U | 0x00000002U), "mask_r10"); 
         }   break;
         case SCALL_TEE:
         {
@@ -764,7 +764,7 @@ bool ExecState::defineSymbolsForScalls(unsigned long scall_idx, unsigned long tm
         {
             printf("case: %d\n", (int)scall_idx);
             tmp += 0x70; //adr of rdi
-            declareSymbolicObject(tmp, 8, 1, 1, 4, "fd_rdi"); 
+            //declareSymbolicObject(tmp, 8, 1, 1, 4, "fd_rdi"); 
         }   break;
         case SCALL_BRK:
         {

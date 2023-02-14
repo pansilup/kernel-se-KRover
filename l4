@@ -1,0 +1,163 @@
+======================0x7f7fffffed2c, 0x7f7fffffed20
+================
+error open file!
+m_sts: 0x7f00008aafe0, m_cr: 0x7f000089ec30, decoder: 0x7f00008abec0 .
+low: 0. 
+high: fffffffffffff000. 
+main.cpp:	 1945
+nme_fsbase: 7f200000d640. 
+gdt base: 7f1000902000. 
+idx: 170, entry: ce78067. 
+main.cpp:	 1952
+rax: 0
+rbx: 0 rcx: 0 rdx: 0 rdi: 0 rsi: 0 r8: 0 r9: 0 r10: 0 
+rip: 0 
+rsp: 0 
+ei_shar_args at: 0x7f88000907000 
+t_rsp0 stack: fffffe000003c000. 
+t_rsp1 stack: ffffc9000007c000. 
+onsite receive request. 
+ei_shar_args->rip: 55555555470e, rsp: 7fffffffdfc0. 
+ei_shar_args at: 0x7f1000907000 
+target rip: 0x555555554711, target code: 4800000016c0c748. 
+syscall entry at: 0xffffffff81c00010, code: 2524894865f8010f. 
+redirected page start from :0x7f0001021000. ends : 0x7f0001029000. 
+new_va: 7f0001022000. ker_addr: ffffffff812ea000. 
+about to issue hyper call to redirect page: ffffffff812ea000 .
+install probe at: ffffffff812ea7f0. 
+int3 invoked. saved rip: ffffffff812ea7f0. saved rsp: ffffc90001ed3f30, saved_rflags: 202, ret address on stack: ffffffff81004207. 
+at processAt
+syscall idx : 22
+case: 22
+######### at start of processFuncyion, rip ffffffff812ea7f5
+ffffffff812ea700
+ffffffff812ea620
+ffffffff812ea480
+ffffffff81300f40
+ffffffff812feb40
+ffffffff812a9620
+ffffffff81add5b0
+ffffffff81127b00
+ffffffff8124e690
+ffffffff812fe500
+ffffffff81170750
+ffffffff81170690
+ffffffff81170770
+ffffffff81170690
+ffffffff81458da0
+ffffffff811018c0
+ffffffff81ae2340
+ffffffff812fe790
+ffffffff812e9e60
+ffffffff812a9850
+ffffffff81add5b0
+ffffffff81127b00
+ffffffff8124e690
+ffffffff81ac5ef0
+ffffffff812aa250
+ffffffff812518e0
+ffffffff81add5b0
+ffffffff81127b00
+ffffffff8124e690
+ffffffff81ac5ef0
+ffffffff810f2fe0
+ffffffff81101440
+ffffffff812ff5a0
+ffffffff81137b30
+ffffffff812ff4f0
+ffffffff812e0f90
+ffffffff81aba920
+ffffffff812fd680
+ffffffff812fd240
+ffffffff812a9620
+ffffffff81add5b0
+ffffffff81127b00
+ffffffff8124e690
+ffffffff81ac5ef0
+ffffffff81ac5bb0
+ffffffff812fa1a0
+ffffffff81303c40
+ffffffff812fb120
+ffffffff81457f30
+ffffffff81ae2340
+ffffffff812fb030
+ffffffff812fa220
+ffffffff81ae2340
+ffffffff812e0ea0
+ffffffff812e0db0
+ffffffff812e0cb0
+ffffffff812a9620
+ffffffff81add5b0
+ffffffff81127b00
+ffffffff8124e690
+ffffffff81ac5ef0
+ffffffff81459740
+ffffffff812a9620
+ffffffff81add5b0
+ffffffff81127b00
+ffffffff8124e690
+ffffffff81ac5ef0
+ffffffff81e00ce0
+ffffffff81e00cec
+ffffffff81add5b0
+ffffffff81127b00
+ffffffff81101440
+ffffffff815576a0
+ffffffff8152f290
+ffffffff812e13e0
+ffffffff812e0ea0
+ffffffff812e0db0
+ffffffff812e0cb0
+ffffffff812a9620
+ffffffff81add5b0
+ffffffff81127b00
+ffffffff8124e690
+ffffffff81ac5ef0
+ffffffff81459740
+ffffffff812a9620
+ffffffff81add5b0
+ffffffff81127b00
+ffffffff8124e690
+ffffffff81ac5ef0
+ffffffff81e00ce0
+ffffffff81e00cec
+ffffffff81add5b0
+ffffffff81127b00
+ffffffff81101440
+ffffffff815576a0
+ffffffff8152f290
+ffffffff812eab80
+ffffffff81303c40
+ffffffff81522d30
+ffffffff81302d60
+ffffffff81302bf0
+ffffffff81ae2340
+ffffffff8152bf90
+ffffffff8152bf90
+ffffffff81302080
+ffffffff81302d60
+ffffffff81302bf0
+ffffffff81ae2340
+ffffffff8152bf90
+ffffffff8152bf90
+ffffffff81302080
+ffffffff8152f160
+ffffffff81ac3710
+ffffffff81302e20
+ffffffff81302da0
+ffffffff81302e20
+ffffffff81302da0
+######### at end of processFuncyion, rip ffffffff81004207
+kvm: 3
+vmfd: 4, vcpufd: 5. 
+vcpu size: 3000
+before KVM_GET_SUPPORTED_CPUID, set nent as 100. 
+
+KVM_GET_SUPPORTED_CPUID: return 0
+KVM_GET_SUPPORTED_CPUID, nent = 45
+
+000, xcr: 0x00000000, reserved: 0x00000000,  value: 0x0000000000000001
+ready to run, hard_cr3: 0. 
+get guest context done !!!, sizeof arg_blk: 1a8
+child process id: 9571. 
+OASIS stop: 0, exit reason: 0. 

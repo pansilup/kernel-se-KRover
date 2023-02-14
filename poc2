@@ -1,0 +1,47 @@
+======================0x7f7fffffed2c, 0x7f7fffffed20
+================
+error open file!
+m_sts: 0x7f0001ca5fe0, m_cr: 0x7f0001c99c30, decoder: 0x7f0001ca6ec0 .
+low: 0. 
+high: fffffffffffff000. 
+main.cpp:	 1945
+nme_fsbase: 7f200000d640. 
+gdt base: 7f1000902000. 
+idx: 170, entry: 32bf0067. 
+main.cpp:	 1952
+rax: 0
+rbx: 0 rcx: 0 rdx: 0 rdi: 0 rsi: 0 r8: 0 r9: 0 r10: 0 
+rip: 0 
+rsp: 0 
+ei_shar_args at: 0x7f88000907000 
+t_rsp0 stack: fffffe0000003000. 
+t_rsp1 stack: ffffffff82a04000. 
+onsite receive request. 
+ei_shar_args->rip: 555555554b0d, rsp: 7fffffffdf70. 
+ei_shar_args at: 0x7f1000907000 
+target rip: 0x555555554b10, target code: 7885894880458d48. 
+syscall entry at: 0xffffffff81c00010, code: 2524894865f8010f. 
+redirected page start from :0x7f000241c000. ends : 0x7f0002424000. 
+new_va: 7f000241d000. ker_addr: ffffffff81910000. 
+about to issue hyper call to redirect page: ffffffff81910000 .
+install probe at: ffffffff81910b50. 
+new_va: 7f000241e000. ker_addr: ffffffff812da000. 
+about to issue hyper call to redirect page: ffffffff812da000 .
+install probe at: ffffffff812da030. 
+int3 invoked. saved rip: ffffffff81910b50. saved rsp: ffffc9000240bf30, saved_rflags: 202, ret address on stack: ffffffff81004207. 
+at processAt
+syscall idx : 42
+######### at start of processFuncyion, rip ffffffff81910b55
+kvm: 3
+vmfd: 4, vcpufd: 5. 
+vcpu size: 3000
+before KVM_GET_SUPPORTED_CPUID, set nent as 100. 
+
+KVM_GET_SUPPORTED_CPUID: return 0
+KVM_GET_SUPPORTED_CPUID, nent = 45
+
+000, xcr: 0x00000000, reserved: 0x00000000,  value: 0x0000000000000001
+ready to run, hard_cr3: 0. 
+get guest context done !!!, sizeof arg_blk: 1a8
+child process id: 7348. 
+OASIS stop: 0, exit reason: 0. 
